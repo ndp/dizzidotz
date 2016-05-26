@@ -15,6 +15,10 @@ const mousedown = Rx.Observable.fromEvent(svg, 'mousedown')
 const mouseup = Rx.Observable.fromEvent(svg, 'mouseup')
 const msPerPeriodChange = Rx.Observable.fromEvent(msPerPeriodInput, 'change')
 
+const NOTE_COLOR = 'violet'
+const PLAYING_COLOR = 'white'
+const GROWING_COLOR = 'yellow'
+
 
 const msPerTick = 20
 let msPerPeriod = 2000
@@ -72,26 +76,27 @@ const calcSize = (start = startTimeStamp) => {
 }
 
 mousedown.subscribe((e) => {
-  console.log(e.timeStamp)
   startTimeStamp = (new Date()).getTime()
+  const pt = eventToPt(e)
+  const [angle, dist] = ptToVector(pt)
 
   const interval = setInterval(() => {
     if (startTimeStamp) {
-      const pt = eventToPt(e)
-      const [angle, dist] = ptToVector(pt)
       const peg = {
-        id: `peg-${angle}`,
+        id: 'wip',
         angle: angle,
         dist: dist,
         size: calcSize(),
         pt: pt,
-        color: 'purple',
+        color: GROWING_COLOR,
       }
       renderPeg(peg)
     } else {
+      const e = document.getElementById('wip')
+      if (e) e.parentNode.removeChild(e)
       clearInterval(interval)
     }
-  }, 30)
+  }, 20)
 })
 
 
@@ -111,7 +116,7 @@ const renderPeg = (pegModel) => {
   e.setAttribute("cx", pegModel.pt.x + radius)
   e.setAttribute("cy", pegModel.pt.y + radius)
   e.setAttribute("r", pegModel.size)
-  e.setAttribute("fill", pegModel.highlightcolor || pegModel.color)
+  e.setAttribute("fill", pegModel.highlightcolor || pegModel.color || NOTE_COLOR)
   if (pegModel.highlightcolor) {
     setTimeout(() => e.setAttribute('fill', pegModel.color), 100)
   }
@@ -120,7 +125,6 @@ const renderPeg = (pegModel) => {
 mouseup.subscribe((e) => {
   const pt = eventToPt(e)
   const [angle, dist] = ptToVector(pt)
-  console.log(angle, dist)
   const size = calcSize()
   const peg = {
     id: `peg-${angle}`,
@@ -128,10 +132,9 @@ mouseup.subscribe((e) => {
     dist: dist,
     size: size,
     pt: pt,
-    color: 'green',
     duration: size / MAX_SIZE,
     velocity: dist / radius,
-    frequency: "c4",
+    frequency: (1 - dist / radius) * 4000,
     volume: Math.log2(size) * 3
   }
 
@@ -149,7 +152,7 @@ radians.subscribe((angle) => {
     y1: radius + Math.sin(angle) * radius,
     x2: radius,
     y2: radius
-  }, {duration: msPerTick - 2, easing: "linear", queue: false});
+  }, {duration: msPerTick * .75, easing: "linear", queue: false});
 })
 
 const activePegs = new Rx.Subject()
@@ -171,12 +174,9 @@ activePegs.subscribe((pegModel) => {
 })
 
 activePegs.subscribe((pegModel) => {
-  console.log(pegModel)
-})
-
-activePegs.subscribe((pegModel) => {
   const tempModel = Object.create(pegModel)
-  tempModel.highlightcolor = 'red'
+  tempModel.color = NOTE_COLOR
+  tempModel.highlightcolor = PLAYING_COLOR
   renderPeg(tempModel)
 })
 
@@ -187,11 +187,3 @@ hub.setAttribute('cy', radius)
 wheel.setAttribute('cx', radius)
 wheel.setAttribute('cy', radius)
 wheel.setAttribute('r', radius)
-
-//    ticker.subscribe((e) => {
-//        console.log('tick', e)
-//    })
-//    radians.subscribe((e) => {
-//        console.log('radians', e)
-//    })
-
