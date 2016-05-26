@@ -1,5 +1,20 @@
 "use strict";
 
+// MODEL
+const msPerTick = 20
+let msPerPeriod = 2000
+const radiansPerPeriod = 2 * Math.PI
+const radiansPerTick = () => {
+  return (msPerTick / msPerPeriod * radiansPerPeriod)
+}
+
+
+
+
+
+
+
+// VIEW
 const svg = document.getElementsByTagName('svg')[0]
 const hand = document.getElementById('hand')
 const body = document.getElementsByTagName('body')[0]
@@ -7,10 +22,22 @@ const hub = document.getElementById('hub')
 const wheel = document.getElementById('wheel')
 const msPerPeriodInput = document.getElementById('ms-per-period')
 
+const radius = Math.min(body.clientHeight, body.clientWidth) / 2
 
-const mousedown = Rx.Observable.fromEvent(svg, 'mousedown')
-const mouseup = Rx.Observable.fromEvent(svg, 'mouseup')
-const tempoChange = Rx.Observable.fromEvent(msPerPeriodInput, 'change')
+// View set up
+svg.style.width = 2 * radius
+svg.style.height = 2 * radius
+svg.style.marginLeft = `${(body.clientWidth / 2) - radius}px`
+hub.setAttribute('cx', radius)
+hub.setAttribute('cy', radius)
+wheel.setAttribute('cx', radius)
+wheel.setAttribute('cy', radius)
+wheel.setAttribute('r', radius)
+
+
+const mousedown$ = Rx.Observable.fromEvent(svg, 'mousedown')
+const mouseup$ = Rx.Observable.fromEvent(svg, 'mouseup')
+const tempoChange$ = Rx.Observable.fromEvent(msPerPeriodInput, 'change')
 
 const Color = {
   note: 'violet',
@@ -19,14 +46,6 @@ const Color = {
 }
 
 
-const msPerTick = 20
-let msPerPeriod = 2000
-const ticker = Rx.Observable.interval(msPerTick)
-const radius = Math.min(body.clientHeight, body.clientWidth) / 2
-const radiansPerPeriod = 2 * Math.PI
-const radiansPerTick = () => {
-  return (msPerTick / msPerPeriod * radiansPerPeriod)
-}
 
 const maxSize = 128
 
@@ -37,12 +56,11 @@ const normalizeRadians = (r) => {
   return r
 }
 
-tempoChange.subscribe((e) => msPerPeriod = e.target.value)
+tempoChange$.subscribe((e) => msPerPeriod = e.target.value)
 
 
 const synth = new Tone.PolySynth(4, Tone.SimpleSynth).toMaster()// new Tone.SimpleSynth().toMaster()
 const synthFor = (pegModel) => synth
-
 
 
 const pegs = []
@@ -64,7 +82,7 @@ const calcSize = (start = startTimeStamp) => {
   return Math.min(maxSize, (((new Date()).getTime()) - start) / 40)
 }
 
-mousedown.subscribe((e) => {
+mousedown$.subscribe((e) => {
   console.log(e)
   startTimeStamp = (new Date()).getTime()
   const pt = eventToPt(e)
@@ -113,11 +131,9 @@ const renderPeg = (pegModel) => {
   }
 }
 
-mouseup.subscribe((e) => {
-  const pt = eventToPt(e)
+const createPegModel = (pt, size) => {
   const [angle, dist] = ptToVector(pt)
-  const size = calcSize()
-  const peg = {
+  return {
     id: `peg-${angle}`,
     angle: angle,
     dist: dist,
@@ -128,16 +144,28 @@ mouseup.subscribe((e) => {
     frequency: (1 - dist / radius) * 4000,
     volume: Math.log2(size) * 3
   }
+}
+
+mouseup$.subscribe((e) => {
+  const pt = eventToPt(e)
+  const size = calcSize()
+
+  const peg = createPegModel(pt, size)
 
   pegs.push(peg)
   renderPeg(peg)
+})
 
+mouseup$.subscribe((e) => {
   startTimeStamp = null
 })
 
 
-const radians = ticker.scan((last) => normalizeRadians(last + radiansPerTick()))
-radians.subscribe((angle) => {
+const ticker$ = Rx.Observable.interval(msPerTick)
+const radians$ = ticker$.scan((last) => normalizeRadians(last + radiansPerTick()))
+
+radians$.subscribe((angle) => {
+  // Move the clock hand
   Velocity(hand, {
     x1: radius + Math.cos(angle) * radius,
     y1: radius + Math.sin(angle) * radius,
@@ -146,36 +174,30 @@ radians.subscribe((angle) => {
   }, {duration: msPerTick * .75, easing: "linear", queue: false});
 })
 
-const activePegs = new Rx.Subject()
+const activePegs$ = new Rx.Subject()
 
-radians.subscribe((angle) => {
+radians$.subscribe((angle) => {
+  // Generate stream of active pegs
   pegs.forEach((pegModel) => {
     if (angle <= pegModel.angle && pegModel.angle < (angle + radiansPerTick())) {
-      activePegs.onNext(pegModel)
+      activePegs$.onNext(pegModel)
     }
   })
 })
 
 
-activePegs.subscribe((pegModel) => {
+activePegs$.subscribe((pegModel) => {
   const synth = synthFor(pegModel)
   synth.volume.value = 0
   synth.triggerAttackRelease(pegModel.frequency, pegModel.duration, undefined, pegModel.velocity)
   synth.volume.value = pegModel.volume
 })
 
-activePegs.subscribe((pegModel) => {
+activePegs$.subscribe((pegModel) => {
   const tempModel = Object.create(pegModel)
   tempModel.color = Color.note
   tempModel.highlightcolor = Color.playing
   renderPeg(tempModel)
 })
 
-svg.style.width = 2 * radius
-svg.style.height = 2 * radius
-svg.style.marginLeft = `${(body.clientWidth / 2) - radius}px`
-hub.setAttribute('cx', radius)
-hub.setAttribute('cy', radius)
-wheel.setAttribute('cx', radius)
-wheel.setAttribute('cy', radius)
-wheel.setAttribute('r', radius)
+
