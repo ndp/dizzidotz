@@ -4,13 +4,16 @@ const svg = document.getElementsByTagName('svg')[0]
 const hand = document.getElementById('hand')
 const body = document.getElementsByTagName('body')[0]
 const hub = document.getElementById('hub')
+const wheel = document.getElementById('wheel')
+const msPerPeriodInput = document.getElementById('ms-per-period')
 
 
 const keydown = Rx.Observable.fromEvent(document, 'keydown')
 const keyup = Rx.Observable.fromEvent(document, 'keyup')
-const click = Rx.Observable.fromEvent(document, 'click')
-const mousedown = Rx.Observable.fromEvent(document, 'mousedown')
-const mouseup = Rx.Observable.fromEvent(document, 'mouseup')
+const svgClick = Rx.Observable.fromEvent(svg, 'click')
+const mousedown = Rx.Observable.fromEvent(svg, 'mousedown')
+const mouseup = Rx.Observable.fromEvent(svg, 'mouseup')
+const msPerPeriodChange = Rx.Observable.fromEvent(msPerPeriodInput, 'change')
 
 
 const msPerTick = 20
@@ -22,12 +25,16 @@ const radiansPerTick = () => {
   return (msPerTick / msPerPeriod * radiansPerPeriod)
 }
 
+const MAX_SIZE = 128
+
 const normalizeRadians = (r) => {
   if (Math.abs(r) < Math.pi) return r
   r = r % radiansPerPeriod
   if (r > Math.PI) r = r - radiansPerPeriod
   return r
 }
+
+msPerPeriodChange.subscribe((e) => msPerPeriod = e.target.value)
 
 
 const synth = new Tone.PolySynth(4, Tone.SimpleSynth).toMaster()// new Tone.SimpleSynth().toMaster()
@@ -60,6 +67,10 @@ var eventToPt = function (e) {
 
 let startTimeStamp = null
 
+const calcSize = (start = startTimeStamp) => {
+  return Math.min(MAX_SIZE, (((new Date()).getTime()) - start) / 40)
+}
+
 mousedown.subscribe((e) => {
   console.log(e.timeStamp)
   startTimeStamp = (new Date()).getTime()
@@ -68,16 +79,13 @@ mousedown.subscribe((e) => {
     if (startTimeStamp) {
       const pt = eventToPt(e)
       const [angle, dist] = ptToVector(pt)
-      console.log(angle, dist)
       const peg = {
         id: `peg-${angle}`,
         angle: angle,
         dist: dist,
-        size: (((new Date()).getTime()) - startTimeStamp) / 50,
+        size: calcSize(),
         pt: pt,
-        color: 'green',
-        duration: dist / 1000.0,
-        frequency: "c4",
+        color: 'purple',
       }
       renderPeg(peg)
     } else {
@@ -113,15 +121,18 @@ mouseup.subscribe((e) => {
   const pt = eventToPt(e)
   const [angle, dist] = ptToVector(pt)
   console.log(angle, dist)
+  const size = calcSize()
   const peg = {
     id: `peg-${angle}`,
     angle: angle,
     dist: dist,
-    size: ((new Date()).getTime() - startTimeStamp) / 50,
+    size: size,
     pt: pt,
     color: 'green',
-    duration: dist / 1000.0,
+    duration: size / MAX_SIZE,
+    velocity: dist / radius,
     frequency: "c4",
+    volume: Math.log2(size) * 3
   }
 
   pegs.push(peg)
@@ -153,7 +164,14 @@ radians.subscribe((angle) => {
 
 
 activePegs.subscribe((pegModel) => {
-  synthFor(pegModel).triggerAttackRelease(pegModel.frequency, pegModel.duration)
+  const synth = synthFor(pegModel)
+  synth.volume.value = 0
+  synth.triggerAttackRelease(pegModel.frequency, pegModel.duration, undefined, pegModel.velocity)
+  synth.volume.value = pegModel.volume
+})
+
+activePegs.subscribe((pegModel) => {
+  console.log(pegModel)
 })
 
 activePegs.subscribe((pegModel) => {
@@ -162,8 +180,13 @@ activePegs.subscribe((pegModel) => {
   renderPeg(tempModel)
 })
 
+svg.style.width = 2 * radius
+svg.style.height = 2 * radius
 hub.setAttribute('cx', radius)
 hub.setAttribute('cy', radius)
+wheel.setAttribute('cx', radius)
+wheel.setAttribute('cy', radius)
+wheel.setAttribute('r', radius)
 
 //    ticker.subscribe((e) => {
 //        console.log('tick', e)

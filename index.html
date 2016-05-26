@@ -19,14 +19,20 @@
             transparent 1px);
         }
 
+        #ms-per-period {
+            position: relative;
+            top: -20px;
+            left: 10px;
+        }
     </style>
 </head>
 <body>
 <svg>
+    <circle id='wheel' cx="50%" cy="50%" r="50%" stroke-width="0" fill="black"/>
     <line id='hand' x1="0" y1="0" x2="50%" y2="50%" style="stroke:rgb(255,0,0);stroke-width:2"/>
-    <circle id='hub'  r="2%" stroke-width="0" fill="gray"/>
+    <circle id='hub' r="2%" stroke-width="0" fill="gray"/>
 </svg>
-
+<input id='ms-per-period' type="range" min="200" max="10000" value="2000">
 
 <script src="js/machine.js" type="application/javascript"></script>
 
