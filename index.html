@@ -16,24 +16,27 @@
         }
 
         body {
-            /* Graph paper background */
-            background-size: 20px 20px;
-            background-image: linear-gradient(to right, #eee 1px, transparent 1px), linear-gradient(to bottom, #eee 1px,
-            transparent 1px);
+            background-color: black;
         }
 
         #ms-per-period {
-            position: relative;
-            top: -20px;
-            left: 10px;
+            position: fixed;
+            bottom: 10px;
+            left: 20px;
         }
     </style>
 </head>
 <body>
 <svg>
-    <circle id='wheel' cx="50%" cy="50%" r="50%" stroke-width="0" fill="purple"/>
+    <circle id='wheel' cx="50%" cy="50%" r="50%" stroke-width="0" fill="url(#grad1)"/>
     <line id='hand' x1="0" y1="0" x2="50%" y2="50%" style="stroke:yellow;stroke-width:2"/>
     <circle id='hub' r="2px" stroke-width="0" fill="white"/>
+    <radialGradient id="grad1" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+        <stop offset="0%" style="stop-color:mediumpurple;stop-opacity:1" />
+        <stop offset="10%" style="stop-color:purple;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:slateblue;stop-opacity:1" />
+    </radialGradient>
+
 </svg>
 <input id='ms-per-period' type="range" min="200" max="20000" value="2000">
 
