@@ -8,11 +8,17 @@ const radiansPerTick = () => {
   return (msPerTick / msPerPeriod * radiansPerPeriod)
 }
 
+// equal tempered scale
+const chromaticDist = Math.pow(2, 1 / 12)
+// ref. http://www.phy.mtu.edu/~suits/NoteFreqCalcs.html
+const roundToEqualTempered = (f) => f - (f % chromaticDist)
+
 const pegs = []
 const maxPegSize = 128
 
 const newPeg = (radius, pt, size) => {
   const [angle, dist] = ptToVector(pt)
+  const frequency = roundToEqualTempered((1 - dist / radius) * 4000)
   const p = {
     id: `peg-${angle}`,
     angle: angle,
@@ -21,7 +27,7 @@ const newPeg = (radius, pt, size) => {
     pt: pt,
     duration: size / maxPegSize,
     velocity: dist / radius,
-    frequency: (1 - dist / radius) * 4000,
+    frequency: frequency,
     volume: Math.log2(size) * 3
   }
   pegs.push(p)
@@ -48,7 +54,6 @@ radians$.subscribe((angle) => {
     }
   })
 })
-
 
 
 // VIEW
@@ -103,10 +108,9 @@ const renderPeg = (pegModel) => {
   e.setAttribute("r", pegModel.size)
   e.setAttribute("fill", pegModel.highlightcolor || pegModel.color || Color.note)
   if (pegModel.highlightcolor) {
-    setTimeout(() => e.setAttribute('fill', pegModel.color), Math.min(200, pegModel.duration*1000))
+    setTimeout(() => e.setAttribute('fill', pegModel.color), Math.min(200, pegModel.duration * 1000))
   }
 }
-
 
 
 // INTERACTIONS
