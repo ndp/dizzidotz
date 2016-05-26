@@ -1,0 +1,34 @@
+<html>
+<head>
+    <script src="js/Tone.min.js"></script>
+    <script src="js/velocity.min.js" type="application/javascript"></script>
+    <script src="js/rx.all.js" type="application/javascript"></script>
+
+    <style>
+        html, body, svg {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            /* Graph paper background */
+            background-size: 20px 20px;
+            background-image: linear-gradient(to right, #eee 1px, transparent 1px), linear-gradient(to bottom, #eee 1px,
+            transparent 1px);
+        }
+
+    </style>
+</head>
+<body>
+<svg>
+    <line id='hand' x1="0" y1="0" x2="50%" y2="50%" style="stroke:rgb(255,0,0);stroke-width:2"/>
+    <circle id='hub'  r="2%" stroke-width="0" fill="gray"/>
+</svg>
+
+
+<script src="js/machine.js" type="application/javascript"></script>
+
+</body>
+</html>
