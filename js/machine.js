@@ -8,16 +8,15 @@ const wheel = document.getElementById('wheel')
 const msPerPeriodInput = document.getElementById('ms-per-period')
 
 
-const keydown = Rx.Observable.fromEvent(document, 'keydown')
-const keyup = Rx.Observable.fromEvent(document, 'keyup')
-const svgClick = Rx.Observable.fromEvent(svg, 'click')
 const mousedown = Rx.Observable.fromEvent(svg, 'mousedown')
 const mouseup = Rx.Observable.fromEvent(svg, 'mouseup')
-const msPerPeriodChange = Rx.Observable.fromEvent(msPerPeriodInput, 'change')
+const tempoChange = Rx.Observable.fromEvent(msPerPeriodInput, 'change')
 
-const NOTE_COLOR = 'violet'
-const PLAYING_COLOR = 'white'
-const GROWING_COLOR = 'deeppink'
+const Color = {
+  note: 'violet',
+  playing: 'white',
+  growing: 'deeppink'
+}
 
 
 const msPerTick = 20
@@ -38,22 +37,12 @@ const normalizeRadians = (r) => {
   return r
 }
 
-msPerPeriodChange.subscribe((e) => msPerPeriod = e.target.value)
+tempoChange.subscribe((e) => msPerPeriod = e.target.value)
 
 
 const synth = new Tone.PolySynth(4, Tone.SimpleSynth).toMaster()// new Tone.SimpleSynth().toMaster()
 const synthFor = (pegModel) => synth
 
-keydown.subscribe((e) => {
-  const ch = /Key([A-G])/.exec(e.code)
-  if (ch) {
-    synth.triggerAttack(ch[1] + "4")
-  }
-})
-
-keyup.subscribe(() => {
-  synth.triggerRelease()
-})
 
 
 const pegs = []
@@ -90,7 +79,7 @@ mousedown.subscribe((e) => {
         dist: dist,
         size: calcSize(),
         pt: pt,
-        color: GROWING_COLOR,
+        color: Color.growing,
       }
       renderPeg(peg)
     } else {
@@ -118,7 +107,7 @@ const renderPeg = (pegModel) => {
   e.setAttribute("cx", pegModel.pt.x + radius)
   e.setAttribute("cy", pegModel.pt.y + radius)
   e.setAttribute("r", pegModel.size)
-  e.setAttribute("fill", pegModel.highlightcolor || pegModel.color || NOTE_COLOR)
+  e.setAttribute("fill", pegModel.highlightcolor || pegModel.color || Color.note)
   if (pegModel.highlightcolor) {
     setTimeout(() => e.setAttribute('fill', pegModel.color), 100)
   }
@@ -177,8 +166,8 @@ activePegs.subscribe((pegModel) => {
 
 activePegs.subscribe((pegModel) => {
   const tempModel = Object.create(pegModel)
-  tempModel.color = NOTE_COLOR
-  tempModel.highlightcolor = PLAYING_COLOR
+  tempModel.color = Color.note
+  tempModel.highlightcolor = Color.playing
   renderPeg(tempModel)
 })
 
