@@ -8,9 +8,46 @@ const radiansPerTick = () => {
   return (msPerTick / msPerPeriod * radiansPerPeriod)
 }
 
+const pegs = []
+const maxPegSize = 128
+
+const newPeg = (radius, pt, size) => {
+  const [angle, dist] = ptToVector(pt)
+  const p = {
+    id: `peg-${angle}`,
+    angle: angle,
+    dist: dist,
+    size: size,
+    pt: pt,
+    duration: size / maxPegSize,
+    velocity: dist / radius,
+    frequency: (1 - dist / radius) * 4000,
+    volume: Math.log2(size) * 3
+  }
+  pegs.push(p)
+  return p
+}
 
 
+const normalizeRadians = (r) => {
+  if (Math.abs(r) < Math.pi) return r
+  r = r % radiansPerPeriod
+  if (r > Math.PI) r = r - radiansPerPeriod
+  return r
+}
 
+const ticker$ = Rx.Observable.interval(msPerTick)
+const radians$ = ticker$.scan((last) => normalizeRadians(last + radiansPerTick()))
+const activePegs$ = new Rx.Subject()
+
+radians$.subscribe((angle) => {
+  // Generate stream of active pegs
+  pegs.forEach((pegModel) => {
+    if (angle <= pegModel.angle && pegModel.angle < (angle + radiansPerTick())) {
+      activePegs$.onNext(pegModel)
+    }
+  })
+})
 
 
 
@@ -35,10 +72,6 @@ wheel.setAttribute('cy', radius)
 wheel.setAttribute('r', radius)
 
 
-const mousedown$ = Rx.Observable.fromEvent(svg, 'mousedown')
-const mouseup$ = Rx.Observable.fromEvent(svg, 'mouseup')
-const tempoChange$ = Rx.Observable.fromEvent(msPerPeriodInput, 'change')
-
 const Color = {
   note: 'violet',
   playing: 'white',
@@ -46,51 +79,66 @@ const Color = {
 }
 
 
-
-const maxSize = 128
-
-const normalizeRadians = (r) => {
-  if (Math.abs(r) < Math.pi) return r
-  r = r % radiansPerPeriod
-  if (r > Math.PI) r = r - radiansPerPeriod
-  return r
-}
-
-tempoChange$.subscribe((e) => msPerPeriod = e.target.value)
-
-
-const synth = new Tone.PolySynth(4, Tone.SimpleSynth).toMaster()// new Tone.SimpleSynth().toMaster()
-const synthFor = (pegModel) => synth
-
-
-const pegs = []
-
 const ptToVector = function (pt) {
-  const angle = Math.atan2(pt.y, pt.x) // note: backward order is JS spec
+  const angle = Math.atan2(pt.y, pt.x) // note: unintuitive order is JS spec
   const dist = Math.sqrt(pt.x * pt.x + pt.y * pt.y)
   return [angle, dist]
 }
+
+
+const findOrCreatePeg = (pegModel) => {
+  let peg = document.getElementById(pegModel.id)
+  if (!peg) {
+    peg = document.createElementNS("http://www.w3.org/2000/svg", "circle")
+    peg.setAttribute('id', pegModel.id)
+    svg.appendChild(peg)
+  }
+  return peg
+}
+
+const renderPeg = (pegModel) => {
+  const e = findOrCreatePeg(pegModel)
+  e.setAttribute("cx", pegModel.pt.x + radius)
+  e.setAttribute("cy", pegModel.pt.y + radius)
+  e.setAttribute("r", pegModel.size)
+  e.setAttribute("fill", pegModel.highlightcolor || pegModel.color || Color.note)
+  if (pegModel.highlightcolor) {
+    setTimeout(() => e.setAttribute('fill', pegModel.color), Math.min(200, pegModel.duration*1000))
+  }
+}
+
+
+
+// INTERACTIONS
+
+const tempoChange$ = Rx.Observable.fromEvent(msPerPeriodInput, 'change')
+tempoChange$.subscribe((e) => msPerPeriod = e.target.value)
+
+
+const mousedown$ = Rx.Observable.fromEvent(svg, 'mousedown')
+const mouseup$ = Rx.Observable.fromEvent(svg, 'mouseup')
+
+
 var eventToPt = function (e) {
   const x = (e.offsetX || e.clientX) - radius
   const y = (e.offsetY || e.clientY) - radius
   return {x: x, y: y}
 }
 
-let startTimeStamp = null
+let startedPegAt = null
 
-const calcSize = (start = startTimeStamp) => {
-  return Math.min(maxSize, (((new Date()).getTime()) - start) / 40)
+// Size based on how long the mouse press/touch is
+const calcSize = (start = startedPegAt) => {
+  return Math.min(maxPegSize, (((new Date()).getTime()) - start) / 40)
 }
 
 mousedown$.subscribe((e) => {
-  console.log(e)
-  startTimeStamp = (new Date()).getTime()
+  startedPegAt = (new Date()).getTime()
   const pt = eventToPt(e)
-  console.log(pt)
   const [angle, dist] = ptToVector(pt)
 
   const interval = setInterval(() => {
-    if (startTimeStamp) {
+    if (startedPegAt) {
       const peg = {
         id: 'wip',
         angle: angle,
@@ -108,89 +156,29 @@ mousedown$.subscribe((e) => {
   }, 20)
 })
 
-
-const findOrCreatePeg = (pegModel) => {
-  let peg = document.getElementById(pegModel.id)
-  if (!peg) {
-    peg = document.createElementNS("http://www.w3.org/2000/svg", "circle")
-    peg.setAttribute('id', pegModel.id)
-    svg.appendChild(peg)
-  }
-  return peg
-}
-
-
-const renderPeg = (pegModel) => {
-  const e = findOrCreatePeg(pegModel)
-  e.setAttribute("cx", pegModel.pt.x + radius)
-  e.setAttribute("cy", pegModel.pt.y + radius)
-  e.setAttribute("r", pegModel.size)
-  e.setAttribute("fill", pegModel.highlightcolor || pegModel.color || Color.note)
-  if (pegModel.highlightcolor) {
-    setTimeout(() => e.setAttribute('fill', pegModel.color), 100)
-  }
-}
-
-const createPegModel = (pt, size) => {
-  const [angle, dist] = ptToVector(pt)
-  return {
-    id: `peg-${angle}`,
-    angle: angle,
-    dist: dist,
-    size: size,
-    pt: pt,
-    duration: size / maxSize,
-    velocity: dist / radius,
-    frequency: (1 - dist / radius) * 4000,
-    volume: Math.log2(size) * 3
-  }
-}
-
 mouseup$.subscribe((e) => {
   const pt = eventToPt(e)
   const size = calcSize()
 
-  const peg = createPegModel(pt, size)
+  const peg = newPeg(radius, pt, size)
 
-  pegs.push(peg)
   renderPeg(peg)
 })
 
 mouseup$.subscribe((e) => {
-  startTimeStamp = null
+  startedPegAt = null
 })
 
 
-const ticker$ = Rx.Observable.interval(msPerTick)
-const radians$ = ticker$.scan((last) => normalizeRadians(last + radiansPerTick()))
-
 radians$.subscribe((angle) => {
   // Move the clock hand
+  const duration = msPerTick * .75 // smaller than intervalso we don't drop behind
   Velocity(hand, {
     x1: radius + Math.cos(angle) * radius,
     y1: radius + Math.sin(angle) * radius,
     x2: radius,
     y2: radius
-  }, {duration: msPerTick * .75, easing: "linear", queue: false});
-})
-
-const activePegs$ = new Rx.Subject()
-
-radians$.subscribe((angle) => {
-  // Generate stream of active pegs
-  pegs.forEach((pegModel) => {
-    if (angle <= pegModel.angle && pegModel.angle < (angle + radiansPerTick())) {
-      activePegs$.onNext(pegModel)
-    }
-  })
-})
-
-
-activePegs$.subscribe((pegModel) => {
-  const synth = synthFor(pegModel)
-  synth.volume.value = 0
-  synth.triggerAttackRelease(pegModel.frequency, pegModel.duration, undefined, pegModel.velocity)
-  synth.volume.value = pegModel.volume
+  }, {duration: duration, easing: "linear", queue: false});
 })
 
 activePegs$.subscribe((pegModel) => {
@@ -200,4 +188,16 @@ activePegs$.subscribe((pegModel) => {
   renderPeg(tempModel)
 })
 
+
+// MUSIC
+
+const synth = new Tone.PolySynth(10, Tone.SimpleSynth).toMaster()
+const synthFor = (pegModel) => synth
+
+activePegs$.subscribe((pegModel) => {
+  const synth = synthFor(pegModel)
+  synth.volume.value = 0 // Normalize it from whatever it was
+  synth.triggerAttackRelease(pegModel.frequency, pegModel.duration, undefined, pegModel.velocity)
+  synth.volume.value = pegModel.volume
+})
 
