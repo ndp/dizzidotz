@@ -17,7 +17,7 @@ const msPerPeriodChange = Rx.Observable.fromEvent(msPerPeriodInput, 'change')
 
 const NOTE_COLOR = 'violet'
 const PLAYING_COLOR = 'white'
-const GROWING_COLOR = 'yellow'
+const GROWING_COLOR = 'deeppink'
 
 
 const msPerTick = 20
@@ -29,7 +29,7 @@ const radiansPerTick = () => {
   return (msPerTick / msPerPeriod * radiansPerPeriod)
 }
 
-const MAX_SIZE = 128
+const maxSize = 128
 
 const normalizeRadians = (r) => {
   if (Math.abs(r) < Math.pi) return r
@@ -64,20 +64,22 @@ const ptToVector = function (pt) {
   return [angle, dist]
 }
 var eventToPt = function (e) {
-  const x = e.clientX - radius
-  const y = e.clientY - radius
+  const x = (e.offsetX || e.clientX) - radius
+  const y = (e.offsetY || e.clientY) - radius
   return {x: x, y: y}
 }
 
 let startTimeStamp = null
 
 const calcSize = (start = startTimeStamp) => {
-  return Math.min(MAX_SIZE, (((new Date()).getTime()) - start) / 40)
+  return Math.min(maxSize, (((new Date()).getTime()) - start) / 40)
 }
 
 mousedown.subscribe((e) => {
+  console.log(e)
   startTimeStamp = (new Date()).getTime()
   const pt = eventToPt(e)
+  console.log(pt)
   const [angle, dist] = ptToVector(pt)
 
   const interval = setInterval(() => {
@@ -132,7 +134,7 @@ mouseup.subscribe((e) => {
     dist: dist,
     size: size,
     pt: pt,
-    duration: size / MAX_SIZE,
+    duration: size / maxSize,
     velocity: dist / radius,
     frequency: (1 - dist / radius) * 4000,
     volume: Math.log2(size) * 3
@@ -182,6 +184,7 @@ activePegs.subscribe((pegModel) => {
 
 svg.style.width = 2 * radius
 svg.style.height = 2 * radius
+svg.style.marginLeft = `${(body.clientWidth / 2) - radius}px`
 hub.setAttribute('cx', radius)
 hub.setAttribute('cy', radius)
 wheel.setAttribute('cx', radius)
