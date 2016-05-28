@@ -13,7 +13,7 @@ const chromaticDist = Math.pow(2, 1 / 12)
 // ref. http://www.phy.mtu.edu/~suits/NoteFreqCalcs.html
 const roundToEqualTempered = (f) => f - (f % chromaticDist)
 
-const pegs = []
+let pegs = []
 const maxPegSize = 128
 
 const newPeg = (radius, pt, size) => {
@@ -57,14 +57,13 @@ radians$.subscribe((angle) => {
 
 
 // VIEW
-const svg = document.getElementsByTagName('svg')[0]
-const hand = document.getElementById('hand')
+const svg = document.getElementById('editor')
 const body = document.getElementsByTagName('body')[0]
-const hub = document.getElementById('hub')
 const wheel = document.getElementById('wheel')
+
+
 const msPerPeriodInput = document.getElementById('ms-per-period')
 const saveButton = document.getElementById('save-button')
-const projectList = document.getElementsByTagName('ol')[0]
 
 const radius = Math.min(body.clientHeight, body.clientWidth) / 2
 
@@ -76,8 +75,6 @@ const sizeSVG = () => {
   svg.setAttribute('viewBox', `0 0 ${2 * radius} ${2 * radius}`)
 }
 sizeSVG()
-hub.setAttribute('cx', radius)
-hub.setAttribute('cy', radius)
 wheel.setAttribute('cx', radius)
 wheel.setAttribute('cy', radius)
 wheel.setAttribute('r', radius)
@@ -126,36 +123,28 @@ tempoChange$.subscribe((e) => msPerPeriod = e.target.value)
 
 
 const saveClicks$ = Rx.Observable.fromEvent(saveButton, 'click')
-saveClicks$.subscribe((e) => saveProject())
+saveClicks$.subscribe((e) => saveProject(e))
+
 
 const saveProject = () => {
-  let projects = localStorage['projects'] || '[]'
-  projects = JSON.parse(projects)
+  const projects = loadSavedProjects()
   svg.style.width = 'auto'
   svg.style.height = 'auto'
   svg.style.marginLeft = 'auto'
-  projects.unshift({pegs: pegs, svg: svg.outerHTML})
+  projects.unshift({pegs: pegs, svg: svg.outerHTML.replace(/id="peg[^"]+"/g, '')})
   sizeSVG()
   localStorage['projects'] = JSON.stringify(projects)
   drawProjects(projects)
 }
 
 
-const drawProjects = (projects) => {
-  projectList.innerHTML = ''
-
-  projects.forEach((project) => {
-    console.log('draw a project')
-    const link = document.createElement('A')
-    link.style.height = '100px'
-    link.style.width = '100px'
-    link.style.display = 'block'
-    link.innerHTML = project.svg
-    projectList.appendChild(link)
+const clearProject = () => {
+  pegs.forEach((pegModel) => {
+    const peg = document.getElementById(pegModel.id)
+    peg.parentNode.removeChild(peg)
   })
+  pegs = []
 }
-
-if (localStorage['projects']) drawProjects(JSON.parse(localStorage['projects']))
 
 
 const mousedown$ = Rx.Observable.fromEvent(svg, 'mousedown')
@@ -215,6 +204,7 @@ mouseup$.subscribe((e) => {
 
 radians$.subscribe((angle) => {
   // Move the clock hand
+  const hand = document.getElementById('hand')
   const duration = msPerTick * .75 // smaller than intervalso we don't drop behind
   Velocity(hand, {
     x1: radius + Math.cos(angle) * radius,

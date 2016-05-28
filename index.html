@@ -54,10 +54,9 @@
     </style>
 </head>
 <body>
-<svg>
+<svg id='editor'>
     <circle id='wheel' cx="50%" cy="50%" r="50%" stroke-width="0" fill="url(#grad1)"/>
     <line id='hand' x1="0" y1="0" x2="50%" y2="50%" style="stroke:yellow;stroke-width:2"/>
-    <circle id='hub' r="2px" stroke-width="0" fill="white"/>
     <radialGradient id="grad1" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
         <stop offset="0%" style="stop-color:mediumpurple;stop-opacity:1"/>
         <stop offset="10%" style="stop-color:purple;stop-opacity:1"/>
@@ -72,6 +71,9 @@
 </svg>
 <input id='ms-per-period' type="range" min="200" max="20000" value="2000">
 <button id="save-button" href="#">&raquo;</button>
+
+<script src="js/index.js" type="application/javascript"></script>
+<script src="js/index.js" type="application/javascript;version=1.7"></script>
 
 <script src="js/machine.js" type="application/javascript"></script>
 <script src="js/machine.js" type="application/javascript;version=1.7"></script>
