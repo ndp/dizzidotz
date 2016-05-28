@@ -17,30 +17,33 @@ let pegs = []
 const maxPegSize = (r = radius) => r / 5
 
 
-const addSoundData = (peg) => {
-  const r = Object.create(peg)
-  r.frequency = roundToEqualTempered((1 - peg.distScore) * 4000)
-  r.volume = peg.sizeScore * 40
-  r.velocity = peg.distScore
-  r.duration = peg.sizeScore
+const newSoundData = (peg) => {
+  const r = {}
+  r.frequency = roundToEqualTempered((1 - peg.normalized.distScore) * 4000)
+  r.volume = peg.normalized.sizeScore * 40
+  r.velocity = peg.normalized.distScore
+  r.duration = peg.normalized.sizeScore
   return r
 }
 
-const addNormalizedData = (peg, radius) => {
-  const r = Object.create(peg);
-  [r.angle, r.dist] = ptToVector(peg.pt)
-  r.distScore = r.dist / radius
+const normalizedValues = (peg, radius) => {
+  const r = {}
+  const [angle, dist] = ptToVector(peg.pt)
+  r.angle = angle
+  r.dist = dist
+  r.distScore = dist / radius
   r.sizeScore = peg.size / maxPegSize(radius)
   return r
 }
 
 const newPeg = (radius, pt, size) => {
-  const p = addSoundData(
-      addNormalizedData({
-        id: `peg-${(new Date()).getTime()}`,
-        size: size,
-        pt: pt
-      }, radius))
+  const p = {
+    id: `peg-${(new Date()).getTime()}`,
+    pt: pt,
+    size: size
+  }
+  p.normalized = normalizedValues(p, radius)
+  p.sound = newSoundData(p)
   pegs.push(p)
   return p
 }
@@ -60,7 +63,7 @@ const activePegs$ = new Rx.Subject()
 radians$.subscribe((angle) => {
   // Generate stream of active pegs
   pegs.forEach((pegModel) => {
-    if (angle <= pegModel.angle && pegModel.angle < (angle + radiansPerTick())) {
+    if (angle <= pegModel.normalized.angle && pegModel.normalized.angle < (angle + radiansPerTick())) {
       activePegs$.onNext(pegModel)
     }
   })
@@ -116,13 +119,14 @@ const findOrCreatePeg = (pegModel) => {
 }
 
 const renderPeg = (pegModel) => {
+  console.log(pegModel)
   const e = findOrCreatePeg(pegModel)
   e.setAttribute("cx", pegModel.pt.x + radius)
   e.setAttribute("cy", pegModel.pt.y + radius)
   e.setAttribute("r", pegModel.size)
   e.setAttribute("fill", pegModel.highlightcolor || pegModel.color || Color.note)
   if (pegModel.highlightcolor) {
-    setTimeout(() => e.setAttribute('fill', pegModel.color), Math.min(200, pegModel.duration * 1000))
+    setTimeout(() => e.setAttribute('fill', pegModel.color), Math.min(200, pegModel.sound.duration * 1000))
   }
 }
 
@@ -238,10 +242,9 @@ activePegs$.subscribe((pegModel) => {
 const synth = new Tone.PolySynth(10, Tone.SimpleSynth).toMaster()
 const synthFor = (pegModel) => synth
 
-activePegs$.subscribe((pegModel) => {
-  const synth = synthFor(pegModel)
+activePegs$.map((x) => x.sound).subscribe((sound) => {
   synth.volume.value = 0 // Normalize it from whatever it was
-  synth.triggerAttackRelease(pegModel.frequency, pegModel.duration, undefined, pegModel.velocity)
-  synth.volume.value = pegModel.volume
+  synth.triggerAttackRelease(sound.frequency, sound.duration, undefined, sound.velocity)
+  synth.volume.value = sound.volume
 })
 

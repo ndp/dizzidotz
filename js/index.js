@@ -20,6 +20,7 @@ const loadProject = (e) => {
   const pegData = link.getAttribute('data-pegs')
   const pegs = JSON.parse(pegData)
   pegs.forEach((pegModel) => {
+    console.log(pegModel)
     newPeg(radius, pegModel.pt, pegModel.size)
     renderPeg(pegModel)
   })
