@@ -24,6 +24,33 @@
             bottom: 10px;
             left: 20px;
         }
+        #save-button {
+            position: fixed;
+            top: 10px;
+            right: 125px;
+        }
+
+        #drawer {
+            position: fixed;
+            right: 0;
+            top: 0;
+            height: 100%;
+            width: 115px;
+            background-color: purple;
+            border-left: 2px solid darkblue;
+            overflow-y: auto;
+        }
+
+        #drawer ol {
+            margin: 0;
+            padding: 0;
+        }
+
+        #drawer ol li {
+            margin: 20px 0 0 0;
+            padding: 0;
+        }
+
     </style>
 </head>
 <body>
@@ -37,8 +64,14 @@
         <stop offset="100%" style="stop-color:slateblue;stop-opacity:1" />
     </radialGradient>
 
+    <div id="drawer">
+        <ol>
+        </ol>
+    </div>
+
 </svg>
 <input id='ms-per-period' type="range" min="200" max="20000" value="2000">
+<button id="save-button" href="#">&raquo;</button>
 
 <script src="js/machine.js" type="application/javascript"></script>
 <script src="js/machine.js" type="application/javascript;version=1.7"></script>

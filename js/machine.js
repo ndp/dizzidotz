@@ -63,13 +63,19 @@ const body = document.getElementsByTagName('body')[0]
 const hub = document.getElementById('hub')
 const wheel = document.getElementById('wheel')
 const msPerPeriodInput = document.getElementById('ms-per-period')
+const saveButton = document.getElementById('save-button')
+const projectList = document.getElementsByTagName('ol')[0]
 
 const radius = Math.min(body.clientHeight, body.clientWidth) / 2
 
 // View set up
-svg.style.width = 2 * radius
-svg.style.height = 2 * radius
-svg.style.marginLeft = `${(body.clientWidth / 2) - radius}px`
+const sizeSVG = () => {
+  svg.style.width = 2 * radius
+  svg.style.height = 2 * radius
+  svg.style.marginLeft = `${(body.clientWidth / 2) - radius}px`
+  svg.setAttribute('viewBox', `0 0 ${2 * radius} ${2 * radius}`)
+}
+sizeSVG()
 hub.setAttribute('cx', radius)
 hub.setAttribute('cy', radius)
 wheel.setAttribute('cx', radius)
@@ -117,6 +123,39 @@ const renderPeg = (pegModel) => {
 
 const tempoChange$ = Rx.Observable.fromEvent(msPerPeriodInput, 'change')
 tempoChange$.subscribe((e) => msPerPeriod = e.target.value)
+
+
+const saveClicks$ = Rx.Observable.fromEvent(saveButton, 'click')
+saveClicks$.subscribe((e) => saveProject())
+
+const saveProject = () => {
+  let projects = localStorage['projects'] || '[]'
+  projects = JSON.parse(projects)
+  svg.style.width = 'auto'
+  svg.style.height = 'auto'
+  svg.style.marginLeft = 'auto'
+  projects.unshift({pegs: pegs, svg: svg.outerHTML})
+  sizeSVG()
+  localStorage['projects'] = JSON.stringify(projects)
+  drawProjects(projects)
+}
+
+
+const drawProjects = (projects) => {
+  projectList.innerHTML = ''
+
+  projects.forEach((project) => {
+    console.log('draw a project')
+    const link = document.createElement('A')
+    link.style.height = '100px'
+    link.style.width = '100px'
+    link.style.display = 'block'
+    link.innerHTML = project.svg
+    projectList.appendChild(link)
+  })
+}
+
+if (localStorage['projects']) drawProjects(JSON.parse(localStorage['projects']))
 
 
 const mousedown$ = Rx.Observable.fromEvent(svg, 'mousedown')
