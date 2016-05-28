@@ -14,7 +14,7 @@ const chromaticDist = Math.pow(2, 1 / 12)
 const roundToEqualTempered = (f) => f - (f % chromaticDist)
 
 let pegs = []
-const maxPegSize = () => radius / 5
+const maxPegSize = (r = radius) => r / 5
 
 
 const addSoundData = (peg) => {
@@ -26,17 +26,21 @@ const addSoundData = (peg) => {
   return r
 }
 
+const addNormalizedData = (peg, radius) => {
+  const r = Object.create(peg);
+  [r.angle, r.dist] = ptToVector(peg.pt)
+  r.distScore = r.dist / radius
+  r.sizeScore = peg.size / maxPegSize(radius)
+  return r
+}
+
 const newPeg = (radius, pt, size) => {
-  const [angle, dist] = ptToVector(pt)
-  const p = addSoundData({
-    id: `peg-${angle}`,
-    angle: angle,
-    dist: dist,
-    size: size,
-    distScore: dist / radius,
-    sizeScore: size / maxPegSize(),
-    pt: pt,
-  })
+  const p = addSoundData(
+      addNormalizedData({
+        id: `peg-${(new Date()).getTime()}`,
+        size: size,
+        pt: pt
+      }, radius))
   pegs.push(p)
   return p
 }
