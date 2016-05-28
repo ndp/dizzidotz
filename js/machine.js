@@ -14,22 +14,29 @@ const chromaticDist = Math.pow(2, 1 / 12)
 const roundToEqualTempered = (f) => f - (f % chromaticDist)
 
 let pegs = []
-const maxPegSize = 128
+const maxPegSize = () => radius / 5
+
+
+const addSoundData = (peg) => {
+  const r = Object.create(peg)
+  r.frequency = roundToEqualTempered((1 - peg.distScore) * 4000)
+  r.volume = peg.sizeScore * 40
+  r.velocity = peg.distScore
+  r.duration = peg.sizeScore
+  return r
+}
 
 const newPeg = (radius, pt, size) => {
   const [angle, dist] = ptToVector(pt)
-  const frequency = roundToEqualTempered((1 - dist / radius) * 4000)
-  const p = {
+  const p = addSoundData({
     id: `peg-${angle}`,
     angle: angle,
     dist: dist,
     size: size,
+    distScore: dist / radius,
+    sizeScore: size / maxPegSize(),
     pt: pt,
-    duration: size / maxPegSize,
-    velocity: dist / radius,
-    frequency: frequency,
-    volume: Math.log2(size) * 3
-  }
+  })
   pegs.push(p)
   return p
 }
@@ -161,7 +168,7 @@ let startedPegAt = null
 
 // Size based on how long the mouse press/touch is
 const calcSize = (start = startedPegAt) => {
-  return Math.min(maxPegSize, (((new Date()).getTime()) - start) / 40)
+  return Math.min(maxPegSize(), (((new Date()).getTime()) - start) / 40)
 }
 
 mousedown$.subscribe((e) => {
