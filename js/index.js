@@ -1,16 +1,32 @@
-const loadSavedProjects = () => {
-  if (!localStorage['projects']) {
-    localStorage['projects'] = "[{\"pegs\":[],\"svg\":\"<svg id=\\\"editor\\\" viewBox=\\\"0 0 904 904\\\" style=\\\"width: auto; height: auto; margin-left: auto;\\\"><circle id=\\\"wheel\\\" cx=\\\"452\\\" cy=\\\"452\\\" r=\\\"452\\\" stroke-width=\\\"0\\\" fill=\\\"url(#grad1)\\\"></circle><radialGradient id=\\\"grad1\\\" cx=\\\"50%\\\" cy=\\\"50%\\\" r=\\\"50%\\\" fx=\\\"50%\\\" fy=\\\"50%\\\"><stop offset=\\\"0%\\\" style=\\\"stop-color:mediumpurple;stop-opacity:1\\\"></stop><stop offset=\\\"10%\\\" style=\\\"stop-color:purple;stop-opacity:1\\\"></stop><stop offset=\\\"100%\\\" style=\\\"stop-color:slateblue;stop-opacity:1\\\"></stop></radialGradient></svg>\"}]"
-  }
-  return JSON.parse(localStorage['projects'])
-}
+"use strict";
 
+const savedProjects$ = Rx.Observable.range(0, localStorage.length)
+    .map((x) => localStorage.key(x))
+    .filter((x) => /project.*/.exec(x))
+    .map((x) => localStorage.getItem(x))
+    .map((x) => JSON.parse(x))
+    .reduce((acc, x) => {
+      acc.push(x)
+      return acc
+    }, [])
+    .map((x) => x.sort((a, b) => b.timestamp - a.timestamp))
+
+const newProjects$ = new Rx.Subject()
+
+newProjects$.subscribe((project) => {
+  project.timestamp = (new Date()).getTime()
+  project.name = `project-${project.timestamp}`
+  localStorage.setItem(project.name, JSON.stringify(project))
+})
+
+const allProjects$ = Rx.Observable.combineLatest(savedProjects$, newProjects$.startWith(null), (savedProjects, newProject) => {
+      if (newProject) savedProjects.unshift(newProject)
+      return savedProjects
+    })
 
 const projectList = document.getElementsByTagName('ol')[0]
 
-
-
-const loadProject = (e) => {
+const renderProject = (e) => {
 
   const link = e.target.closest('a')
   if (!link) return;
@@ -20,7 +36,6 @@ const loadProject = (e) => {
   const pegData = link.getAttribute('data-pegs')
   const pegs = JSON.parse(pegData)
   pegs.forEach((pegModel) => {
-    console.log(pegModel)
     newPeg(radius, pegModel.pt, pegModel.size)
     renderPeg(pegModel)
   })
@@ -28,8 +43,7 @@ const loadProject = (e) => {
 
 
 const projectClicks$ = Rx.Observable.fromEvent(projectList, 'click')
-projectClicks$.subscribe(loadProject)
-
+projectClicks$.subscribe(renderProject)
 
 
 const drawProjects = (projects) => {
@@ -46,6 +60,7 @@ const drawProjects = (projects) => {
   })
 }
 
-drawProjects(loadSavedProjects())
-
+allProjects$.subscribe((x) => {
+  drawProjects(x)
+})
 

@@ -38,7 +38,7 @@ const normalizedValues = (peg, radius) => {
 
 const newPeg = (radius, pt, size) => {
   const p = {
-    id: `peg-${(new Date()).getTime()}`,
+    id: `peg-${(new Date()).getTime()}${Math.random()}`,
     pt: pt,
     size: size
   }
@@ -71,7 +71,7 @@ radians$.subscribe((angle) => {
 
 
 // VIEW
-const svg = document.getElementById('editor')
+const editor = document.getElementById('editor')
 const body = document.getElementsByTagName('body')[0]
 const wheel = document.getElementById('wheel')
 
@@ -82,13 +82,13 @@ const saveButton = document.getElementById('save-button')
 const radius = Math.min(body.clientHeight, body.clientWidth) / 2
 
 // View set up
-const sizeSVG = () => {
-  svg.style.width = 2 * radius
-  svg.style.height = 2 * radius
-  svg.style.marginLeft = `${(body.clientWidth / 2) - radius}px`
-  svg.setAttribute('viewBox', `0 0 ${2 * radius} ${2 * radius}`)
+const sizeEditor = () => {
+  editor.style.width = 2 * radius
+  editor.style.height = 2 * radius
+  editor.style.marginLeft = `${(body.clientWidth / 2) - radius}px`
+  editor.setAttribute('viewBox', `0 0 ${2 * radius} ${2 * radius}`)
 }
-sizeSVG()
+sizeEditor()
 wheel.setAttribute('cx', radius)
 wheel.setAttribute('cy', radius)
 wheel.setAttribute('r', radius)
@@ -113,13 +113,14 @@ const findOrCreatePeg = (pegModel) => {
   if (!peg) {
     peg = document.createElementNS("http://www.w3.org/2000/svg", "circle")
     peg.setAttribute('id', pegModel.id)
-    svg.appendChild(peg)
+    peg.setAttribute('class', 'peg')
+    editor.appendChild(peg)
   }
   return peg
 }
 
 const renderPeg = (pegModel) => {
-  console.log(pegModel)
+  //console.log(pegModel)
   const e = findOrCreatePeg(pegModel)
   e.setAttribute("cx", pegModel.pt.x + radius)
   e.setAttribute("cy", pegModel.pt.y + radius)
@@ -142,28 +143,25 @@ saveClicks$.subscribe((e) => saveProject(e))
 
 
 const saveProject = () => {
-  const projects = loadSavedProjects()
-  svg.style.width = 'auto'
-  svg.style.height = 'auto'
-  svg.style.marginLeft = 'auto'
-  projects.unshift({pegs: pegs, svg: svg.outerHTML.replace(/id="peg[^"]+"/g, '')})
-  sizeSVG()
-  localStorage['projects'] = JSON.stringify(projects)
-  drawProjects(projects)
+  editor.style.width = 'auto'
+  editor.style.height = 'auto'
+  editor.style.marginLeft = 'auto'
+  newProjects$.onNext({pegs: pegs, svg: editor.outerHTML.replace(/id="peg[^"]+"/g, '')})
+  sizeEditor()
 }
 
 
 const clearProject = () => {
-  pegs.forEach((pegModel) => {
-    const peg = document.getElementById(pegModel.id)
-    peg.parentNode.removeChild(peg)
-  })
+  let peg
+  while (peg = editor.getElementsByClassName('peg')[0]) {
+    if (peg.parentNode) peg.parentNode.removeChild(peg)
+  }
   pegs = []
 }
 
 
-const mousedown$ = Rx.Observable.fromEvent(svg, 'mousedown')
-const mouseup$ = Rx.Observable.fromEvent(svg, 'mouseup')
+const mousedown$ = Rx.Observable.fromEvent(editor, 'mousedown')
+const mouseup$ = Rx.Observable.fromEvent(editor, 'mouseup')
 
 
 var eventToPt = function (e) {
