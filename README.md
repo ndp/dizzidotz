@@ -1,5 +1,7 @@
 # dizzidotz
 
+__Source code for dizzidotz.com__
+
 There's this circle. A bar goes around it like a clock hand and hits "pegs" that are placed in it. It makes noise.
 
 I saw a real one of these at the Exploritorium. Or at least I think I did. I remember it had twelve holes 
