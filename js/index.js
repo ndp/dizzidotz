@@ -56,7 +56,9 @@ const drawProjects = (projects) => {
     link.style.display = 'block'
     link.innerHTML = project.svg
     link.setAttribute('data-pegs', JSON.stringify(project.pegs))
-    projectList.appendChild(link)
+    const li = document.createElement('LI')
+    li.appendChild(link)
+    projectList.appendChild(li)
   })
 }
 
