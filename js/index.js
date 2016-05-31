@@ -1,8 +1,8 @@
 "use strict";
 
-const savedProjects$ = Rx.Observable.range(0, localStorage.length)
+const savedPatterns$ = Rx.Observable.range(0, localStorage.length)
     .map((x) => localStorage.key(x))
-    .filter((x) => /project.*/.exec(x))
+    .filter((x) => /pattern.*/.exec(x))
     .map((x) => localStorage.getItem(x))
     .map((x) => JSON.parse(x))
     .reduce((acc, x) => {
@@ -11,27 +11,27 @@ const savedProjects$ = Rx.Observable.range(0, localStorage.length)
     }, [])
     .map((x) => x.sort((a, b) => b.timestamp - a.timestamp))
 
-const newProjects$ = new Rx.Subject()
+const newPatterns$ = new Rx.Subject()
 
-newProjects$.subscribe((project) => {
-  project.timestamp = (new Date()).getTime()
-  project.name = `project-${project.timestamp}`
-  localStorage.setItem(project.name, JSON.stringify(project))
+newPatterns$.subscribe((pattern) => {
+  pattern.timestamp = (new Date()).getTime()
+  pattern.name = `pattern-${pattern.timestamp}`
+  localStorage.setItem(pattern.name, JSON.stringify(pattern))
 })
 
-const allProjects$ = Rx.Observable.combineLatest(savedProjects$, newProjects$.startWith(null), (savedProjects, newProject) => {
-      if (newProject) savedProjects.unshift(newProject)
-      return savedProjects
+const allPatterns$ = Rx.Observable.combineLatest(savedPatterns$, newPatterns$.startWith(null), (savedPatterns, newPattern) => {
+      if (newPattern) savedPatterns.unshift(newPattern)
+      return savedPatterns
     })
 
-const projectList = document.getElementsByTagName('ol')[0]
+const patternList = document.getElementsByTagName('ol')[0]
 
-const renderProject = (e) => {
+const renderPattern = (e) => {
 
   const link = e.target.closest('a')
   if (!link) return;
 
-  clearProject()
+  clearPattern()
 
   const pegData = link.getAttribute('data-pegs')
   const pegs = JSON.parse(pegData)
@@ -42,27 +42,27 @@ const renderProject = (e) => {
 }
 
 
-const projectClicks$ = Rx.Observable.fromEvent(projectList, 'click')
-projectClicks$.subscribe(renderProject)
+const patternClicks$ = Rx.Observable.fromEvent(patternList, 'click')
+patternClicks$.subscribe(renderPattern)
 
 
-const drawProjects = (projects) => {
-  projectList.innerHTML = ''
+const drawPatterns = (patterns) => {
+  patternList.innerHTML = ''
 
-  projects.forEach((project) => {
+  patterns.forEach((pattern) => {
     const link = document.createElement('A')
     link.style.height = '100px'
     link.style.width = '100px'
     link.style.display = 'block'
-    link.innerHTML = project.svg
-    link.setAttribute('data-pegs', JSON.stringify(project.pegs))
+    link.innerHTML = pattern.svg
+    link.setAttribute('data-pegs', JSON.stringify(pattern.pegs))
     const li = document.createElement('LI')
     li.appendChild(link)
-    projectList.appendChild(li)
+    patternList.appendChild(li)
   })
 }
 
-allProjects$.subscribe((x) => {
-  drawProjects(x)
+allPatterns$.subscribe((x) => {
+  drawPatterns(x)
 })
 

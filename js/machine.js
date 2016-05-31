@@ -139,19 +139,19 @@ tempoChange$.subscribe((e) => msPerPeriod = e.target.value)
 
 
 const saveClicks$ = Rx.Observable.fromEvent(saveButton, 'click')
-saveClicks$.subscribe((e) => saveProject(e))
+saveClicks$.subscribe((e) => savePattern(e))
 
 
-const saveProject = () => {
+const savePattern = () => {
   editor.style.width = 'auto'
   editor.style.height = 'auto'
   editor.style.marginLeft = 'auto'
-  newProjects$.onNext({pegs: pegs, svg: editor.outerHTML.replace(/id="peg[^"]+"/g, '')})
+  newPatterns$.onNext({pegs: pegs, svg: editor.outerHTML.replace(/id="peg[^"]+"/g, '')})
   sizeEditor()
 }
 
 
-const clearProject = () => {
+const clearPattern = () => {
   let peg
   while (peg = editor.getElementsByClassName('peg')[0]) {
     if (peg.parentNode) peg.parentNode.removeChild(peg)
