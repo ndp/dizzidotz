@@ -71,6 +71,7 @@ radians$.subscribe((angle) => {
 
 
 // VIEW
+const drawerWidth = 115
 const editor = document.getElementById('editor')
 const body = document.getElementsByTagName('body')[0]
 const wheel = document.getElementById('wheel')
@@ -79,7 +80,7 @@ const wheel = document.getElementById('wheel')
 const msPerPeriodInput = document.getElementById('ms-per-period')
 const saveButton = document.getElementById('save-button')
 
-const radius = Math.min(body.clientHeight, body.clientWidth) / 2
+const radius = Math.min(body.clientHeight, body.clientWidth - 2 * drawerWidth) / 2
 
 // View set up
 const sizeEditor = () => {
