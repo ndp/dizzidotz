@@ -3,7 +3,6 @@
 // MODEL
 const msPerTick = 20
 let msPerPeriod = 2000
-const radiansPerPeriod = 2 * Math.PI
 const radiansPerTick = () => {
   return (msPerTick / msPerPeriod * radiansPerPeriod)
 }
@@ -48,13 +47,6 @@ const newPeg = (radius, pt, size) => {
   return p
 }
 
-
-const normalizeRadians = (r) => {
-  if (Math.abs(r) < Math.pi) return r
-  r = r % radiansPerPeriod
-  if (r > Math.PI) r = r - radiansPerPeriod
-  return r
-}
 
 const ticker$ = Rx.Observable.interval(msPerTick)
 const radians$ = ticker$.scan((last) => normalizeRadians(last + radiansPerTick()))
@@ -101,12 +93,6 @@ const Color = {
   growing: 'deeppink'
 }
 
-
-const ptToVector = function (pt) {
-  const angle = Math.atan2(pt.y, pt.x) // note: unintuitive order is JS spec
-  const dist = Math.sqrt(pt.x * pt.x + pt.y * pt.y)
-  return [angle, dist]
-}
 
 
 const findOrCreatePeg = (pegModel) => {
