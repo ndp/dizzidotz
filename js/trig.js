@@ -17,6 +17,9 @@ const ptToVector = function (pt) {
 
 
 const vectorToPt = (angle, dist) => {
-
+  return {
+    x: dist * Math.cos(angle),
+    y: dist * Math.sin(angle)
+  }
 }
 
