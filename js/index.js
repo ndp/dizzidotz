@@ -20,9 +20,9 @@ newPatterns$.subscribe((pattern) => {
 })
 
 const allPatterns$ = Rx.Observable.combineLatest(savedPatterns$, newPatterns$.startWith(null), (savedPatterns, newPattern) => {
-      if (newPattern) savedPatterns.unshift(newPattern)
-      return savedPatterns
-    })
+  if (newPattern) savedPatterns.unshift(newPattern)
+  return savedPatterns
+})
 
 const patternList = document.getElementsByTagName('ol')[0]
 
@@ -36,6 +36,8 @@ const renderPattern = (e) => {
   const pegData = link.getAttribute('data-pegs')
   const pegs = JSON.parse(pegData)
   pegs.forEach((pegModel) => {
+    pegModel.pt = vectorToPt(pegModel.normalized.angle, pegModel.normalized.distScore * radius)
+    pegModel.size = pegModel.normalized.sizeScore * maxPegSize(radius)
     newPeg(radius, pegModel.pt, pegModel.size)
     renderPeg(pegModel)
   })

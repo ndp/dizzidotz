@@ -29,7 +29,6 @@ const normalizedValues = (peg, radius) => {
   const r = {}
   const [angle, dist] = ptToVector(peg.pt)
   r.angle = angle
-  r.dist = dist
   r.distScore = dist / radius
   r.sizeScore = peg.size / maxPegSize(radius)
   return r
