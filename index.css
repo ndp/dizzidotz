@@ -14,6 +14,7 @@ body {
     bottom: 10px;
     left: 20px;
 }
+
 #save-button {
     position: fixed;
     top: 10px;
@@ -37,13 +38,48 @@ body {
 }
 
 #drawer ol li {
+    position: relative;
     margin: 10px 0 0 5px;
     padding: 0;
 }
+
 #drawer ol li a {
     cursor: zoom-in;
     opacity: 0.8;
 }
+
 #drawer ol li a:hover {
     opacity: 1.0;
+}
+
+#drawer ol li a.delete {
+    position: absolute;
+    top: -4px;
+    right: 0px;
+    border: 1px solid white;
+    width: 12px;
+    height: 12px;
+    opacity: 0;
+    line-height: 0;
+}
+
+#drawer ol li:hover a.delete {
+    opacity: 0.5;
+}
+
+#drawer ol li a.delete:hover {
+    color: white;
+    cursor: default;
+    opacity: 1.0;
+}
+
+a.button {
+    color: beige;
+    text-decoration: none;
+    cursor: move;
+    font-size: 20px;
+}
+
+a.button:hover {
+    color: white;
 }
