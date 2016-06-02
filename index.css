@@ -7,6 +7,12 @@ html, body, svg {
 
 body {
     background-color: black;
+    background: url(img/bg/wood20.jpg);
+    background-size: cover;
+}
+
+#wheel {
+    opacity: .6;
 }
 
 #drawer, #ms-per-period, #save-button {
@@ -15,12 +21,13 @@ body {
 
 #drawer {
     background-color: purple;
+    background: url(img/bg/wood15.jpg);
     overflow: auto;
     transition-duration: 1s;
     transition-property: all;
     margin: 0;
     padding: 0;
-    border: 0 solid darkred;
+    border: 0 solid black;
 }
 
 @media (orientation: landscape) {
