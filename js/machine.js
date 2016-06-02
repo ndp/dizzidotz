@@ -62,7 +62,7 @@ radians$.subscribe((angle) => {
 
 
 // VIEW
-const drawerWidth = 115
+const drawerDepth = 115
 const editor = document.getElementById('editor')
 const body = document.getElementsByTagName('body')[0]
 const wheel = document.getElementById('wheel')
@@ -71,13 +71,22 @@ const wheel = document.getElementById('wheel')
 const msPerPeriodInput = document.getElementById('ms-per-period')
 const saveButton = document.getElementById('save-button')
 
-const radius = Math.min(body.clientHeight, body.clientWidth - 2 * drawerWidth) / 2
+const portrait = () => (body.clientHeight > body.clientWidth)
+const radius = portrait() ?
+Math.min(body.clientHeight - 2 * drawerDepth, body.clientWidth) / 2
+    : Math.min(body.clientHeight, body.clientWidth - 2 * drawerDepth) / 2
 
 // View set up
 const sizeEditor = () => {
   editor.style.width = 2 * radius
   editor.style.height = 2 * radius
-  editor.style.marginLeft = `${(body.clientWidth / 2) - radius}px`
+  if (portrait()) {
+    editor.style.marginTop = `${((body.clientHeight - drawerDepth) / 2) - radius}px`
+    editor.style.marginLeft = `${(body.clientWidth / 2) - radius}px`
+  } else {
+    editor.style.marginTop = `${(body.clientHeight / 2) - radius}px`
+    editor.style.marginLeft = `${((body.clientWidth - drawerDepth) / 2) - radius}px`
+  }
   editor.setAttribute('viewBox', `0 0 ${2 * radius} ${2 * radius}`)
 }
 sizeEditor()
@@ -91,7 +100,6 @@ const Color = {
   playing: 'white',
   growing: 'deeppink'
 }
-
 
 
 const findOrCreatePeg = (pegModel) => {
@@ -132,6 +140,7 @@ const savePattern = () => {
   editor.style.width = 'auto'
   editor.style.height = 'auto'
   editor.style.marginLeft = 'auto'
+  editor.style.marginTop = 'auto'
   newPatterns$.onNext({pegs: pegs, svg: editor.outerHTML.replace(/id="[^"]+"/g, '')})
   sizeEditor()
 }
