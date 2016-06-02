@@ -26,7 +26,6 @@ body {
     right: 0;
     top: 0;
     height: 100%;
-    width: 115px;
     background-color: purple;
     border-left: 2px solid darkblue;
     overflow-y: auto;
@@ -35,6 +34,11 @@ body {
 #drawer ol {
     margin: 0;
     padding: 0;
+    width: 115px;
+}
+
+#drawer ol:empty {
+    width: 0;
 }
 
 #drawer ol li {
