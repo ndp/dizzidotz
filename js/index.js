@@ -29,7 +29,7 @@ const patternList = document.getElementsByTagName('ol')[0]
 const renderPattern = (e) => {
 
   const link = e.target.closest('a')
-  if (!link) return;
+  if (!link || link.className == 'delete') return;
 
   clearPattern()
 
@@ -44,12 +44,27 @@ const renderPattern = (e) => {
 }
 
 
-const patternClicks$ = Rx.Observable.fromEvent(patternList, 'click')
+const patternsClicks$ = Rx.Observable.fromEvent(patternList, 'click')
+
+
+const patternClicks$ = patternsClicks$
+    .filter((e) => e.target.closest('a').className !== 'delete')
+const delPatternClick$ = patternsClicks$
+    .filter((e) => e.target.closest('a').className == 'delete')
+
+const delPatternLi$ = delPatternClick$
+    .map((e) => e.target.closest('li'))
+
+const delPatternRequests$ = delPatternLi$
+    .map((li) => li.getAttribute('data-name'))
+
+
+delPatternRequests$.subscribe((name) => localStorage.removeItem(name))
+delPatternLi$.subscribe((li) => li.parentNode.removeChild(li))
+
+
+
 patternClicks$.subscribe(renderPattern)
-
-
-const delPatternClicks$ = Rx.Observable.fromEvent(patternList, 'click', '.delete')
-delPatternClicks$.subscribe((e) => console.log(e))
 
 
 
@@ -66,6 +81,7 @@ const drawPatterns = (patterns) => {
     link.setAttribute('data-pegs', JSON.stringify(pattern.pegs))
 
     const li = document.createElement('LI')
+    li.setAttribute('data-name', pattern.name)
     li.appendChild(link)
 
     const del = document.createElement('A')
