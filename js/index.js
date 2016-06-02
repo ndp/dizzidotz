@@ -29,7 +29,7 @@ const patternList = document.getElementsByTagName('ol')[0]
 const renderPattern = (e) => {
 
   const link = e.target.closest('a')
-  if (!link) return;
+  if (!link || link.className == 'delete') return;
 
   clearPattern()
 
@@ -44,8 +44,28 @@ const renderPattern = (e) => {
 }
 
 
-const patternClicks$ = Rx.Observable.fromEvent(patternList, 'click')
+const patternsClicks$ = Rx.Observable.fromEvent(patternList, 'click')
+
+
+const patternClicks$ = patternsClicks$
+    .filter((e) => e.target.closest('a').className !== 'delete')
+const delPatternClick$ = patternsClicks$
+    .filter((e) => e.target.closest('a').className == 'delete')
+
+const delPatternLi$ = delPatternClick$
+    .map((e) => e.target.closest('li'))
+
+const delPatternRequests$ = delPatternLi$
+    .map((li) => li.getAttribute('data-name'))
+
+
+delPatternRequests$.subscribe((name) => localStorage.removeItem(name))
+delPatternLi$.subscribe((li) => li.parentNode.removeChild(li))
+
+
+
 patternClicks$.subscribe(renderPattern)
+
 
 
 const drawPatterns = (patterns) => {
@@ -53,13 +73,22 @@ const drawPatterns = (patterns) => {
 
   patterns.forEach((pattern) => {
     const link = document.createElement('A')
+    link.className = 'pattern'
     link.style.height = '100px'
     link.style.width = '100px'
     link.style.display = 'block'
     link.innerHTML = pattern.svg
     link.setAttribute('data-pegs', JSON.stringify(pattern.pegs))
+
     const li = document.createElement('LI')
+    li.setAttribute('data-name', pattern.name)
     li.appendChild(link)
+
+    const del = document.createElement('A')
+    del.innerHTML = '<svg viewBox="0 0 100 100" style=""><line x1="0px" y1="0px" x2="100px" y2="100px" style="stroke:white;stroke-width:6"></line><line x1="0px" y1="100px" x2="100px" y2="0px" style="stroke:white;stroke-width:6"></line></svg>'
+    del.className = 'delete'
+    li.appendChild(del)
+
     patternList.appendChild(li)
   })
 }

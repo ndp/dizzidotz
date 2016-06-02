@@ -132,7 +132,7 @@ const savePattern = () => {
   editor.style.width = 'auto'
   editor.style.height = 'auto'
   editor.style.marginLeft = 'auto'
-  newPatterns$.onNext({pegs: pegs, svg: editor.outerHTML.replace(/id="peg[^"]+"/g, '')})
+  newPatterns$.onNext({pegs: pegs, svg: editor.outerHTML.replace(/id="[^"]+"/g, '')})
   sizeEditor()
 }
 
