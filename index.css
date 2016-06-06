@@ -20,14 +20,12 @@ body {
 }
 
 #drawer {
-    background-color: purple;
-    background: url(img/bg/wood15.jpg);
     overflow: auto;
     transition-duration: 1s;
     transition-property: all;
     margin: 0;
     padding: 0;
-    border: 0 solid black;
+    border: 0 solid saddlebrown;
 }
 
 @media (orientation: landscape) {
