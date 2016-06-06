@@ -47,7 +47,10 @@ const newPeg = (radius, pt, size) => {
 }
 
 
-const ticker$ = Rx.Observable.interval(msPerTick)
+//const pauser$ = new Rx.Subject()
+const pauser$ = playPause$
+
+const ticker$ = Rx.Observable.interval(msPerTick).pausable(pauser$)
 const radians$ = ticker$.scan((last) => normalizeRadians(last + radiansPerTick()))
 const activePegs$ = new Rx.Subject()
 
@@ -59,6 +62,7 @@ radians$.subscribe((angle) => {
     }
   })
 })
+
 
 
 // VIEW
