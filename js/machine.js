@@ -7,29 +7,16 @@ const radiansPerTick = () => {
   return (msPerTick / msPerPeriod * radiansPerPeriod)
 }
 
-// equal tempered scale
-const chromaticDist = Math.pow(2, 1 / 12)
-// ref. http://www.phy.mtu.edu/~suits/NoteFreqCalcs.html
-const roundToEqualTempered = (f) => f - (f % chromaticDist)
 
 let pegs = []
 const maxPegSize = (r = radius) => r / 5
 
 
-const newSoundData = (peg) => {
-  const r = {}
-  r.frequency = roundToEqualTempered((1 - peg.normalized.distScore) * 4000)
-  r.volume = peg.normalized.sizeScore * 40
-  r.velocity = peg.normalized.distScore
-  r.duration = peg.normalized.sizeScore
-  return r
-}
-
 const normalizedValues = (peg, radius) => {
   const r = {}
   const [angle, dist] = ptToVector(peg.pt)
   r.angle = angle
-  r.distScore = dist / radius
+  r.distScore = 1 - (dist / radius)
   r.sizeScore = peg.size / maxPegSize(radius)
   return r
 }

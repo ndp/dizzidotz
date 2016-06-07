@@ -36,7 +36,7 @@ const renderPattern = (e) => {
   const pegData = link.getAttribute('data-pegs')
   const pegs = JSON.parse(pegData)
   pegs.forEach((pegModel) => {
-    pegModel.pt = vectorToPt(pegModel.normalized.angle, pegModel.normalized.distScore * radius)
+    pegModel.pt = vectorToPt(pegModel.normalized.angle, (1 - pegModel.normalized.distScore) * radius)
     pegModel.size = pegModel.normalized.sizeScore * maxPegSize(radius)
     newPeg(radius, pegModel.pt, pegModel.size)
     renderPeg(pegModel)
