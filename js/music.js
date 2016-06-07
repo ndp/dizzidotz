@@ -2,70 +2,66 @@
 const semitone = Math.pow(2, 1 / 12)
 // ref. http://www.phy.mtu.edu/~suits/NoteFreqCalcs.html
 
-const ν = {
-    octaves = [110, 220, 440, 880, 1760, 1760 * 2]
-}
-
-//function* fibonacci(){
-//  var current = 55;
-//  while (1) { current = current * 2;
-//    yield current;
-//  }
-//}
-//
-//Rx.Observable.from(fibonacci())
-//    .take(10)
-//    .subscribe(function (x) {
-//      console.log('Value: %s', x);
-//    });
+const majorSecondAbove = (ν) => ν * semitone * semitone
+const minorThirdAbove = (ν) => ν * Math.pow(semitone, 3)
+const majorThirdAbove = (ν) => ν * 5.0 / 4.0
+const perfectFourthAbove = (ν) => ν * 4.0 / 3.0
+const flatFiveAbove = (ν) => ν * Math.pow(semitone, 6)
+const perfectFifthAbove = (ν) => ν * 3.0 / 2.0
+const majorSixthAbove = (ν) => ν  * Math.pow(semitone, 9)
+const minorSeventhAbove = (ν) => ν  * Math.pow(semitone, 10)
+const majorSeventhAbove = (ν) => ν  * Math.pow(semitone, 11)
 
 const floor = (x, d) => x - (x % d)
-
-
 const roundToEqualTempered = (f) => floor(f * 4000, semitone)
 
-// s = 0..1
-const octaves = (s) => {
-  return ν.octaves[Math.floor(s * ν.octaves.length)]
+
+// Nasty syntax for this, dudes...
+const octavesObj = {}
+octavesObj[Symbol.iterator] = function* () {
+  let a = 110
+  while (true) {
+    yield a
+    a *= 2;
+    if (a > 4000) return null
+  }
 }
 
-// s = 0..1
-const fifths = (s) => {
+const ν = {
+  octaves: [...octavesObj] // [110, 220, 440, 880, 1760, 1760 * 2]
+}
 
+// Give a name to the scale, and provide any number of
+// functions to generate the notes above the tonic.
+const buildScale = (name, ...noteFns) => {
   const all = []
   ν.octaves.forEach((a) => {
     all.push(a)
-    all.push(a * 3.0 / 2.0) // add fifth above
+    for (let f of noteFns) {
+      all.push(f(a))
+    }
   })
-  console.log('All', all)
+  ν[name] = all
+}
 
-  const note = all[Math.floor(s * all.length)]
+buildScale('fifths', perfectFifthAbove)
+buildScale('perfect', perfectFourthAbove, perfectFifthAbove)
+buildScale('majorTriad', majorThirdAbove, perfectFifthAbove)
+buildScale('major', majorSecondAbove, majorThirdAbove, perfectFourthAbove, perfectFifthAbove, majorSixthAbove, majorSeventhAbove)
+buildScale('blues', minorThirdAbove, perfectFourthAbove, flatFiveAbove, perfectFifthAbove, minorSeventhAbove)
+
+
+// x = 0..1
+const calcNote = (x, scale) => {
+  const s = ν[scale]
+  const note = s[Math.floor(x * s.length)]
   console.log(note)
   return note
 }
-
-const chords = (s) => {
-  const all = []
-  ν.octaves.forEach((a) => {
-    all.push(a)
-    all.push(a * semitone * semitone) // add major second
-    all.push(a * 5.0 / 4.0) // add major third above
-    all.push(a * 4.0 / 3.0) // add perfect fourth above
-    all.push(a * 3.0 / 2.0) // add perfect fifth above
-    all.push(a * semitone * semitone * semitone * semitone *
-        semitone * semitone * semitone * semitone * semitone) // add major sixth
-  })
-  console.log('Chords', all)
-
-  const note = all[Math.floor(s * all.length)]
-  console.log(note)
-  return note
-}
-
 
 const newSoundData = (peg) => {
   const r = {}
-  r.frequency = chords(peg.normalized.distScore)
+  r.frequency = calcNote(peg.normalized.distScore, 'blues')
   r.volume = peg.normalized.sizeScore * 40
   r.velocity = peg.normalized.sizeScore
   r.duration = peg.normalized.sizeScore
