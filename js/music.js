@@ -16,131 +16,17 @@ const floor = (x, d) => x - (x % d)
 const roundToEqualTempered = (f) => floor(f * 4000, semitone)
 
 
-function buildOctavesGenerator(lo, hi) {
-  const iterable = {}
-  iterable[Symbol.iterator] = function* () {
-    let a = lo
-    while (a < hi) {
-      yield a
-      a *= 2
-    }
-  }
-  return [...iterable]
-}
-
-function buildOctavesRecursive2a(lo, hi) {
-  return (function next(f) {
-    if (f * 2 < hi) {
-      return [f].concat(next(f * 2))
-    } else {
-      return [f]
-    }
-  })(lo)
-}
-
-function buildOctavesRecursive2b(lo, hi) {
-  return (function next(f) {
-    const n = f * 2
-    if (n < hi) {
-      return [f].concat(next(n))
-    } else {
-      return [f]
-    }
-  })(lo)
+function buildOctaves(lo, hi) {
+  const octaveIter = doubleIter(lo)
+  const notes = whileLessThan(octaveIter, hi)
+  return [...notes]
 }
 
 
-function buildOctavesRecursive2(lo, hi) {
-  return (function next(f) {
-    if (f < hi) {
-      const n = next(f*2)
-      return (n) ? [f].concat(n) : [f]
-    }
-  })(lo)
+
+const ν = {
+  octaves: buildOctaves(110, 4000) // [110, 220, 440, 880, 1760, 3520]
 }
-
-
-function buildOctavesGenerator2(lo, hi) {
-  const iterator = function* () {
-    let a = lo
-    while (a < hi) {
-      yield a
-      a *= 2
-    }
-  }
-  return [...iterator()]
-}
-
-function buildOctavesGenerator25(lo, hi) {
-  return [...(function* () {
-    let a = lo
-    while (a < hi) {
-      yield a
-      a *= 2
-    }
-  })()]
-}
-
-const iterateX2 = function* (x) {
-  while (true) {
-    yield x
-    x *= 2
-  }
-}
-
-const takeWhile = function* (it, fn) {
-  for (x of it) {
-    if (fn(x))
-      yield x;
-    else
-      return
-  }
-}
-
-const whileLessThan = function (it, max) {
-  return takeWhile(it, (x) => x < max)
-}
-
-
-function buildOctavesGenerator3(lo, hi) {
-
-  const whileLessThan = function*(it, max) {
-    for (x of it) {
-      if (x < max)
-        yield x;
-      else
-        return
-    }
-  }
-
-  const c = whileLessThan(iterateX2(lo), hi)
-  return [...c]
-}
-
-
-function buildOctavesForLoop(lo, hi) {
-  const o = []
-  for (let f = lo; f < hi; f *= 2)
-    o.push(f)
-  return o
-}
-
-
-function buildOctavesRecursive(lo, hi) {
-  const o = [];
-  (function next(f) {
-    if (f < hi) {
-      o.push(f)
-      next(f * 2)
-    }
-  })(lo)
-  return o
-}
-
-const ν = {}
-ν.octaves = buildOctavesGenerator(110, 4000) // [110, 220, 440, 880, 1760, 3520]
-ν.octaves = buildOctavesForLoop(110, 4000)
-ν.octaves = buildOctavesRecursive(110, 4000)
 
 
 // Give a name to the scale, and provide any number of
