@@ -2,8 +2,8 @@
  
  In this post, I delve into writing the same 
 functionality in a 
-myriad of ways. In the process, I'll look at some trade-offs, 
-as well as figuring out some new generators functionality of Javascript 
+myriad of ways. In the process, I'll evaluate some trade-offs, 
+as well as try out generators of Javascript 
 ES6.
 
 The problem I'm solving is simple: we're building an
@@ -19,7 +19,7 @@ const octaves = [110, 220, 440, 880, 1760, 3520]
 ### Refactor, pass I
 
 This is OK, but not as maintainable as it should be. To change the 
-key of the notes, my future self wil have to change all the 
+key of the notes, my future self willg  have to change all the 
 numbers. I’d rather express the underlying math if possible. 
 
 Turns out that this can be done with an old fashion `for` loop.
