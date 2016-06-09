@@ -1,4 +1,3 @@
-const log = (x) => (y,z) => console.log(x, y, z)
 
 const playPause = document.getElementById('play-pause')
 const playPauseClicks$ = Rx.Observable.fromEvent(playPause, 'click')
