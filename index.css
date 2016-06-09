@@ -57,6 +57,17 @@ body {
     width: 0;
   }
 
+  #scale {
+    bottom: 10px;
+    left: 10px;
+  }
+
+
+  #scale-current {
+    top: -21px;
+    left: 0;
+  }
+
 }
 
 @media (orientation: portrait) {
@@ -74,6 +85,16 @@ body {
     left: 10px;
     bottom: 125px;
   }
+
+  #scale {
+    right: 10px;
+    bottom: 130px;
+  }
+  #scale-current {
+    right: 0;
+    top: -20px;
+  }
+
 
   #drawer {
     right: 0;
@@ -208,10 +229,11 @@ a.button:hover {
 }
 
 #scale {
-  position: relative;
+  position: absolute;
 }
 
 #scale-current {
+  position: absolute;
   display: inline-block;
   color: black;
   font: 20px ImpactLabelRegular, monospace;
