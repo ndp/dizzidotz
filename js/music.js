@@ -71,3 +71,25 @@ const newSoundData = (peg) => {
   return r
 }
 
+const scale$ = new Rx.BehaviorSubject('blues')
+
+// Build scale control
+const scaleDivElem = document.getElementById('scale')
+const scaleCurrentElem = document.getElementById('scale-current')
+for (p in ν) {
+  if (ν.hasOwnProperty(p)) {
+    const input = document.createElement('INPUT')
+    input.setAttribute('type', 'radio')
+    input.setAttribute('name', 'scale')
+    input.setAttribute('value', p)
+    input.setAttribute('id', `scale-${p}`)
+    input.setAttribute('title', p)
+    scaleDivElem.insertBefore(input, scaleCurrentElem)
+
+    const change$ = Rx.Observable.fromEvent(input, 'change').map(p)
+    change$.subscribe((c) => scale$.onNext(c))
+  }
+}
+
+scale$.subscribe((s) => scaleCurrentElem.innerText = s)
+
