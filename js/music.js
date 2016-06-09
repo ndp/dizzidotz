@@ -61,12 +61,13 @@ const calcNote = (x, scale) => {
   return note
 }
 
-const newSoundData = (peg) => {
+const newSoundData = (normalized) => {
   const r = {}
-  r.frequency = calcNote(peg.normalized.distScore, 'blues')
-  r.volume = peg.normalized.sizeScore * 40
-  r.velocity = peg.normalized.sizeScore
-  r.duration = peg.normalized.sizeScore
+  r.scale = scale$.getValue() || 'chromatic'
+  r.frequency = calcNote(normalized.distScore, r.scale)
+  r.volume = normalized.sizeScore * 30
+  r.velocity = normalized.sizeScore
+  r.duration = normalized.sizeScore
   return r
 }
 
