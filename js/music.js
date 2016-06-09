@@ -58,7 +58,6 @@ buildScale('chromatic', semitoneAbove, majorSecondAbove, minorThirdAbove, majorT
 const calcNote = (x, scale) => {
   const s = ν[scale]
   const note = s[Math.floor(x * s.length)]
-  console.log(note)
   return note
 }
 
