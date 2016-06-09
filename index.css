@@ -1,203 +1,220 @@
 html, body, svg {
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-    background-color: black;
-    background: url(img/bg/wood20.jpg);
-    background-size: cover;
+  background-color: black;
+  background: url(img/bg/wood20.jpg);
+  background-size: cover;
 }
 
 #wheel {
-    opacity: .6;
+  opacity: .6;
 }
 
 #drawer, #ms-per-period, #save-button {
-    position: fixed;
+  position: fixed;
 }
 
 #drawer {
-    overflow: auto;
-    transition-duration: 1s;
-    transition-property: all;
-    margin: 0;
-    padding: 0;
-    border: 0 solid saddlebrown;
+  overflow: auto;
+  transition-duration: 1s;
+  transition-property: all;
+  margin: 0;
+  padding: 0;
+  border: 0 solid black;
+  background-color: #00000099;
 }
 
 @media (orientation: landscape) {
-    #play-pause {
-        right: 300px;
-        top: 8px;
-    }
-    #ms-per-period {
-        top: 13px;
-        right: 150px;
-    }
+  #play-pause {
+    right: 300px;
+    top: 8px;
+  }
 
-    #save-button {
-        top: 10px;
-        right: 125px;
-    }
+  #ms-per-period {
+    top: 13px;
+    right: 150px;
+  }
 
-    #drawer {
-        right: 0;
-        top: 0;
-        height: 100%;
-        width: 115px;
-        border-left-width: 2px;
-    }
+  #save-button {
+    top: 10px;
+    right: 125px;
+  }
 
-    #drawer:empty {
-        width: 0;
-    }
+  #drawer {
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 115px;
+    border-left-width: 2px;
+  }
+
+  #drawer:empty {
+    width: 0;
+  }
 
 }
 
 @media (orientation: portrait) {
-    #play-pause {
-        right: 10px;
-        top: 10px;
-    }
-    #ms-per-period {
-        bottom: 128px;
-        right: 10px;
-    }
+  #play-pause {
+    right: 10px;
+    top: 10px;
+  }
 
-    #save-button {
-        left: 10px;
-        bottom: 125px;
-    }
+  #ms-per-period {
+    bottom: 128px;
+    right: 10px;
+  }
 
-    #drawer {
-        right: 0;
-        bottom: 0;
-        height: 115px;
-        width: 100%;
-        border-top-width: 2px;
-    }
+  #save-button {
+    left: 10px;
+    bottom: 125px;
+  }
 
-    #drawer:empty {
-        width: 0;
-    }
+  #drawer {
+    right: 0;
+    bottom: 0;
+    height: 115px;
+    width: 100%;
+    border-top-width: 2px;
+  }
+
+  #drawer:empty {
+    width: 0;
+  }
 }
 
 #drawer li {
-    position: relative;
-    display: block;
-    margin: 5px;
-    padding: 0;
-    float: left;
+  position: relative;
+  display: block;
+  margin: 5px;
+  padding: 0;
+  float: left;
 }
 
 #drawer li a {
-    cursor: zoom-in;
-    opacity: 0.5;
-    -webkit-transition: width 2s, height 2s, background-color 2s, -webkit-transform 2s;
-    transition: opacity 1s, width 2s, height 2s, background-color 2s, transform 2s;
+  cursor: zoom-in;
+  opacity: 0.5;
+  -webkit-transition: width 2s, height 2s, background-color 2s, -webkit-transform 2s;
+  transition: opacity 1s, width 2s, height 2s, background-color 2s, transform 2s;
 }
 
 @-ms-keyframes wiggle {
-    0% {
-        -ms-transform: rotate(3deg);
-    }
-    50% {
-        -ms-transform: rotate(-3deg);
-    }
-    100% {
-        -ms-transform: rotate(3deg);
-    }
+  0% {
+    -ms-transform: rotate(3deg);
+  }
+  50% {
+    -ms-transform: rotate(-3deg);
+  }
+  100% {
+    -ms-transform: rotate(3deg);
+  }
 }
 
 @-moz-keyframes wiggle {
-    0% {
-        -moz-transform: rotate(3deg);
-    }
-    50% {
-        -moz-transform: rotate(-3deg);
-    }
-    100% {
-        -moz-transform: rotate(3deg);
-    }
+  0% {
+    -moz-transform: rotate(3deg);
+  }
+  50% {
+    -moz-transform: rotate(-3deg);
+  }
+  100% {
+    -moz-transform: rotate(3deg);
+  }
 }
 
 @-webkit-keyframes wiggle {
-    0% {
-        -webkit-transform: rotate(3deg);
-    }
-    50% {
-        -webkit-transform: rotate(-3deg);
-    }
-    100% {
-        -webkit-transform: rotate(3deg);
-    }
+  0% {
+    -webkit-transform: rotate(3deg);
+  }
+  50% {
+    -webkit-transform: rotate(-3deg);
+  }
+  100% {
+    -webkit-transform: rotate(3deg);
+  }
 }
 
 @keyframes wiggle {
-    0% {
-        transform: rotate(3deg);
-    }
-    50% {
-        transform: rotate(-3deg);
-    }
-    100% {
-        transform: rotate(3deg);
-    }
+  0% {
+    transform: rotate(3deg);
+  }
+  50% {
+    transform: rotate(-3deg);
+  }
+  100% {
+    transform: rotate(3deg);
+  }
 }
 
 #drawer li a:hover {
-    -ms-animation: wiggle .3s 2;
-    -moz-animation: wiggle .3s 2;
-    -webkit-animation: wiggle .3s 2;
-    animation: wiggle .3s 2;
-    opacity: 1.0;
-    /*-webkit-transform: rotate(180deg);*/
-    /*transform: rotate(180deg);*/
+  -ms-animation: wiggle .3s 2;
+  -moz-animation: wiggle .3s 2;
+  -webkit-animation: wiggle .3s 2;
+  animation: wiggle .3s 2;
+  opacity: 1.0;
+  /*-webkit-transform: rotate(180deg);*/
+  /*transform: rotate(180deg);*/
 }
 
 #drawer li a.delete {
-    position: absolute;
-    top: -4px;
-    right: 0px;
-    border: 1px solid white;
-    width: 12px;
-    height: 12px;
-    opacity: 0;
-    line-height: 0;
+  position: absolute;
+  top: -4px;
+  right: 0px;
+  border: 1px solid white;
+  width: 12px;
+  height: 12px;
+  opacity: 0;
+  line-height: 0;
 }
 
 #drawer li:hover a.delete {
-    opacity: 0.5;
+  opacity: 0.5;
 }
 
 #drawer li a.delete:hover {
-    color: white;
-    cursor: default;
-    opacity: 1.0;
+  color: white;
+  cursor: default;
+  opacity: 1.0;
 }
 
 a.button {
-    color: beige;
-    text-decoration: none;
-    cursor: move;
-    font-size: 20px;
+  color: beige;
+  text-decoration: none;
+  cursor: move;
+  font-size: 20px;
 }
 
 a.button:hover {
-    color: white;
+  color: white;
 }
 
 #play-pause {
-    position: absolute;
-    cursor: pointer;
-    font-size: 24px;
+  position: absolute;
+  cursor: pointer;
+  font-size: 24px;
 }
+
 #play-pause.playing .play {
-    display: none;
+  display: none;
 }
+
 #play-pause.paused .pause {
-    display: none;
+  display: none;
+}
+
+#scale {
+  position: relative;
+}
+
+#scale-current {
+  display: inline-block;
+  color: black;
+  font: 20px ImpactLabelRegular, monospace;
+  padding: 0;
+  background-color: white;
 }
