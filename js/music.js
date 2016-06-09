@@ -71,7 +71,7 @@ const newSoundData = (normalized) => {
   return r
 }
 
-const scale$ = new Rx.BehaviorSubject('blues')
+const scale$ = new Rx.BehaviorSubject(localStorage['scale'] || 'blues')
 
 // Build scale control
 const scaleDivElem = document.getElementById('scale')
@@ -86,10 +86,10 @@ for (p in ν) {
     input.setAttribute('title', p)
     scaleDivElem.insertBefore(input, scaleCurrentElem)
 
-    const change$ = Rx.Observable.fromEvent(input, 'change').map(p)
-    change$.subscribe((c) => scale$.onNext(c))
+    Rx.Observable.fromEvent(input, 'change').map(p).subscribe(scale$)
   }
 }
 
 scale$.subscribe((s) => scaleCurrentElem.innerText = s)
 
+scale$.subscribe((s) => localStorage['scale'] = s)
