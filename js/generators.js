@@ -5,6 +5,13 @@ const doubleIter = function* (x) {
   }
 }
 
+const counterIter = function* (x = 0) {
+  while (true) {
+    yield x
+    x += 1
+  }
+}
+
 const takeWhile = function* (it, fn) {
   for (x of it) {
     if (fn(x))
