@@ -229,3 +229,22 @@ activePegs$.map((x) => x.sound).subscribe((sound) => {
   synth.volume.value = sound.volume
 })
 
+
+// Scratchin'
+Rx.Observable.fromEvent(editor, 'mousemove')
+    .throttle(50)
+    .filter((e) => e.shiftKey)
+    .map((e) => {
+      const pt = eventToPt(e)
+      const [angle, dist] = ptToVector(pt)
+      const peg = {
+        angle: angle,
+        dist: dist,
+        size: maxPegSize() / 10,
+        pt: pt,
+        color: Color.growing,
+      }
+      return newSoundData(normalizedValues(peg, radius))
+    })
+    .filter((s) => s.frequency)
+    .subscribe((s) => synth.triggerAttackRelease(s.frequency, s.duration, undefined, s.velocity))
