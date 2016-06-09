@@ -28,13 +28,12 @@ const newPeg = (radius, pt, size) => {
     size: size
   }
   p.normalized = normalizedValues(p, radius)
-  p.sound = newSoundData(p)
+  p.sound = newSoundData(p.normalized)
   pegs.push(p)
   return p
 }
 
 
-//const pauser$ = new Rx.Subject()
 const pauser$ = playPause$
 
 const ticker$ = Rx.Observable.interval(msPerTick).pausable(pauser$)
@@ -49,7 +48,6 @@ radians$.subscribe((angle) => {
     }
   })
 })
-
 
 
 // VIEW
@@ -204,7 +202,7 @@ mouseup$.subscribe((e) => {
 radians$.subscribe((angle) => {
   // Move the clock hand
   const hand = document.getElementById('hand')
-  const duration = msPerTick * .75 // smaller than intervalso we don't drop behind
+  const duration = msPerTick * .75 // smaller than interval so we don't drop behind
   Velocity(hand, {
     x1: radius + Math.cos(angle) * radius,
     y1: radius + Math.sin(angle) * radius,
@@ -224,7 +222,6 @@ activePegs$.subscribe((pegModel) => {
 // MUSIC
 
 const synth = new Tone.PolySynth(10, Tone.SimpleSynth).toMaster()
-const synthFor = (pegModel) => synth
 
 activePegs$.map((x) => x.sound).subscribe((sound) => {
   synth.volume.value = 0 // Normalize it from whatever it was
