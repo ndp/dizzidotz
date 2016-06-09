@@ -2,19 +2,17 @@
 const semitone = Math.pow(2, 1 / 12)
 // ref. http://www.phy.mtu.edu/~suits/NoteFreqCalcs.html
 
+const semitoneAbove = (ν) => ν * semitone
 const majorSecondAbove = (ν) => ν * semitone * semitone
 const minorThirdAbove = (ν) => ν * Math.pow(semitone, 3)
 const majorThirdAbove = (ν) => ν * 5.0 / 4.0
 const perfectFourthAbove = (ν) => ν * 4.0 / 3.0
 const flatFiveAbove = (ν) => ν * Math.pow(semitone, 6)
 const perfectFifthAbove = (ν) => ν * 3.0 / 2.0
+const minorSixthAbove = (ν) => ν * Math.pow(semitone, 8)
 const majorSixthAbove = (ν) => ν * Math.pow(semitone, 9)
 const minorSeventhAbove = (ν) => ν * Math.pow(semitone, 10)
 const majorSeventhAbove = (ν) => ν * Math.pow(semitone, 11)
-
-const floor = (x, d) => x - (x % d)
-const roundToEqualTempered = (f) => floor(f * 4000, semitone)
-
 
 function buildOctaves(lo, hi) {
   const octaveIter = doubleIter(lo)
@@ -22,10 +20,13 @@ function buildOctaves(lo, hi) {
   return [...notes]
 }
 
-
+function buildRange(lo, hi) {
+  return [...whileLessThan(counterIter(lo), hi)]
+}
 
 const ν = {
-  octaves: buildOctaves(110, 4000) // [110, 220, 440, 880, 1760, 3520]
+  continuous: buildRange(100, 4000),
+  octaves: buildOctaves(110, 4000), // [110, 220, 440, 880, 1760, 3520]
 }
 
 
@@ -46,7 +47,11 @@ buildScale('fifths', perfectFifthAbove)
 buildScale('perfect', perfectFourthAbove, perfectFifthAbove)
 buildScale('majorTriad', majorThirdAbove, perfectFifthAbove)
 buildScale('major', majorSecondAbove, majorThirdAbove, perfectFourthAbove, perfectFifthAbove, majorSixthAbove, majorSeventhAbove)
+buildScale('harmonicMinor', majorSecondAbove, minorThirdAbove, perfectFourthAbove, perfectFifthAbove, majorSixthAbove, minorSeventhAbove)
 buildScale('blues', minorThirdAbove, perfectFourthAbove, flatFiveAbove, perfectFifthAbove, minorSeventhAbove)
+buildScale('chromatic', semitoneAbove, majorSecondAbove, minorThirdAbove, majorThirdAbove,
+    perfectFourthAbove, flatFiveAbove, perfectFifthAbove, minorSixthAbove, majorSixthAbove,
+    minorSeventhAbove, majorSeventhAbove)
 
 
 // x = 0..1
