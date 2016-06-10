@@ -97,7 +97,5 @@ const drawPatterns = (patterns) => {
   })
 }
 
-allPatterns$.subscribe((x) => {
-  drawPatterns(x)
-})
+allPatterns$.subscribe(drawPatterns)
 

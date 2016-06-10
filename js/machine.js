@@ -117,9 +117,9 @@ const renderPeg = (pegModel) => {
   e.setAttribute("cx", pegModel.screen.pt.x + radius)
   e.setAttribute("cy", pegModel.screen.pt.y + radius)
   e.setAttribute("r", pegModel.screen.size)
-  e.setAttribute("fill", pegModel.highlightcolor || pegModel.color || Color.note)
-  if (pegModel.highlightcolor) {
-    setTimeout(() => e.setAttribute('fill', pegModel.color), Math.min(200, pegModel.sound.duration * 1000))
+  e.setAttribute("fill", pegModel.screen.highlightcolor || pegModel.screen.color || Color.note)
+  if (pegModel.screen.highlightcolor) {
+    setTimeout(() => e.setAttribute('fill', pegModel.screen.color), Math.min(200, pegModel.sound.duration * 1000))
   }
 }
 
@@ -183,9 +183,9 @@ mousedown$.subscribe((e) => {
         dist: dist,
         screen: {
           size: calcSizeWhileGrowing(),
-          pt: pt
+          pt: pt,
+          color: Color.growing
         },
-        color: Color.growing,
       }
       renderPeg(peg)
     } else {
@@ -224,8 +224,8 @@ radians$.subscribe((angle) => {
 
 activePegs$.subscribe((pegModel) => {
   const tempModel = Object.create(pegModel)
-  tempModel.color = Color.note
-  tempModel.highlightcolor = Color.playing
+  tempModel.screen.color = Color.note
+  tempModel.screen.highlightcolor = Color.playing
   renderPeg(tempModel)
 })
 
