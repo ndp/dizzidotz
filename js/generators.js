@@ -13,7 +13,7 @@ const counterIter = function* (x = 0) {
 }
 
 const takeWhile = function* (it, fn) {
-  for (x of it) {
+  for (let x of it) {
     if (fn(x))
       yield x;
     else

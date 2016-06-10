@@ -28,7 +28,7 @@ const newPeg = (radius, pt, size) => {
     size: size
   }
   p.normalized = normalizedValues(p, radius)
-  p.sound = newSoundData(p.normalized)
+  p.sound = newSoundData(p.normalized, currTonality$.getValue())
   pegs.push(p)
   return p
 }
@@ -244,7 +244,7 @@ Rx.Observable.fromEvent(editor, 'mousemove')
         pt: pt,
         color: Color.growing,
       }
-      return newSoundData(normalizedValues(peg, radius))
+      return newSoundData(normalizedValues(peg, radius), currTonality$.getValue())
     })
     .filter((s) => s.frequency)
     .subscribe((s) => synth.triggerAttackRelease(s.frequency, s.duration, undefined, s.velocity))
