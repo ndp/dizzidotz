@@ -267,11 +267,11 @@ input[type="radio"] + label span {
 }
 
 input[type="radio"] + label span {
-  background-color: darkred;
+  background-color: purple;
 }
 
 input[type="radio"]:checked + label span{
-  background-color: orangered;
+  background-color: mediumpurple;
 }
 
 input[type="radio"] + label span,

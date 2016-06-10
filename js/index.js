@@ -8,47 +8,24 @@ const savedPatterns$ = Rx.Observable.range(0, localStorage.length)
     .reduce((acc, x) => { acc.push(x); return acc }, [])
     .map((x) => x.sort((a, b) => b.timestamp - a.timestamp))
 
-const newPatterns$ = new Rx.Subject()
+const patternsToPersist$ = new Rx.Subject()
 
-newPatterns$.subscribe((pattern) => {
+patternsToPersist$.subscribe((pattern) => {
   pattern.timestamp = (new Date()).getTime()
   pattern.name = `pattern-${pattern.timestamp}`
   localStorage.setItem(pattern.name, JSON.stringify(pattern))
 })
 
-const allPatterns$ = Rx.Observable.combineLatest(savedPatterns$, newPatterns$.startWith(null), (savedPatterns, newPattern) => {
+const savedPatternsModel$ = Rx.Observable.combineLatest(savedPatterns$, patternsToPersist$.startWith(null), (savedPatterns, newPattern) => {
   if (newPattern) savedPatterns.unshift(newPattern)
   return savedPatterns
 })
 
-const patternList = document.getElementsByTagName('ol')[0]
-
-const normalizedToScreen = (normalized, radius) => {
-  return {
-    pt: vectorToPt(normalized.angle, (1 - normalized.distScore) * radius),
-    size: normalized.sizeScore * maxPegSize(radius)
-  }
-}
-
-const renderPattern = (e) => {
-
-  const link = e.target.closest('a')
-  if (!link || link.className == 'delete') return;
-
-  clearPattern()
-
-  const pegData = link.getAttribute('data-pegs')
-  const pegs = JSON.parse(pegData)
-  pegs.forEach((pegModel) => {
-    const screen = normalizedToScreen(pegModel.normalized, radius)
-    pegModel.pt = screen.pt
-    pegModel.size = screen.size
-    renderPeg(newPeg(radius, pegModel.pt, pegModel.size))
-  })
-}
+const patternListElem = document.getElementsByTagName('ol')[0]
 
 
-const patternsClicks$ = Rx.Observable.fromEvent(patternList, 'click')
+
+const patternsClicks$ = Rx.Observable.fromEvent(patternListElem, 'click')
 
 
 const patternClicks$ = patternsClicks$
@@ -67,13 +44,26 @@ delPatternRequests$.subscribe((name) => localStorage.removeItem(name))
 delPatternLi$.subscribe((li) => li.parentNode.removeChild(li))
 
 
+const resurrectPattern$ = patternClicks$
+    .map((e) => e.target.closest('a'))
+    .filter((link) => link && link.className != 'delete')
 
-patternClicks$.subscribe(renderPattern)
-
+const clearPatternAction$ = new Rx.BehaviorSubject()
+resurrectPattern$.subscribe(clearPatternAction$)
+resurrectPattern$.subscribe((link) => {
+  const pegData = link.getAttribute('data-pegs')
+  const pegs = JSON.parse(pegData)
+  pegs.forEach((pegModel) => {
+    const screen = normalizedToScreen(pegModel.normalized, radius)
+    pegModel.pt = screen.pt
+    pegModel.size = screen.size
+    renderPeg(newPeg(radius, pegModel.pt, pegModel.size))
+  })
+})
 
 
 const drawPatterns = (patterns) => {
-  patternList.innerHTML = ''
+  patternListElem.innerHTML = ''
 
   patterns.forEach((pattern) => {
     const link = document.createElement('A')
@@ -93,9 +83,9 @@ const drawPatterns = (patterns) => {
     del.className = 'delete'
     li.appendChild(del)
 
-    patternList.appendChild(li)
+    patternListElem.appendChild(li)
   })
 }
 
-allPatterns$.subscribe(drawPatterns)
+savedPatternsModel$.subscribe(drawPatterns)
 

@@ -2,9 +2,9 @@
 
 // MODEL
 const msPerTick = 20
-let msPerPeriod = 2000
+
 const radiansPerTick = () => {
-  return (msPerTick / msPerPeriod * radiansPerPeriod)
+  return (msPerTick / msPerPeriod$.getValue() * radiansPerPeriod)
 }
 
 
@@ -12,7 +12,7 @@ let pegs = []
 const maxPegSize = (r = radius) => r / 5
 
 
-const normalizedValues = (radius, pt, size) => {
+const normalizeValues = (radius, pt, size) => {
   const r = {}
   const [angle, dist] = ptToVector(pt)
   r.angle = angle
@@ -22,13 +22,11 @@ const normalizedValues = (radius, pt, size) => {
 }
 
 const normalizeEvent = (e, radius, size) =>
-    normalizedValues(radius, eventToPt(e, radius), size)
-
-
+    normalizeValues(radius, eventToPt(e, radius), size)
 
 
 const newPeg = (radius, pt, size) => {
-  const normalized = normalizedValues(radius, pt, size)
+  const normalized = normalizeValues(radius, pt, size)
   const peg = {
     normalized,
     id: `peg-${(new Date()).getTime()}${Math.random()}`,
@@ -74,8 +72,9 @@ const radius = portrait() ?
 Math.min(body.clientHeight - 2 * drawerDepth, body.clientWidth) / 2
     : Math.min(body.clientHeight, body.clientWidth - 2 * drawerDepth) / 2
 
-// View set up
-const sizeEditor = () => {
+
+const resizeAction$ = new Rx.Subject()
+resizeAction$.subscribe(() => {
   editor.style.width = 2 * radius
   editor.style.height = 2 * radius
   if (portrait()) {
@@ -86,8 +85,10 @@ const sizeEditor = () => {
     editor.style.marginLeft = `${((body.clientWidth - drawerDepth) / 2) - radius}px`
   }
   editor.setAttribute('viewBox', `0 0 ${2 * radius} ${2 * radius}`)
-}
-sizeEditor()
+})
+
+resizeAction$.onNext()
+
 wheel.setAttribute('cx', radius)
 wheel.setAttribute('cy', radius)
 wheel.setAttribute('r', radius)
@@ -126,36 +127,49 @@ const renderPeg = (pegModel) => {
 
 // INTERACTIONS
 
-const tempoChange$ = Rx.Observable.fromEvent(msPerPeriodInput, 'change')
-tempoChange$.subscribe((e) => msPerPeriod = e.target.value)
+const tempoChangeAction$ = Rx.Observable
+    .fromEvent(msPerPeriodInput, 'change')
+    .map((e) => e.target.value)
+
+const msPerPeriod$ = new Rx.BehaviorSubject(2000)
+tempoChangeAction$.subscribe(msPerPeriod$)
 
 
-const saveClicks$ = Rx.Observable.fromEvent(saveButton, 'click')
-saveClicks$.subscribe((e) => savePattern(e))
+const saveEditorAction$ = Rx.Observable
+    .fromEvent(saveButton, 'click')
+    .map(() => {
+      return {
+        pegs: pegs,
+        svg: editor.outerHTML.replace(/(style|id)="[^"]+"/g, '')
+      }
+    })
+saveEditorAction$.subscribe(patternsToPersist$)
+
+resizeAction$.subscribe(saveEditorAction$)
 
 
-const savePattern = () => {
-  editor.style.width = 'auto'
-  editor.style.height = 'auto'
-  editor.style.marginLeft = 'auto'
-  editor.style.marginTop = 'auto'
-  newPatterns$.onNext({pegs: pegs, svg: editor.outerHTML.replace(/id="[^"]+"/g, '')})
-  sizeEditor()
-}
-
-
-const clearPattern = () => {
+clearPatternAction$.subscribe(() => {
   let peg
   while (peg = editor.getElementsByClassName('peg')[0]) {
     if (peg.parentNode) peg.parentNode.removeChild(peg)
   }
+})
+
+clearPatternAction$.subscribe(() => {
   pegs = []
+})
+
+
+const editorMousedown$ = Rx.Observable.fromEvent(editor, 'mousedown')
+const editorMouseup$ = Rx.Observable.fromEvent(editor, 'mouseup')
+
+
+const normalizedToScreen = (normalized, radius) => {
+  return {
+    pt: vectorToPt(normalized.angle, (1 - normalized.distScore) * radius),
+    size: normalized.sizeScore * maxPegSize(radius)
+  }
 }
-
-
-const mousedown$ = Rx.Observable.fromEvent(editor, 'mousedown')
-const mouseup$ = Rx.Observable.fromEvent(editor, 'mouseup')
-
 
 var eventToPt = function (e, radius) {
   const x = (e.offsetX || e.clientX) - radius
@@ -170,7 +184,7 @@ const calcSizeWhileGrowing = (start = startedPegAt) => {
   return Math.min(maxPegSize(), (((new Date()).getTime()) - start) / 40)
 }
 
-mousedown$.subscribe((e) => {
+editorMousedown$.subscribe((e) => {
   startedPegAt = (new Date()).getTime()
   const pt = eventToPt(e, radius)
   const [angle, dist] = ptToVector(pt)
@@ -196,7 +210,7 @@ mousedown$.subscribe((e) => {
   }, 20)
 })
 
-mouseup$.subscribe((e) => {
+editorMouseup$.subscribe((e) => {
   const pt = eventToPt(e, radius)
   const size = calcSizeWhileGrowing()
 
@@ -205,7 +219,7 @@ mouseup$.subscribe((e) => {
   renderPeg(peg)
 })
 
-mouseup$.subscribe((e) => {
+editorMouseup$.subscribe((e) => {
   startedPegAt = null
 })
 
