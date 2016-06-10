@@ -5,10 +5,7 @@ const savedPatterns$ = Rx.Observable.range(0, localStorage.length)
     .filter((x) => /pattern.*/.exec(x))
     .map((x) => localStorage.getItem(x))
     .map((x) => JSON.parse(x))
-    .reduce((acc, x) => {
-      acc.push(x)
-      return acc
-    }, [])
+    .reduce((acc, x) => { acc.push(x); return acc }, [])
     .map((x) => x.sort((a, b) => b.timestamp - a.timestamp))
 
 const newPatterns$ = new Rx.Subject()
@@ -26,6 +23,13 @@ const allPatterns$ = Rx.Observable.combineLatest(savedPatterns$, newPatterns$.st
 
 const patternList = document.getElementsByTagName('ol')[0]
 
+const normalizedToScreen = (normalized, radius) => {
+  return {
+    pt: vectorToPt(normalized.angle, (1 - normalized.distScore) * radius),
+    size: normalized.sizeScore * maxPegSize(radius)
+  }
+}
+
 const renderPattern = (e) => {
 
   const link = e.target.closest('a')
@@ -36,10 +40,10 @@ const renderPattern = (e) => {
   const pegData = link.getAttribute('data-pegs')
   const pegs = JSON.parse(pegData)
   pegs.forEach((pegModel) => {
-    pegModel.pt = vectorToPt(pegModel.normalized.angle, (1 - pegModel.normalized.distScore) * radius)
-    pegModel.size = pegModel.normalized.sizeScore * maxPegSize(radius)
-    newPeg(radius, pegModel.pt, pegModel.size)
-    renderPeg(pegModel)
+    const screen = normalizedToScreen(pegModel.normalized, radius)
+    pegModel.pt = screen.pt
+    pegModel.size = screen.size
+    renderPeg(newPeg(radius, pegModel.pt, pegModel.size))
   })
 }
 

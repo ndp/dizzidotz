@@ -12,25 +12,34 @@ let pegs = []
 const maxPegSize = (r = radius) => r / 5
 
 
-const normalizedValues = (peg, radius) => {
+const normalizedValues = (radius, pt, size) => {
   const r = {}
-  const [angle, dist] = ptToVector(peg.pt)
+  const [angle, dist] = ptToVector(pt)
   r.angle = angle
   r.distScore = 1 - (dist / radius)
-  r.sizeScore = peg.size / maxPegSize(radius)
+  r.sizeScore = size / maxPegSize(radius)
   return r
 }
 
+const normalizeEvent = (e, radius, size) =>
+    normalizedValues(radius, eventToPt(e, radius), size)
+
+
+
+
 const newPeg = (radius, pt, size) => {
-  const p = {
+  const normalized = normalizedValues(radius, pt, size)
+  const peg = {
+    normalized,
     id: `peg-${(new Date()).getTime()}${Math.random()}`,
-    pt: pt,
-    size: size
+    screen: {
+      pt: pt,
+      size: size
+    },
+    sound: newSoundData(normalized, currTonality$.getValue())
   }
-  p.normalized = normalizedValues(p, radius)
-  p.sound = newSoundData(p.normalized, currTonality$.getValue())
-  pegs.push(p)
-  return p
+  pegs.push(peg)
+  return peg
 }
 
 
@@ -105,9 +114,9 @@ const findOrCreatePeg = (pegModel) => {
 const renderPeg = (pegModel) => {
   //console.log(pegModel)
   const e = findOrCreatePeg(pegModel)
-  e.setAttribute("cx", pegModel.pt.x + radius)
-  e.setAttribute("cy", pegModel.pt.y + radius)
-  e.setAttribute("r", pegModel.size)
+  e.setAttribute("cx", pegModel.screen.pt.x + radius)
+  e.setAttribute("cy", pegModel.screen.pt.y + radius)
+  e.setAttribute("r", pegModel.screen.size)
   e.setAttribute("fill", pegModel.highlightcolor || pegModel.color || Color.note)
   if (pegModel.highlightcolor) {
     setTimeout(() => e.setAttribute('fill', pegModel.color), Math.min(200, pegModel.sound.duration * 1000))
@@ -148,7 +157,7 @@ const mousedown$ = Rx.Observable.fromEvent(editor, 'mousedown')
 const mouseup$ = Rx.Observable.fromEvent(editor, 'mouseup')
 
 
-var eventToPt = function (e) {
+var eventToPt = function (e, radius) {
   const x = (e.offsetX || e.clientX) - radius
   const y = (e.offsetY || e.clientY) - radius
   return {x: x, y: y}
@@ -157,13 +166,13 @@ var eventToPt = function (e) {
 let startedPegAt = null
 
 // Size based on how long the mouse press/touch is
-const calcSize = (start = startedPegAt) => {
+const calcSizeWhileGrowing = (start = startedPegAt) => {
   return Math.min(maxPegSize(), (((new Date()).getTime()) - start) / 40)
 }
 
 mousedown$.subscribe((e) => {
   startedPegAt = (new Date()).getTime()
-  const pt = eventToPt(e)
+  const pt = eventToPt(e, radius)
   const [angle, dist] = ptToVector(pt)
 
   const interval = setInterval(() => {
@@ -172,8 +181,10 @@ mousedown$.subscribe((e) => {
         id: 'wip',
         angle: angle,
         dist: dist,
-        size: calcSize(),
-        pt: pt,
+        screen: {
+          size: calcSizeWhileGrowing(),
+          pt: pt
+        },
         color: Color.growing,
       }
       renderPeg(peg)
@@ -186,8 +197,8 @@ mousedown$.subscribe((e) => {
 })
 
 mouseup$.subscribe((e) => {
-  const pt = eventToPt(e)
-  const size = calcSize()
+  const pt = eventToPt(e, radius)
+  const size = calcSizeWhileGrowing()
 
   const peg = newPeg(radius, pt, size)
 
@@ -226,26 +237,15 @@ activePegs$.map((x) => x.sound).subscribe(soundOut$)
 // Scratchin'
 Rx.Observable.fromEvent(editor, 'mousemove')
     .throttle(50)
-    .filter((e) => e.shiftKey)
-    .map((e) => {
-      const pt = eventToPt(e)
-      const [angle, dist] = ptToVector(pt)
-      const peg = {
-        angle: angle,
-        dist: dist,
-        size: maxPegSize() / 10,
-        pt: pt,
-        color: Color.growing,
-      }
-      return newSoundData(normalizedValues(peg, radius), currTonality$.getValue())
-    })
-    .filter((s) => s.frequency)
+    .filter(e => e.shiftKey)
+    .map(e => newSoundData(normalizeEvent(e, radius, maxPegSize() / 10), currTonality$.getValue()))
+    .filter(s => s.frequency)
     .subscribe(soundOut$)
 
 /*
-event => normalized
-event => normalized (in progress)
-normalized => peg
-normalized => sound
+ event => normalized
+ event => normalized (in progress)
+ normalized => peg
+ normalized => sound
 
  */
