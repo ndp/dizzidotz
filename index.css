@@ -232,6 +232,11 @@ a.button:hover {
   position: absolute;
 }
 
+#scale > input {
+  -moz-appearance: checkbox;
+  -webkit-appearance: checkbox;
+}
+
 #scale-current {
   position: absolute;
   display: inline-block;
@@ -239,4 +244,40 @@ a.button:hover {
   font: 20px ImpactLabelRegular, monospace;
   padding: 0;
   background-color: white;
+}
+
+
+input[type="radio"] {
+  display:none;
+}
+input[type="radio"] + label {
+  color: darkred;
+  font-family:Arial, sans-serif;
+  font-size:14px;
+}
+input[type="radio"] + label span {
+  display:inline-block;
+  width:19px;
+  height:19px;
+  margin:-1px 4px 0 0;
+  vertical-align:middle;
+  cursor:pointer;
+  -moz-border-radius:  50%;
+  border-radius:  50%;
+}
+
+input[type="radio"] + label span {
+  background-color: purple;
+}
+
+input[type="radio"]:checked + label span{
+  background-color: mediumpurple;
+}
+
+input[type="radio"] + label span,
+input[type="radio"]:checked + label span {
+  -webkit-transition:background-color 0.4s linear;
+  -o-transition:background-color 0.4s linear;
+  -moz-transition:background-color 0.4s linear;
+  transition:background-color 0.4s linear;
 }
