@@ -241,3 +241,11 @@ Rx.Observable.fromEvent(editor, 'mousemove')
     })
     .filter((s) => s.frequency)
     .subscribe(soundOut$)
+
+/*
+event => normalized
+event => normalized (in progress)
+normalized => peg
+normalized => sound
+
+ */

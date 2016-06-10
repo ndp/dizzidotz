@@ -65,6 +65,7 @@ function createFrequencyCalculator() {
   // x: 0..1
   // scale: name of scale
   return [tonalityNames, (x, scale) => {
+    x = Math.min(1.0, Math.max(0.0, x))
     const s = ν[scale]
     return s[Math.floor(x * s.length)]
   }]
