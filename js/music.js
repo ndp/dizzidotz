@@ -1,4 +1,16 @@
 
+const [tonalities, calcFrequency] = createFrequencyCalculator()
+
+const newSoundData = (normalized, scale) => {
+  const frequency = calcFrequency(normalized.distScore, scale)
+  return {
+    scale, frequency,
+    volume: normalized.sizeScore * 30,
+    velocity: normalized.sizeScore,
+    duration: normalized.sizeScore
+  }
+}
+
 const currTonality$ = new Rx.BehaviorSubject(localStorage['tonality'] || 'blues')
 
 // Build scale control

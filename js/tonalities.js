@@ -69,15 +69,3 @@ function createFrequencyCalculator() {
     return s[Math.floor(x * s.length)]
   }]
 }
-
-const [tonalities, calcFrequency] = createFrequencyCalculator()
-
-const newSoundData = (normalized, scale) => {
-  const frequency = calcFrequency(normalized.distScore, scale)
-  return {
-    scale, frequency,
-    volume: normalized.sizeScore * 30,
-    velocity: normalized.sizeScore,
-    duration: normalized.sizeScore
-  }
-}
