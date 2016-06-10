@@ -199,8 +199,8 @@ mouseup$.subscribe((e) => {
 })
 
 
+// Move the clock hand
 radians$.subscribe((angle) => {
-  // Move the clock hand
   const hand = document.getElementById('hand')
   const duration = msPerTick * .75 // smaller than interval so we don't drop behind
   Velocity(hand, {
@@ -220,14 +220,7 @@ activePegs$.subscribe((pegModel) => {
 
 
 // MUSIC
-
-const synth = new Tone.PolySynth(10, Tone.SimpleSynth).toMaster()
-
-activePegs$.map((x) => x.sound).subscribe((sound) => {
-  synth.volume.value = 0 // Normalize it from whatever it was
-  synth.triggerAttackRelease(sound.frequency, sound.duration, undefined, sound.velocity)
-  synth.volume.value = sound.volume
-})
+activePegs$.map((x) => x.sound).subscribe(soundOut$)
 
 
 // Scratchin'
@@ -247,4 +240,4 @@ Rx.Observable.fromEvent(editor, 'mousemove')
       return newSoundData(normalizedValues(peg, radius), currTonality$.getValue())
     })
     .filter((s) => s.frequency)
-    .subscribe((s) => synth.triggerAttackRelease(s.frequency, s.duration, undefined, s.velocity))
+    .subscribe(soundOut$)
