@@ -8,45 +8,19 @@ const radiansPerTick = () => {
 }
 
 
-//const editorPegs$ = new Rx.BehaviorSubject([])
-//const editorPegsCmdBus$ = new Rx.Subject()
-//const editorPegsCmdFn$ = new Rx.Subject()
-//
-//editorPegsCmdBus$
-//    .filter(a => a.cmd == 'add')
-//    .map((state) => {
-//      log('adding')
-//      return (state, cmd) => {
-//        return state + cmd.value
-//      }
-//    })
-//    .subscribe(editorPegsCmdFn$)
-//
-//editorPegsCmdBus$
-//    .filter(a => a.cmd == 'sub')
-//    .map((state, cmd) => {
-//      log('subbn')
-//      return (state) => {
-//        return state - cmd.value
-//      }
-//    })
-//    .subscribe(editorPegsCmdFn$)
-//
-//editorPegs$.combineLatest(editorPegsCmdFn$, (state, cmdFn) => {
-//  console.log('running now: ', state, cmdFn)
-//  return cmdFn(state)
-//}).subscribe(editorPegs$)
-//
-//editorPegs$.subscribe(log('editorPegs$'))
-//editorPegsCmdFn$.subscribe(log('editorPegsCmd$'))
-//
-//editorPegsCmdBus$.onNext({cmd: 'add', value: 5})
-//editorPegsCmdBus$.onNext({cmd: 'add', value: 15})
-//editorPegsCmdBus$.onNext({cmd: 'sub', value: 25})
-//
-//const newPeg$ = new Rx.Subject()
+const editorPegs$ = new Rx.BehaviorSubject([])
+const editorPegsCmdBus$ = newCmdBus$(editorPegs$)
 
-let pegs = []
+editorPegsCmdBus$.handleCmdWith('add', (state, cmd) => {
+  state.push(cmd.value)
+  return state
+})
+
+editorPegsCmdBus$.handleCmdWith('clear', (state, cmd) => {
+  return []
+})
+
+
 const maxPegSize = (r = radius) => r / 5
 
 
@@ -74,7 +48,7 @@ const newPeg = (radius, pt, size) => {
     },
     sound: newSoundData(normalized, currTonality$.getValue())
   }
-  pegs.push(peg)
+  editorPegsCmdBus$.onNext({ cmd: 'add', value: peg })
   return peg
 }
 
@@ -85,7 +59,7 @@ const ticker$ = Rx.Observable.interval(msPerTick).pausable(pauser$)
 const radians$ = ticker$.scan((last) => normalizeRadians(last + radiansPerTick()))
 const activePegs$ = new Rx.Subject()
 
-radians$.subscribe((angle) => {
+radians$.withLatestFrom(editorPegs$, (angle, pegs) => {
   // Generate stream of active pegs
   pegs.forEach((pegModel) => {
     if (angle <= pegModel.normalized.angle && pegModel.normalized.angle < (angle + radiansPerTick())) {
@@ -93,6 +67,7 @@ radians$.subscribe((angle) => {
     }
   })
 })
+    .subscribe(() => null)
 
 
 // VIEW
@@ -175,7 +150,7 @@ tempoChangeAction$.subscribe(msPerPeriod$)
 
 const saveEditorAction$ = Rx.Observable
     .fromEvent(saveButton, 'click')
-    .map(() => {
+    .withLatestFrom(editorPegs$, (_, pegs) => {
       return {
         pegs: pegs,
         svg: editor.outerHTML.replace(/(style|id)="[^"]+"/g, '')
@@ -193,9 +168,9 @@ clearEditorPatternAction$.subscribe(() => {
   }
 })
 
-clearEditorPatternAction$.subscribe(() => {
-  pegs = []
-})
+clearEditorPatternAction$
+    .map(() => { return { cmd: 'clear' }})
+    .subscribe(editorPegsCmdBus$)
 
 
 const editorMousedown$ = Rx.Observable.fromEvent(editor, 'mousedown')
