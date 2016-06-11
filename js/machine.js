@@ -8,6 +8,44 @@ const radiansPerTick = () => {
 }
 
 
+//const editorPegs$ = new Rx.BehaviorSubject([])
+//const editorPegsCmdBus$ = new Rx.Subject()
+//const editorPegsCmdFn$ = new Rx.Subject()
+//
+//editorPegsCmdBus$
+//    .filter(a => a.cmd == 'add')
+//    .map((state) => {
+//      log('adding')
+//      return (state, cmd) => {
+//        return state + cmd.value
+//      }
+//    })
+//    .subscribe(editorPegsCmdFn$)
+//
+//editorPegsCmdBus$
+//    .filter(a => a.cmd == 'sub')
+//    .map((state, cmd) => {
+//      log('subbn')
+//      return (state) => {
+//        return state - cmd.value
+//      }
+//    })
+//    .subscribe(editorPegsCmdFn$)
+//
+//editorPegs$.combineLatest(editorPegsCmdFn$, (state, cmdFn) => {
+//  console.log('running now: ', state, cmdFn)
+//  return cmdFn(state)
+//}).subscribe(editorPegs$)
+//
+//editorPegs$.subscribe(log('editorPegs$'))
+//editorPegsCmdFn$.subscribe(log('editorPegsCmd$'))
+//
+//editorPegsCmdBus$.onNext({cmd: 'add', value: 5})
+//editorPegsCmdBus$.onNext({cmd: 'add', value: 15})
+//editorPegsCmdBus$.onNext({cmd: 'sub', value: 25})
+//
+//const newPeg$ = new Rx.Subject()
+
 let pegs = []
 const maxPegSize = (r = radius) => r / 5
 
@@ -143,7 +181,7 @@ const saveEditorAction$ = Rx.Observable
         svg: editor.outerHTML.replace(/(style|id)="[^"]+"/g, '')
       }
     })
-saveEditorAction$.subscribe(patternsToPersist$)
+saveEditorAction$.subscribe(persistPatternAction$)
 
 resizeAction$.subscribe(saveEditorAction$)
 
@@ -262,4 +300,11 @@ Rx.Observable.fromEvent(editor, 'mousemove')
  normalized => peg
  normalized => sound
 
+
+ event
+ => action
+ => commandFn
+ commandFn (state) => new state
+ render(state) => view
+ watch(view) => event
  */

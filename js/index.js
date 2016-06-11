@@ -1,32 +1,38 @@
 "use strict";
 
-const savedPatterns$ = Rx.Observable.range(0, localStorage.length)
+const savedPatternsState$ = Rx.Observable.range(0, localStorage.length)
     .map((x) => localStorage.key(x))
     .filter((x) => /pattern.*/.exec(x))
     .map((x) => localStorage.getItem(x))
     .map((x) => JSON.parse(x))
-    .reduce((acc, x) => { acc.push(x); return acc }, [])
+    .reduce((acc, x) => {
+      acc.push(x);
+      return acc
+    }, [])
     .map((x) => x.sort((a, b) => b.timestamp - a.timestamp))
 
-const patternsToPersist$ = new Rx.Subject()
+const persistPatternAction$ = new Rx.Subject()
 
-patternsToPersist$.subscribe((pattern) => {
+persistPatternAction$.subscribe((pattern) => {
   pattern.timestamp = (new Date()).getTime()
   pattern.name = `pattern-${pattern.timestamp}`
   localStorage.setItem(pattern.name, JSON.stringify(pattern))
 })
 
-const savedPatternsModel$ = Rx.Observable.combineLatest(savedPatterns$, patternsToPersist$.startWith(null), (savedPatterns, newPattern) => {
-  if (newPattern) savedPatterns.unshift(newPattern)
-  return savedPatterns
-})
-
+// Currently saved patterns
+const patternsState$ = Rx.Observable.combineLatest(
+    savedPatternsState$,
+    persistPatternAction$.startWith(null),
+    (savedPatterns, newPattern) => {
+      if (newPattern) savedPatterns.unshift(newPattern)
+      return savedPatterns
+    })
 
 
 // VIEWS
 const patternListElem = document.getElementsByTagName('ol')[0]
 
-const drawPatterns = (patterns) => {
+const renderPatterns = (patterns) => {
   patternListElem.innerHTML = ''
 
   patterns.forEach((pattern) => {
@@ -51,8 +57,7 @@ const drawPatterns = (patterns) => {
   })
 }
 
-savedPatternsModel$.subscribe(drawPatterns)
-
+patternsState$.subscribe(renderPatterns)
 
 
 // INTENTIONS
@@ -60,14 +65,14 @@ const clearEditorPatternAction$ = new Rx.BehaviorSubject()
 
 const patternsClicks$ = Rx.Observable.fromEvent(patternListElem, 'click')
 
-const resurrectPattern$ = patternsClicks$
+const loadPatternCmd$ = patternsClicks$
     .map((e) => e.target.closest('a'))
     .filter((link) => link && link.className != 'delete')
     .map(link => link.getAttribute('data-pegs'))
     .map(pegData => JSON.parse(pegData))
 
-resurrectPattern$.subscribe(clearEditorPatternAction$)
-resurrectPattern$
+loadPatternCmd$.subscribe(clearEditorPatternAction$)
+loadPatternCmd$
     .subscribe((pegs) => {
       pegs.forEach((pegModel) => {
         const screen = normalizedToScreen(pegModel.normalized, radius)
