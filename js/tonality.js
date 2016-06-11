@@ -1,4 +1,4 @@
-
+// MODEL
 const [tonalities, calcFrequency] = createFrequencyCalculator()
 
 const newSoundData = (normalized, scale) => {
@@ -12,7 +12,10 @@ const newSoundData = (normalized, scale) => {
 }
 
 const currTonality$ = new Rx.BehaviorSubject(localStorage['tonality'] || 'blues')
+currTonality$.subscribe((s) => localStorage['tonality'] = s)
 
+
+// VIEW
 // Build scale control
 const scaleDivElem = document.getElementById('scale')
 const scaleCurrentElem = document.getElementById('scale-current')
@@ -34,5 +37,3 @@ for (let name of tonalities()) {
 }
 
 currTonality$.subscribe((s) => scaleCurrentElem.innerText = s)
-
-currTonality$.subscribe((s) => localStorage['tonality'] = s)

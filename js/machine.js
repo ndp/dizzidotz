@@ -148,14 +148,14 @@ saveEditorAction$.subscribe(patternsToPersist$)
 resizeAction$.subscribe(saveEditorAction$)
 
 
-clearPatternAction$.subscribe(() => {
+clearEditorPatternAction$.subscribe(() => {
   let peg
   while (peg = editor.getElementsByClassName('peg')[0]) {
     if (peg.parentNode) peg.parentNode.removeChild(peg)
   }
 })
 
-clearPatternAction$.subscribe(() => {
+clearEditorPatternAction$.subscribe(() => {
   pegs = []
 })
 
