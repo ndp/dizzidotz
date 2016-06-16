@@ -7,17 +7,18 @@ const radiansPerTick = () => {
   return (msPerTick / msPerPeriod$.getValue() * radiansPerPeriod)
 }
 
-
-const editorPegs$ = new Rx.BehaviorSubject([])
-const editorPegsCmdBus$ = newCmdBus$(editorPegs$)
-
-editorPegsCmdBus$.handleCmdWith('add', (state, cmd) => {
+editorPegsCmdBus$.addListener('add', (state, cmd) => {
   state.push(cmd.value)
   return state
 })
 
-editorPegsCmdBus$.handleCmdWith('clear', (state, cmd) => {
-  return []
+editorPegsCmdBus$.addListener('clear', () => [])
+
+editorPegsCmdBus$.addListener('add normalized', (state, cmd) => {
+  return cmd.pegs.map((pegModel) => {
+    const screen = normalizedToScreen(pegModel.normalized, radius)
+    return newPeg(radius, screen.pt, screen.size)
+  })
 })
 
 
@@ -48,9 +49,14 @@ const newPeg = (radius, pt, size) => {
     },
     sound: newSoundData(normalized, currTonality$.getValue())
   }
-  editorPegsCmdBus$.onNext({ cmd: 'add', value: peg })
   return peg
 }
+
+editorPegs$.subscribe((pegs) => {
+  pegs.forEach((pegModel) => {
+    renderPeg(pegModel)
+  })
+})
 
 
 const pauser$ = playPause$
@@ -160,17 +166,13 @@ saveEditorAction$.subscribe(persistPatternAction$)
 
 resizeAction$.subscribe(saveEditorAction$)
 
-
-clearEditorPatternAction$.subscribe(() => {
+// Remove all the pegs if they are gone
+editorPegs$.filter((pegs) => pegs.length == 0).subscribe(() => {
   let peg
   while (peg = editor.getElementsByClassName('peg')[0]) {
     if (peg.parentNode) peg.parentNode.removeChild(peg)
   }
 })
-
-clearEditorPatternAction$
-    .map(() => { return { cmd: 'clear' }})
-    .subscribe(editorPegsCmdBus$)
 
 
 const editorMousedown$ = Rx.Observable.fromEvent(editor, 'mousedown')
@@ -228,8 +230,7 @@ editorMouseup$.subscribe((e) => {
   const size = calcSizeWhileGrowing()
 
   const peg = newPeg(radius, pt, size)
-
-  renderPeg(peg)
+  editorPegsCmdBus$.onNext({name: 'add', value: peg})
 })
 
 editorMouseup$.subscribe((e) => {

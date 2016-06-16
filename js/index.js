@@ -61,8 +61,6 @@ patternsState$.subscribe(renderPatterns)
 
 
 // INTENTIONS
-const clearEditorPatternAction$ = new Rx.BehaviorSubject()
-
 const patternsClicks$ = Rx.Observable.fromEvent(patternListElem, 'click')
 
 const loadPatternCmd$ = patternsClicks$
@@ -71,16 +69,16 @@ const loadPatternCmd$ = patternsClicks$
     .map(link => link.getAttribute('data-pegs'))
     .map(pegData => JSON.parse(pegData))
 
-loadPatternCmd$.subscribe(clearEditorPatternAction$)
 loadPatternCmd$
-    .subscribe((pegs) => {
-      pegs.forEach((pegModel) => {
-        const screen = normalizedToScreen(pegModel.normalized, radius)
-        pegModel.pt = screen.pt
-        pegModel.size = screen.size
-        renderPeg(newPeg(radius, pegModel.pt, pegModel.size))
-      })
+    .map(() => {
+      return {name: 'clear'}
     })
+    .subscribe(editorPegsCmdBus$)
+
+loadPatternCmd$
+    .map((pegs) => {
+      return { pegs, name: 'add normalized' }
+    }).subscribe(editorPegsCmdBus$)
 
 
 // INTENTIONS: DELETE
