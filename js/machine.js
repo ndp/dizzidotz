@@ -21,6 +21,12 @@ editorPegsCmdBus$.addListener('add normalized', (state, cmd) => {
   })
 })
 
+editorPegsCmdBus$.addListener('add from screen', (state, cmd) => {
+  const newState = state
+  newState.push(newPeg(radius, cmd.screen.pt, cmd.screen.size))
+  return newState
+})
+
 
 const maxPegSize = (r = radius) => r / 5
 
@@ -225,13 +231,16 @@ editorMousedown$.subscribe((e) => {
   }, 20)
 })
 
-editorMouseup$.subscribe((e) => {
-  const pt = eventToPt(e, radius)
-  const size = calcSizeWhileGrowing()
-
-  const peg = newPeg(radius, pt, size)
-  editorPegsCmdBus$.onNext({name: 'add', value: peg})
-})
+editorMouseup$
+    .map((e) => {
+      const pt = eventToPt(e, radius)
+      const size = calcSizeWhileGrowing()
+      return {pt, size}
+    })
+    .map((screen) => {
+      return {name: 'add from screen', screen}
+    })
+    .subscribe(editorPegsCmdBus$)
 
 editorMouseup$.subscribe((e) => {
   startedPegAt = null
