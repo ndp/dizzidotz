@@ -1,6 +1,7 @@
 /*
- Command Bus
- Create a bus that receives (listens for) commands that transform
+ # Command Bus
+
+ Create a bus that receives and executes commands that transform
  the state.
 
  Caller provides the current
@@ -8,12 +9,12 @@
  or at least both an `Observer` and `Observable`. A `Rx.BehaviorSubject`
  works quite well.
 
- A command is identified with a string.
+ Commands are identified with strings.
 
  Register listeners with `addListener`. Provide the name
  of the command and a function. Only one command per name.
  The listener itself should know how to project the
- state given the current state and the command:
+ state given the current state and the command, ie.
  ```
  (state, cmd) => new state
  ```
@@ -26,34 +27,41 @@
  including no-ops from missing listeners.
 
  Example:
- For example, if the state is simply an integer, this could
+ If the state were an integer, this system would
  increment and decrement:
 
+ ```
+ const state$ = new Rx.BehaviorSubject(0)
+
+ const bus$ = newCmdBus$(state$)
+ bus$.addListener('increment', x => x + 1)
+ bus$.addListener('decrement', x => x - 1)
+
+ bus$.onNext('increment')
+ ...
+ ```
+
+ The bus can also be fed from other streams, as in:
+
 ```
-const state$ = new Rx.BehaviorSubject(0)
-
-const bus$ = newCmdBus$(state$)
-bus$.addListener('increment', x => x + 1)
-bus$.addListener('decrement', x => x - 1)
-
-bus$.onNext('increment')
-...
+ Rx.Observable
+   .fromEvent(elem, 'click')
+   .map('increment')
+   .subscribe(bus$)
 ```
-The bus can also be fed from other streams, as in:
-
-Rx.Observable.fromEvent(elem, 'click')
-  .map('increment').subscribe(bus$)
-
  */
+
+function precondition(x, msg) {
+  if (!x) throw msg
+}
 
 function newCmdBus$(state$) {
   const cmdBus$ = new Rx.Subject()
   const listeners = {}
 
   cmdBus$.addListener = function (cmdName, fn) {
-    if (!cmdName) throw 'Listeners require a command name'
-    if (!fn) throw 'Listeners require a projection function'
-    if (!Rx.helpers.isFunction(fn)) throw 'Listeners require a projection function'
+    precondition(cmdName, 'Listeners require a command name')
+    precondition(Rx.helpers.isFunction(fn), 'Listeners require a projection function')
     listeners[cmdName] = fn
   }
 
