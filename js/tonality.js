@@ -1,10 +1,11 @@
 // MODEL
-const frequencyCalculators = createFrequencyCalculator()
+const tonalities = createTonalities()
 
-const newSoundData = (normalized, scale) => {
-  const frequency = frequencyCalculators[scale](normalized.distScore)
+const newSoundData = (normalized, tonality) => {
+  const frequency = tonalities[tonality](normalized.distScore)
   return {
-              scale, frequency,
+    scale:    tonality,
+              frequency,
     volume:   normalized.sizeScore * 30,
     velocity: normalized.sizeScore,
     duration: normalized.sizeScore
@@ -19,7 +20,7 @@ currTonality$.subscribe((s) => localStorage['tonality'] = s)
 // Build scale control
 const scaleDivElem     = document.getElementById('scale')
 const scaleCurrentElem = document.getElementById('scale-current')
-for (let name of ownPropertiesIter(frequencyCalculators)()) {
+for (let name of ownPropertiesIter(tonalities)()) {
   const input = document.createElement('INPUT')
   input.setAttribute('type', 'radio')
   input.setAttribute('name', 'scale')

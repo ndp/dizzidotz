@@ -1,4 +1,4 @@
-function createFrequencyCalculator() {
+function createTonalities() {
 // equal tempered scale
   const semitone = Math.pow(2, 1 / 12)
 // ref. http://www.phy.mtu.edu/~suits/NoteFreqCalcs.html
