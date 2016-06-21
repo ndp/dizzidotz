@@ -21,3 +21,4 @@ A few themes are driving this project:
 
   * **El**: Suffix added to variables denoting an HTML **element**.
   * **$**: Suffix added to variables denoting a stream. Can be read as "stream."
+  * **Iter**: Iterator.

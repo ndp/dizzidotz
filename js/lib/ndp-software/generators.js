@@ -1,17 +1,22 @@
-const doubleIter = function* (x) {
-  while (true) {
-    yield x
-    x *= 2
+// Given a fn, returns an iterator that calls that function for each step
+// of an iteration.
+const iterateWith = function(fn) {
+  return function *(x) {
+    while (true) {
+      yield x
+      x = fn(x)
+    }
   }
 }
 
-const counterIter = function* (x = 0) {
-  while (true) {
-    yield x
-    x += 1
-  }
-}
+// Starting with the given number, yields a number doubling each time.
+const doubleIter = iterateWith( (x) => x * 2)
 
+// Starting with a given number, yields numbers increasing by ones
+const counterIter = iterateWith( (x) => x + 1)
+
+// Given an iterator and a function, yields iterator value until
+/// function returns false.
 const takeWhile = function* (it, fn) {
   for (let x of it) {
     if (fn(x))
@@ -21,6 +26,7 @@ const takeWhile = function* (it, fn) {
   }
 }
 
+// Calls iterator until number is less than the max value provided.
 const whileLessThan = function (it, max) {
   return takeWhile(it, (x) => x < max)
 }
