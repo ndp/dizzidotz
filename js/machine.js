@@ -65,8 +65,8 @@ editorPegs$.subscribe((pegs) => {
 })
 
 
-const ticker$ = Rx.Observable.interval(msPerTick).pausable(playPause$)
-const radians$ = ticker$.scan((last) => normalizeRadians(last + radiansPerTick()))
+const ticker$     = Rx.Observable.interval(msPerTick).pausable(playState$.map(s => s == 'playing' ? 1 : 0))
+const radians$    = ticker$.scan((last) => normalizeRadians(last + radiansPerTick()))
 const activePegs$ = new Rx.Subject()
 
 radians$.withLatestFrom(editorPegs$, (angle, pegs) => {

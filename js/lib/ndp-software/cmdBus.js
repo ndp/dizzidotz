@@ -65,6 +65,8 @@ function newCmdBus$(state$) {
     listeners[cmdName] = fn
   }
 
+  cmdBus$.on = cmdBus$.addListener // alias
+
   cmdBus$
       .map((cmd) => typeof cmd == 'string' ? {name: cmd} : cmd)
       .withLatestFrom(state$, (cmd, state) => {
