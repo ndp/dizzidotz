@@ -26,7 +26,7 @@ body {
   margin: 0;
   padding: 0;
   border: 0 solid black;
-  background-color: #00000099;
+  background-color: rgba(0,0,0, .3);
 }
 
 @media (orientation: landscape) {
@@ -50,7 +50,7 @@ body {
     top: 0;
     height: 100%;
     width: 115px;
-    border-left-width: 2px;
+    border-left-width: 0px;
   }
 
   #drawer:empty {
@@ -101,7 +101,7 @@ body {
     bottom: 0;
     height: 115px;
     width: 100%;
-    border-top-width: 2px;
+    border-top-width: 0px;
   }
 
   #drawer:empty {
