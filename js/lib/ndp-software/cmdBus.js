@@ -50,11 +50,6 @@
    .subscribe(bus$)
 ```
  */
-
-function precondition(x, msg) {
-  if (!x) throw msg
-}
-
 function newCmdBus$(state$) {
   const cmdBus$ = new Rx.Subject()
   const listeners = {}
