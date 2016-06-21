@@ -50,17 +50,17 @@ function createFrequencyCalculator() {
   ν['harmonicMinor'] = buildTonality(majorSecondAbove, minorThirdAbove, perfectFourthAbove, perfectFifthAbove, majorSixthAbove, minorSeventhAbove)
   ν['blues']         = buildTonality(minorThirdAbove, perfectFourthAbove, flatFiveAbove, perfectFifthAbove, minorSeventhAbove)
   ν['chromatic']     = buildTonality(semitoneAbove, majorSecondAbove, minorThirdAbove, majorThirdAbove,
-                                     perfectFourthAbove, flatFiveAbove, perfectFifthAbove, minorSixthAbove, majorSixthAbove,
-                                     minorSeventhAbove, majorSeventhAbove)
+                                     perfectFourthAbove, flatFiveAbove, perfectFifthAbove, minorSixthAbove,
+                                     majorSixthAbove, minorSeventhAbove, majorSeventhAbove)
 
-  const tonalityNames = ownPropertiesIter(ν)
+  const tonalityCalculator = function(tonalityName) {
+    return function(x) {
+      const s = ν[tonalityName]
+      return s[Math.floor(Math_within(x, 0, 1) * s.length)]
+    }
+  }
 
-  // Return a function that can calculate a frequency based on the scale
-  // x: 0..1
-  // scale: name of scale
-  return [tonalityNames, (x, scale) => {
-    x       = Math.min(1.0, Math.max(0.0, x))
-    const s = ν[scale]
-    return s[Math.floor(x * s.length)]
-  }]
+  const fns = {}
+  for (let t in ν) fns[t] = tonalityCalculator(t)
+  return fns
 }
