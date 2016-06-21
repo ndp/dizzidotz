@@ -65,9 +65,7 @@ editorPegs$.subscribe((pegs) => {
 })
 
 
-const pauser$ = playPause$
-
-const ticker$ = Rx.Observable.interval(msPerTick).pausable(pauser$)
+const ticker$ = Rx.Observable.interval(msPerTick).pausable(playPause$)
 const radians$ = ticker$.scan((last) => normalizeRadians(last + radiansPerTick()))
 const activePegs$ = new Rx.Subject()
 
