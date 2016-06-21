@@ -53,13 +53,7 @@ function createFrequencyCalculator() {
                                      perfectFourthAbove, flatFiveAbove, perfectFifthAbove, minorSixthAbove, majorSixthAbove,
                                      minorSeventhAbove, majorSeventhAbove)
 
-  function *tonalityNames() {
-    for (p in ν) {
-      if (ν.hasOwnProperty(p)) {
-        yield p
-      }
-    }
-  }
+  const tonalityNames = ownPropertiesIter(ν)
 
   // Return a function that can calculate a frequency based on the scale
   // x: 0..1
