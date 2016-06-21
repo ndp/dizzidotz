@@ -32,9 +32,9 @@ const maxPegSize = (r = radius) => r / 5
 
 
 const normalizeValues = (radius, pt, size) => {
-  const r = {}
+  const r     = {}
   const [angle, dist] = ptToVector(pt)
-  r.angle = angle
+  r.angle     = angle
   r.distScore = 1 - (dist / radius)
   r.sizeScore = size / maxPegSize(radius)
   return r
@@ -46,14 +46,14 @@ const normalizeEvent = (e, radius, size) =>
 
 const newPeg = (radius, pt, size) => {
   const normalized = normalizeValues(radius, pt, size)
-  const peg = {
-    normalized,
-    id: `peg-${(new Date()).getTime()}${Math.random()}`,
+  const peg        = {
+            normalized,
+    id:     `peg-${(new Date()).getTime()}${Math.random()}`,
     screen: {
-      pt: pt,
+      pt:   pt,
       size: size
     },
-    sound: newSoundData(normalized, currTonality$.getValue())
+    sound:  newSoundData(normalized, currTonality$.getValue())
   }
   return peg
 }
@@ -82,29 +82,29 @@ radians$.withLatestFrom(editorPegs$, (angle, pegs) => {
 
 // VIEW
 const drawerDepth = 115
-const editor = document.getElementById('editor')
-const body = document.getElementsByTagName('body')[0]
-const wheel = document.getElementById('wheel')
+const editor      = document.getElementById('editor')
+const body        = document.getElementsByTagName('body')[0]
+const wheel       = document.getElementById('wheel')
 
 
 const msPerPeriodInput = document.getElementById('ms-per-period')
-const saveButton = document.getElementById('save-button')
+const saveButton       = document.getElementById('save-button')
 
 const portrait = () => (body.clientHeight > body.clientWidth)
-const radius = portrait() ?
+const radius   = portrait() ?
 Math.min(body.clientHeight - 2 * drawerDepth, body.clientWidth) / 2
     : Math.min(body.clientHeight, body.clientWidth - 2 * drawerDepth) / 2
 
 
 const resizeAction$ = new Rx.Subject()
 resizeAction$.subscribe(() => {
-  editor.style.width = 2 * radius
+  editor.style.width  = 2 * radius
   editor.style.height = 2 * radius
   if (portrait()) {
-    editor.style.marginTop = `${((body.clientHeight - drawerDepth) / 2) - radius}px`
+    editor.style.marginTop  = `${((body.clientHeight - drawerDepth) / 2) - radius}px`
     editor.style.marginLeft = `${(body.clientWidth / 2) - radius}px`
   } else {
-    editor.style.marginTop = `${(body.clientHeight / 2) - radius}px`
+    editor.style.marginTop  = `${(body.clientHeight / 2) - radius}px`
     editor.style.marginLeft = `${((body.clientWidth - drawerDepth) / 2) - radius}px`
   }
   editor.setAttribute('viewBox', `0 0 ${2 * radius} ${2 * radius}`)
@@ -118,7 +118,7 @@ wheel.setAttribute('r', radius)
 
 
 const Color = {
-  note: 'violet',
+  note:    'violet',
   playing: 'white',
   growing: 'deeppink'
 }
@@ -161,11 +161,11 @@ tempoChangeAction$.subscribe(msPerPeriod$)
 const saveEditorAction$ = Rx.Observable
     .fromEvent(saveButton, 'click')
     .withLatestFrom(editorPegs$, (_, pegs) => {
-      return {
-        pegs: pegs,
-        svg: editor.outerHTML.replace(/(style|id)="[^"]+"/g, '')
-      }
-    })
+                      return {
+                        pegs: pegs,
+                        svg:  editor.outerHTML.replace(/(style|id)="[^"]+"/g, '')
+                      }
+                    })
 saveEditorAction$.subscribe(persistPatternAction$)
 
 resizeAction$.subscribe(saveEditorAction$)
@@ -180,12 +180,12 @@ editorPegs$.filter((pegs) => pegs.length == 0).subscribe(() => {
 
 
 const editorMousedown$ = Rx.Observable.fromEvent(editor, 'mousedown')
-const editorMouseup$ = Rx.Observable.fromEvent(editor, 'mouseup')
+const editorMouseup$   = Rx.Observable.fromEvent(editor, 'mouseup')
 
 
 const normalizedToScreen = (normalized, radius) => {
   return {
-    pt: vectorToPt(normalized.angle, (1 - normalized.distScore) * radius),
+    pt:   vectorToPt(normalized.angle, (1 - normalized.distScore) * radius),
     size: normalized.sizeScore * maxPegSize(radius)
   }
 }
@@ -205,18 +205,18 @@ const calcSizeWhileGrowing = (start = startedPegAt) => {
 
 editorMousedown$.subscribe((e) => {
   startedPegAt = (new Date()).getTime()
-  const pt = eventToPt(e, radius)
+  const pt     = eventToPt(e, radius)
   const [angle, dist] = ptToVector(pt)
 
   const interval = setInterval(() => {
     if (startedPegAt) {
       const peg = {
-        id: 'wip',
-        angle: angle,
-        dist: dist,
+        id:     'wip',
+        angle:  angle,
+        dist:   dist,
         screen: {
-          size: calcSizeWhileGrowing(),
-          pt: pt,
+          size:  calcSizeWhileGrowing(),
+          pt:    pt,
           color: Color.growing
         },
       }
@@ -231,13 +231,13 @@ editorMousedown$.subscribe((e) => {
 
 editorMouseup$
     .map((e) => {
-      const pt = eventToPt(e, radius)
-      const size = calcSizeWhileGrowing()
-      return {pt, size}
-    })
+           const pt   = eventToPt(e, radius)
+           const size = calcSizeWhileGrowing()
+           return {pt, size}
+         })
     .map((screen) => {
-      return {name: 'add from screen', screen}
-    })
+           return {name: 'add from screen', screen}
+         })
     .subscribe(editorPegsCmdBus$)
 
 editorMouseup$.subscribe((e) => {
@@ -247,7 +247,7 @@ editorMouseup$.subscribe((e) => {
 
 // Move the clock hand
 radians$.subscribe((angle) => {
-  const hand = document.getElementById('hand')
+  const hand     = document.getElementById('hand')
   const duration = msPerTick * .75 // smaller than interval so we don't drop behind
   Velocity(hand, {
     x1: radius + Math.cos(angle) * radius,
@@ -258,8 +258,8 @@ radians$.subscribe((angle) => {
 })
 
 activePegs$.subscribe((pegModel) => {
-  const tempModel = Object.create(pegModel)
-  tempModel.screen.color = Color.note
+  const tempModel                 = Object.create(pegModel)
+  tempModel.screen.color          = Color.note
   tempModel.screen.highlightcolor = Color.playing
   renderPeg(tempModel)
 })

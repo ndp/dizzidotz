@@ -4,8 +4,8 @@ const [tonalities, calcFrequency] = createFrequencyCalculator()
 const newSoundData = (normalized, scale) => {
   const frequency = calcFrequency(normalized.distScore, scale)
   return {
-    scale, frequency,
-    volume: normalized.sizeScore * 30,
+              scale, frequency,
+    volume:   normalized.sizeScore * 30,
     velocity: normalized.sizeScore,
     duration: normalized.sizeScore
   }
@@ -17,7 +17,7 @@ currTonality$.subscribe((s) => localStorage['tonality'] = s)
 
 // VIEW
 // Build scale control
-const scaleDivElem = document.getElementById('scale')
+const scaleDivElem     = document.getElementById('scale')
 const scaleCurrentElem = document.getElementById('scale-current')
 for (let name of tonalities()) {
   const input = document.createElement('INPUT')

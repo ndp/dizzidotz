@@ -1,7 +1,7 @@
 // MODEL
 const playState$ = new Rx.BehaviorSubject('playing')
 
-playStateBus$    = newCmdBus$(playState$)
+playStateBus$ = newCmdBus$(playState$)
 playStateBus$.on('toggle', state => state == 'playing' ? 'paused' : 'playing')
 
 

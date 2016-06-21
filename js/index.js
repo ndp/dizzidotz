@@ -6,16 +6,16 @@ const savedPatternsState$ = Rx.Observable.range(0, localStorage.length)
     .map((x) => localStorage.getItem(x))
     .map((x) => JSON.parse(x))
     .reduce((acc, x) => {
-      acc.push(x);
-      return acc
-    }, [])
+              acc.push(x);
+              return acc
+            }, [])
     .map((x) => x.sort((a, b) => b.timestamp - a.timestamp))
 
 const persistPatternAction$ = new Rx.Subject()
 
 persistPatternAction$.subscribe((pattern) => {
   pattern.timestamp = (new Date()).getTime()
-  pattern.name = `pattern-${pattern.timestamp}`
+  pattern.name      = `pattern-${pattern.timestamp}`
   localStorage.setItem(pattern.name, JSON.stringify(pattern))
 })
 
@@ -36,19 +36,19 @@ const renderPatterns = (patterns) => {
   patternListElem.innerHTML = ''
 
   patterns.forEach((pattern) => {
-    const link = document.createElement('A')
-    link.className = 'pattern'
-    link.style.height = '100px'
-    link.style.width = '100px'
+    const link         = document.createElement('A')
+    link.className     = 'pattern'
+    link.style.height  = '100px'
+    link.style.width   = '100px'
     link.style.display = 'block'
-    link.innerHTML = pattern.svg
+    link.innerHTML     = pattern.svg
     link.setAttribute('data-pegs', JSON.stringify(pattern.pegs))
 
     const li = document.createElement('LI')
     li.setAttribute('data-name', pattern.name)
     li.appendChild(link)
 
-    const del = document.createElement('A')
+    const del     = document.createElement('A')
     del.innerHTML = '<svg viewBox="0 0 100 100" style=""><line x1="0px" y1="0px" x2="100px" y2="100px" style="stroke:white;stroke-width:6"></line><line x1="0px" y1="100px" x2="100px" y2="0px" style="stroke:white;stroke-width:6"></line></svg>'
     del.className = 'delete'
     li.appendChild(del)
@@ -71,14 +71,14 @@ const loadPatternCmd$ = patternsClicks$
 
 loadPatternCmd$
     .map(() => {
-      return {name: 'clear'}
-    })
+           return {name: 'clear'}
+         })
     .subscribe(editorPegsCmdBus$)
 
 loadPatternCmd$
     .map((pegs) => {
-      return { pegs, name: 'add normalized' }
-    }).subscribe(editorPegsCmdBus$)
+           return {pegs, name: 'add normalized'}
+         }).subscribe(editorPegsCmdBus$)
 
 
 // INTENTIONS: DELETE
