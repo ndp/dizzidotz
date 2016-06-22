@@ -17,6 +17,7 @@ const normalizeValues = (radius, pt, size) => {
   r.angle     = angle
   r.distScore = 1 - (dist / radius)
   r.sizeScore = size / maxPegSize(radius)
+  r.tonality  = currentTonality$.getValue()
   return r
 }
 
@@ -24,10 +25,12 @@ const normalizeEvent = (e, radius, size) =>
     normalizeValues(radius, eventToPt(e, radius), size)
 
 
-const newSoundData = (normalized, tonality) => {
+const newSoundData = (normalized) => {
+  const tonality  = normalized.tonality || currentTonality$.getValue()
   const frequency = tonalities[tonality](normalized.distScore)
   return {
     scale:    tonality,
+    tonality: tonality,
               frequency,
     volume:   normalized.sizeScore * 30,
     velocity: normalized.sizeScore,
@@ -36,19 +39,19 @@ const newSoundData = (normalized, tonality) => {
 }
 
 const newPeg = function(normalized) {
-  const peg        = {
-    id:    `peg-${(new Date()).getTime()}${Math.random()}`,
-           normalized,
-    sound: newSoundData(normalized, currentTonality$.getValue())
+  return {
+    id:         `peg-${(new Date()).getTime()}${Math.random()}`,
+    normalized: normalized,
+    sound:      newSoundData(normalized)
   }
-  return peg
 }
 
 
 const ticker$     = Rx.Observable.interval(msPerTick).pausable(playState$.map(s => s == 'playing' ? 1 : 0))
 const radians$    = ticker$.scan((last) => normalizeRadians(last + radiansPerTick()))
-const activePegs$ = new Rx.Subject()
 
+// activePegs$ is a stream of the "active" or highlighted peg.
+const activePegs$ = new Rx.Subject()
 radians$.withLatestFrom(editorPegs$, (angle, pegs) => {
   // Generate stream of active pegs
   pegs.forEach((pegModel) => {
@@ -66,8 +69,6 @@ const editor      = document.getElementById('editor')
 const body        = document.getElementsByTagName('body')[0]
 const wheel       = document.getElementById('wheel')
 
-
-const msPerPeriodInput = document.getElementById('ms-per-period')
 const saveButton       = document.getElementById('save-button')
 
 const portrait = () => (body.clientHeight > body.clientWidth)
@@ -92,9 +93,9 @@ resizeAction$.subscribe(() => {
 
 resizeAction$.onNext()
 
-wheel.setAttribute('cx', radius)
-wheel.setAttribute('cy', radius)
-wheel.setAttribute('r', radius)
+//wheel.setAttribute('cx', radius)
+//wheel.setAttribute('cy', radius)
+//wheel.setAttribute('r', radius)
 
 
 const Color = {
@@ -114,7 +115,15 @@ editorPegs$
            })
            return newPegs
          })
-    .subscribe(pegs => pegs.forEach((p) => renderPeg(p[0], p[1])) )
+    .subscribe(pegs => pegs.forEach((p) => renderPeg(p[0], p[1])))
+
+const normalizedToScreen = (normalized, radius) => {
+  return {
+    pt:   vectorToPt(normalized.angle, (1 - normalized.distScore) * radius),
+    size: normalized.sizeScore * maxPegSize(radius)
+  }
+}
+
 
 
 const findOrCreatePeg = (pegModel) => {
@@ -138,15 +147,8 @@ const renderPeg = (pegModel, screen) => {
 }
 
 
-
 // INTERACTIONS
 
-const tempoChangeAction$ = Rx.Observable
-    .fromEvent(msPerPeriodInput, 'change')
-    .map((e) => e.target.value)
-
-const msPerPeriod$ = new Rx.BehaviorSubject(2000)
-tempoChangeAction$.subscribe(msPerPeriod$)
 
 
 const saveEditorAction$ = Rx.Observable
@@ -173,13 +175,6 @@ editorPegs$.filter((pegs) => pegs.length == 0).subscribe(() => {
 const editorMousedown$ = Rx.Observable.fromEvent(editor, 'mousedown')
 const editorMouseup$   = Rx.Observable.fromEvent(editor, 'mouseup')
 
-
-const normalizedToScreen = (normalized, radius) => {
-  return {
-    pt:   vectorToPt(normalized.angle, (1 - normalized.distScore) * radius),
-    size: normalized.sizeScore * maxPegSize(radius)
-  }
-}
 
 var eventToPt = function(e, radius) {
   const x = (e.offsetX || e.clientX) - radius
@@ -268,7 +263,7 @@ activePegs$.map((x) => x.sound).subscribe(soundOut$)
 Rx.Observable.fromEvent(editor, 'mousemove')
     .throttle(50)
     .filter(e => e.shiftKey)
-    .map(e => newSoundData(normalizeEvent(e, radius, maxPegSize() / 10), currentTonality$.getValue()))
+    .map(e => newSoundData(normalizeEvent(e, radius, maxPegSize() / 10)))
     .filter(s => s.frequency)
     .subscribe(soundOut$)
 
