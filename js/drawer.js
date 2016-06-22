@@ -5,9 +5,9 @@ const savedPatternsState$ = Rx.Observable.range(0, localStorage.length)
     .filter((x) => /pattern.*/.exec(x))
     .map((x) => localStorage.getItem(x))
     .map((x) => JSON.parse(x))
-    .reduce((acc, x) => {
-              acc.push(x);
-              return acc
+    .reduce((patterns, x) => {
+              patterns.push(x);
+              return patterns
             }, [])
     .map((x) => x.sort((a, b) => b.timestamp - a.timestamp))
 
@@ -49,7 +49,7 @@ const renderPatterns = (patterns) => {
     li.appendChild(link)
 
     const del     = document.createElement('A')
-    del.innerHTML = '<svg viewBox="0 0 100 100" style=""><line x1="0px" y1="0px" x2="100px" y2="100px" style="stroke:white;stroke-width:6"></line><line x1="0px" y1="100px" x2="100px" y2="0px" style="stroke:white;stroke-width:6"></line></svg>'
+    del.innerHTML = '<svg viewBox="0 0 100 100" style=""><line x1="0px" y1="0px" x2="100px" y2="100px" style="stroke:mediumpurple;stroke-width:15"></line><line x1="0px" y1="100px" x2="100px" y2="0px" style="stroke:mediumpurple;stroke-width:15"></line></svg>'
     del.className = 'delete'
     li.appendChild(del)
 
@@ -67,17 +67,16 @@ const loadPatternCmd$ = patternsClicks$
     .map((e) => e.target.closest('a'))
     .filter((link) => link && link.className != 'delete')
     .map(link => link.getAttribute('data-pegs'))
+    .map(log('load'))
     .map(pegData => JSON.parse(pegData))
 
 loadPatternCmd$
-    .map(() => {
-           return {name: 'clear'}
-         })
+    .map('clear')
     .subscribe(editorPegsCmdBus$)
 
 loadPatternCmd$
     .map((pegs) => {
-           return {pegs, name: 'add normalized'}
+           return {pegs, name: 'add pegs'}
          }).subscribe(editorPegsCmdBus$)
 
 

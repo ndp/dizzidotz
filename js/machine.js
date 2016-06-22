@@ -7,26 +7,6 @@ const radiansPerTick = () => {
   return (msPerTick / msPerPeriod$.getValue() * radiansPerPeriod)
 }
 
-editorPegsCmdBus$.addListener('add', (state, cmd) => {
-  state.push(cmd.value)
-  return state
-})
-
-editorPegsCmdBus$.addListener('clear', () => [])
-
-editorPegsCmdBus$.addListener('add normalized', (state, cmd) => {
-  return cmd.pegs.map((pegModel) => {
-    const screen = normalizedToScreen(pegModel.normalized, radius)
-    return newPeg(radius, screen.pt, screen.size)
-  })
-})
-
-editorPegsCmdBus$.addListener('add from screen', (state, cmd) => {
-  const newState = state
-  newState.push(newPeg(radius, cmd.screen.pt, cmd.screen.size))
-  return newState
-})
-
 
 const maxPegSize = (r = radius) => r / 5
 
@@ -37,6 +17,7 @@ const normalizeValues = (radius, pt, size) => {
   r.angle     = angle
   r.distScore = 1 - (dist / radius)
   r.sizeScore = size / maxPegSize(radius)
+  r.tonality  = currentTonality$.getValue()
   return r
 }
 
@@ -44,31 +25,33 @@ const normalizeEvent = (e, radius, size) =>
     normalizeValues(radius, eventToPt(e, radius), size)
 
 
-const newPeg = (radius, pt, size) => {
-  const normalized = normalizeValues(radius, pt, size)
-  const peg        = {
-            normalized,
-    id:     `peg-${(new Date()).getTime()}${Math.random()}`,
-    screen: {
-      pt:   pt,
-      size: size
-    },
-    sound:  newSoundData(normalized, currTonality$.getValue())
+const newSoundData = (normalized) => {
+  const tonality  = normalized.tonality || currentTonality$.getValue()
+  const frequency = tonalities[tonality](normalized.distScore)
+  return {
+    scale:    tonality,
+    tonality: tonality,
+              frequency,
+    volume:   normalized.sizeScore * 30,
+    velocity: normalized.sizeScore,
+    duration: normalized.sizeScore
   }
-  return peg
 }
 
-editorPegs$.subscribe((pegs) => {
-  pegs.forEach((pegModel) => {
-    renderPeg(pegModel)
-  })
-})
+const newPeg = function(normalized) {
+  return {
+    id:         `peg-${(new Date()).getTime()}${Math.random()}`,
+    normalized: normalized,
+    sound:      newSoundData(normalized)
+  }
+}
 
 
 const ticker$     = Rx.Observable.interval(msPerTick).pausable(playState$.map(s => s == 'playing' ? 1 : 0))
 const radians$    = ticker$.scan((last) => normalizeRadians(last + radiansPerTick()))
-const activePegs$ = new Rx.Subject()
 
+// activePegs$ is a stream of the "active" or highlighted peg.
+const activePegs$ = new Rx.Subject()
 radians$.withLatestFrom(editorPegs$, (angle, pegs) => {
   // Generate stream of active pegs
   pegs.forEach((pegModel) => {
@@ -86,8 +69,6 @@ const editor      = document.getElementById('editor')
 const body        = document.getElementsByTagName('body')[0]
 const wheel       = document.getElementById('wheel')
 
-
-const msPerPeriodInput = document.getElementById('ms-per-period')
 const saveButton       = document.getElementById('save-button')
 
 const portrait = () => (body.clientHeight > body.clientWidth)
@@ -112,9 +93,9 @@ resizeAction$.subscribe(() => {
 
 resizeAction$.onNext()
 
-wheel.setAttribute('cx', radius)
-wheel.setAttribute('cy', radius)
-wheel.setAttribute('r', radius)
+//wheel.setAttribute('cx', radius)
+//wheel.setAttribute('cy', radius)
+//wheel.setAttribute('r', radius)
 
 
 const Color = {
@@ -122,6 +103,27 @@ const Color = {
   playing: 'white',
   growing: 'deeppink'
 }
+
+
+// Draw the pegs
+editorPegs$
+    .map((pegs) => {
+           const newPegs = []
+           pegs.forEach((pegModel) => {
+             const screen = normalizedToScreen(pegModel.normalized, radius)
+             newPegs.push([pegModel, screen])
+           })
+           return newPegs
+         })
+    .subscribe(pegs => pegs.forEach((p) => renderPeg(p[0], p[1])))
+
+const normalizedToScreen = (normalized, radius) => {
+  return {
+    pt:   vectorToPt(normalized.angle, (1 - normalized.distScore) * radius),
+    size: normalized.sizeScore * maxPegSize(radius)
+  }
+}
+
 
 
 const findOrCreatePeg = (pegModel) => {
@@ -135,27 +137,18 @@ const findOrCreatePeg = (pegModel) => {
   return peg
 }
 
-const renderPeg = (pegModel) => {
+const renderPeg = (pegModel, screen) => {
   //console.log(pegModel)
   const e = findOrCreatePeg(pegModel)
-  e.setAttribute("cx", pegModel.screen.pt.x + radius)
-  e.setAttribute("cy", pegModel.screen.pt.y + radius)
-  e.setAttribute("r", pegModel.screen.size)
-  e.setAttribute("fill", pegModel.screen.highlightcolor || pegModel.screen.color || Color.note)
-  if (pegModel.screen.highlightcolor) {
-    setTimeout(() => e.setAttribute('fill', pegModel.screen.color), Math.min(200, pegModel.sound.duration * 1000))
-  }
+  e.setAttribute("cx", screen.pt.x + radius)
+  e.setAttribute("cy", screen.pt.y + radius)
+  e.setAttribute("r", screen.size)
+  e.setAttribute("fill", screen.highlightcolor || screen.color || Color.note)
 }
 
 
 // INTERACTIONS
 
-const tempoChangeAction$ = Rx.Observable
-    .fromEvent(msPerPeriodInput, 'change')
-    .map((e) => e.target.value)
-
-const msPerPeriod$ = new Rx.BehaviorSubject(2000)
-tempoChangeAction$.subscribe(msPerPeriod$)
 
 
 const saveEditorAction$ = Rx.Observable
@@ -183,14 +176,7 @@ const editorMousedown$ = Rx.Observable.fromEvent(editor, 'mousedown')
 const editorMouseup$   = Rx.Observable.fromEvent(editor, 'mouseup')
 
 
-const normalizedToScreen = (normalized, radius) => {
-  return {
-    pt:   vectorToPt(normalized.angle, (1 - normalized.distScore) * radius),
-    size: normalized.sizeScore * maxPegSize(radius)
-  }
-}
-
-var eventToPt = function (e, radius) {
+var eventToPt = function(e, radius) {
   const x = (e.offsetX || e.clientX) - radius
   const y = (e.offsetY || e.clientY) - radius
   return {x: x, y: y}
@@ -210,17 +196,17 @@ editorMousedown$.subscribe((e) => {
 
   const interval = setInterval(() => {
     if (startedPegAt) {
-      const peg = {
-        id:     'wip',
-        angle:  angle,
-        dist:   dist,
-        screen: {
-          size:  calcSizeWhileGrowing(),
-          pt:    pt,
-          color: Color.growing
-        },
+      const peg    = {
+        id:    'wip',
+        angle: angle,
+        dist:  dist,
       }
-      renderPeg(peg)
+      const screen = {
+        size:  calcSizeWhileGrowing(),
+        pt:    pt,
+        color: Color.growing
+      }
+      renderPeg(peg, screen)
     } else {
       const e = document.getElementById('wip')
       if (e) e.parentNode.removeChild(e)
@@ -236,7 +222,8 @@ editorMouseup$
            return {pt, size}
          })
     .map((screen) => {
-           return {name: 'add from screen', screen}
+           const normalized = normalizeValues(radius, screen.pt, screen.size)
+           return {name: 'add peg', peg: newPeg(normalized)}
          })
     .subscribe(editorPegsCmdBus$)
 
@@ -257,11 +244,14 @@ radians$.subscribe((angle) => {
   }, {duration: duration, easing: "linear", queue: false});
 })
 
+
 activePegs$.subscribe((pegModel) => {
-  const tempModel                 = Object.create(pegModel)
-  tempModel.screen.color          = Color.note
-  tempModel.screen.highlightcolor = Color.playing
-  renderPeg(tempModel)
+  let e = document.getElementById(pegModel.id)
+  if (e) {
+    e.setAttribute("fill", Color.playing)
+    const highlightDuration = Math.min(200, pegModel.sound.duration * 1000)
+    setTimeout(() => e.setAttribute('fill', Color.note), highlightDuration)
+  }
 })
 
 
@@ -273,21 +263,7 @@ activePegs$.map((x) => x.sound).subscribe(soundOut$)
 Rx.Observable.fromEvent(editor, 'mousemove')
     .throttle(50)
     .filter(e => e.shiftKey)
-    .map(e => newSoundData(normalizeEvent(e, radius, maxPegSize() / 10), currTonality$.getValue()))
+    .map(e => newSoundData(normalizeEvent(e, radius, maxPegSize() / 10)))
     .filter(s => s.frequency)
     .subscribe(soundOut$)
 
-/*
- event => normalized
- event => normalized (in progress)
- normalized => peg
- normalized => sound
-
-
- event
- => action
- => commandFn
- commandFn (state) => new state
- render(state) => view
- watch(view) => event
- */

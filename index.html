@@ -24,13 +24,35 @@
 </head>
 <body>
 <svg id='editor'>
-    <circle id='wheel' cx="50%" cy="50%" r="50%" stroke-width="0" fill="url(#grad1)"/>
+    <circle id='wheel' cx="50%" cy="50%" r="49%" stroke-width="0" style="filter:url(#dropshadow)" />
     <line id='hand' x1="0" y1="0" x2="50%" y2="50%" style="stroke:yellow;stroke-width:2"/>
     <radialGradient id="grad1" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
         <stop offset="0%" style="stop-color:mediumpurple;stop-opacity:1"/>
         <stop offset="10%" style="stop-color:purple;stop-opacity:1"/>
         <stop offset="100%" style="stop-color:slateblue;stop-opacity:1"/>
     </radialGradient>
+    <radialGradient id="purple" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+        <stop offset="0%" style="stop-color:mediumpurple;stop-opacity:1"/>
+        <stop offset="10%" style="stop-color:purple;stop-opacity:1"/>
+        <stop offset="100%" style="stop-color:slateblue;stop-opacity:1"/>
+    </radialGradient>
+    <radialGradient id="continuous" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+        <stop offset="10%" style="stop-color:violet;"/>
+        <stop offset="25%" style="stop-color:indigo;"/>
+        <stop offset="45%" style="stop-color:blue;"/>
+        <stop offset="65%" style="stop-color:green;"/>
+        <stop offset="80%" style="stop-color:yellow;"/>
+        <stop offset="90%" style="stop-color:orange;"/>
+        <stop offset="100%" style="stop-color:red;"/>
+    </radialGradient>
+    <filter id="dropshadow" height="130%" width="130%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="5"/> <!-- stdDeviation is how much to blur -->
+        <feOffset dx="2" dy="2" result="offsetblur"/> <!-- how much to offset -->
+        <feMerge>
+            <feMergeNode/> <!-- this contains the offset blurred image -->
+            <feMergeNode in="SourceGraphic"/> <!-- this contains the element that the filter is applied to -->
+        </feMerge>
+    </filter>
 </svg>
 <ol id="drawer">
 </ol>
@@ -51,8 +73,8 @@
 <script src="js/lib/ndp-software/cmdBus.js" type="application/javascript"></script>
 <script src="js/lib/ndp-software/cmdBus.js" type="application/javascript;version=1.7"></script>
 
-<script src="js/controls.js" type="application/javascript"></script>
-<script src="js/controls.js" type="application/javascript;version=1.7"></script>
+<script src="js/play-pause.js" type="application/javascript"></script>
+<script src="js/play-pause.js" type="application/javascript;version=1.7"></script>
 
 <script src="js/lib/ndp-software/generators.js" type="application/javascript"></script>
 <script src="js/lib/ndp-software/generators.js" type="application/javascript;version=1.7"></script>
@@ -66,11 +88,14 @@
 <script src="js/noise.js" type="application/javascript"></script>
 <script src="js/noise.js" type="application/javascript;version=1.7"></script>
 
+<script src="js/tempo.js" type="application/javascript"></script>
+<script src="js/tempo.js" type="application/javascript;version=1.7"></script>
+
 <script src="js/editor.js" type="application/javascript"></script>
 <script src="js/editor.js" type="application/javascript;version=1.7"></script>
 
-<script src="js/index.js" type="application/javascript"></script>
-<script src="js/index.js" type="application/javascript;version=1.7"></script>
+<script src="js/drawer.js" type="application/javascript"></script>
+<script src="js/drawer.js" type="application/javascript;version=1.7"></script>
 
 <script src="js/machine.js" type="application/javascript"></script>
 <script src="js/machine.js" type="application/javascript;version=1.7"></script>
