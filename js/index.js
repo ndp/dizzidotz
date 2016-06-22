@@ -77,7 +77,7 @@ loadPatternCmd$
 
 loadPatternCmd$
     .map((pegs) => {
-           return {pegs, name: 'add normalized'}
+           return {pegs, name: 'add pegs'}
          }).subscribe(editorPegsCmdBus$)
 
 

@@ -1,20 +1,8 @@
 // MODEL
 const tonalities = createTonalities()
 
-const newSoundData = (normalized, tonality) => {
-  const frequency = tonalities[tonality](normalized.distScore)
-  return {
-    scale:    tonality,
-              frequency,
-    volume:   normalized.sizeScore * 30,
-    velocity: normalized.sizeScore,
-    duration: normalized.sizeScore
-  }
-}
-
-const currTonality$ = new Rx.BehaviorSubject(localStorage['tonality'] || 'blues')
-currTonality$.subscribe((s) => localStorage['tonality'] = s)
-
+const currentTonality$ = new Rx.BehaviorSubject(localStorage['tonality'] || 'blues')
+currentTonality$.subscribe((s) => localStorage['tonality'] = s)
 
 // VIEW
 // Build scale control
@@ -34,7 +22,7 @@ for (let name of ownPropertiesIter(tonalities)()) {
   label.appendChild(document.createElement('SPAN'))
   scaleDivElem.insertBefore(label, scaleCurrentElem)
 
-  Rx.Observable.fromEvent(input, 'change').map(name).subscribe(currTonality$)
+  Rx.Observable.fromEvent(input, 'change').map(name).subscribe(currentTonality$)
 }
 
-currTonality$.subscribe((s) => scaleCurrentElem.innerText = s)
+currentTonality$.subscribe((s) => scaleCurrentElem.innerText = s)
