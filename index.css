@@ -12,7 +12,7 @@ body {
 }
 
 #wheel {
-  opacity: .6;
+  opacity: 1.0;
 }
 
 #drawer, #ms-per-period, #save-button {
@@ -26,7 +26,6 @@ body {
   margin: 0;
   padding: 0;
   border: 0 solid black;
-  background-color: rgba(0,0,0, .3);
   background-color: rgba(255,255,255, .25);
 }
 
@@ -120,7 +119,7 @@ body {
 
 #drawer li a {
   cursor: zoom-in;
-  opacity: 0.5;
+  opacity: 0.7;
   -webkit-transition: width 2s, height 2s, background-color 2s, -webkit-transform 2s;
   transition: opacity 1s, width 2s, height 2s, background-color 2s, transform 2s;
 }
@@ -173,7 +172,7 @@ body {
   }
 }
 
-#drawer li a:hover {
+#drawer li a:hover:not(.delete) {
   -ms-animation: wiggle .3s 2;
   -moz-animation: wiggle .3s 2;
   -webkit-animation: wiggle .3s 2;
@@ -186,20 +185,23 @@ body {
 #drawer li a.delete {
   position: absolute;
   top: -4px;
-  right: 0px;
-  border: 1px solid white;
-  width: 12px;
-  height: 12px;
+  right: 0;
+  border: 2px solid mediumpurple;
+  color: mediumpurple;
+  width: 20px;
+  padding: 2px;
+  height: 20px;
   opacity: 0;
   line-height: 0;
 }
 
 #drawer li:hover a.delete {
-  opacity: 0.5;
+  opacity: 0.9;
 }
 
 #drawer li a.delete:hover {
   color: white;
+  border-color: white;
   cursor: default;
   opacity: 1.0;
 }
@@ -281,4 +283,16 @@ input[type="radio"]:checked + label span {
   -o-transition:background-color 0.4s linear;
   -moz-transition:background-color 0.4s linear;
   transition:background-color 0.4s linear;
+}
+
+
+
+circle#wheel {
+  fill: url(#grad1);
+}
+
+.shadow {
+  -webkit-box-shadow: 10px 10px 36px -3px rgba(69,69,69,1);
+  -moz-box-shadow: 10px 10px 36px -3px rgba(69,69,69,1);
+  box-shadow: 10px 10px 36px -3px rgba(69,69,69,1);
 }
