@@ -67,12 +67,11 @@ const loadPatternCmd$ = patternsClicks$
     .map((e) => e.target.closest('a'))
     .filter((link) => link && link.className != 'delete')
     .map(link => link.getAttribute('data-pegs'))
+    .map(log('load'))
     .map(pegData => JSON.parse(pegData))
 
 loadPatternCmd$
-    .map(() => {
-           return {name: 'clear'}
-         })
+    .map('clear')
     .subscribe(editorPegsCmdBus$)
 
 loadPatternCmd$
