@@ -287,7 +287,7 @@ input[type="radio"]:checked + label span {
 
 
 
-circle#wheel {
+#drawer svg>circle:first-child, circle#wheel {
   fill: url(#grad1);
 }
 
