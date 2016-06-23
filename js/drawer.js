@@ -15,6 +15,7 @@ const persistPatternAction$ = new Rx.Subject()
 
 persistPatternAction$.subscribe((pattern) => {
   pattern.timestamp = (new Date()).getTime()
+  pattern.tonality  = currentTonality$.getValue()
   pattern.name      = `pattern-${pattern.timestamp}`
   localStorage.setItem(pattern.name, JSON.stringify(pattern))
 })
@@ -63,9 +64,12 @@ patternsState$.subscribe(renderPatterns)
 // INTENTIONS
 const patternsClicks$ = Rx.Observable.fromEvent(patternListElem, 'click')
 
-const loadPatternCmd$ = patternsClicks$
+const loadPatternClick$ = patternsClicks$
     .map((e) => e.target.closest('a'))
     .filter((link) => link && link.className != 'delete')
+
+loadPatternClick$.subscribe(log('click'))
+const loadPatternCmd$ = loadPatternClick$
     .map(link => link.getAttribute('data-pegs'))
     .map(log('load'))
     .map(pegData => JSON.parse(pegData))
@@ -81,11 +85,9 @@ loadPatternCmd$
 
 
 // INTENTIONS: DELETE
-const delPatternClick$ = patternsClicks$
+const delPatternLi$ = patternsClicks$
     .map((e) => e.target.closest('a'))
     .filter((link) => link && link.className == 'delete')
-
-const delPatternLi$ = delPatternClick$
     .map((link) => link.closest('li'))
 
 const delPatternAction$ = delPatternLi$
