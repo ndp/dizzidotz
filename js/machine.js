@@ -262,7 +262,7 @@ activePegs$.map((x) => x.sound).subscribe(soundOut$)
 // Scratchin'
 Rx.Observable.fromEvent(editor, 'mousemove')
     .throttle(50)
-    .filter(e => e.shiftKey)
+    //.filter(e => e.shiftKey)
     .map(e => newSoundData(normalizeEvent(e, radius, maxPegSize() / 10)))
     .filter(s => s.frequency)
     .subscribe(soundOut$)
