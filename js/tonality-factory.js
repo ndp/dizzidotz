@@ -40,8 +40,7 @@ function createTonalities() {
   }
 
   const ν            = {
-    continuous: buildRange(100, 4000),
-    octaves:    buildOctaves(110, 4000), // [110, 220, 440, 880, 1760, 3520]
+    octaves:    buildOctaves(110, 4000) // [110, 220, 440, 880, 1760, 3520]
   }
   ν['fifths']        = buildTonality(perfectFifthAbove)
   ν['perfect']       = buildTonality(perfectFourthAbove, perfectFifthAbove)
@@ -52,6 +51,8 @@ function createTonalities() {
   ν['chromatic']     = buildTonality(semitoneAbove, majorSecondAbove, minorThirdAbove, majorThirdAbove,
                                      perfectFourthAbove, flatFiveAbove, perfectFifthAbove, minorSixthAbove,
                                      majorSixthAbove, minorSeventhAbove, majorSeventhAbove)
+
+  ν['continuous']     =  buildRange(100, 4000)
 
   const tonalityCalculator = function(tonalityName) {
     return function(x) {
