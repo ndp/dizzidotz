@@ -1,17 +1,17 @@
 const editorPegs$       = new Rx.BehaviorSubject([])
-const editorPegsCmdBus$ = newCmdBus$(editorPegs$)
+const editorCmdBus$ = newCmdBus$(editorPegs$)
 
 
 // MODEL COMMANDS
-editorPegsCmdBus$.on('add peg', (state, cmd) => {
+editorCmdBus$.on('add peg', (state, cmd) => {
   state.push(cmd.peg)
   return state
 })
 
-editorPegsCmdBus$.on('clear', () => [])
+editorCmdBus$.on('clear', () => [])
 
-editorPegsCmdBus$.on('add pegs', (state, cmd) => {
-  return cmd.pegs.map((pegModel) => {
+editorCmdBus$.on('add pattern', (state, cmd) => {
+  return cmd.pattern.pegs.map((pegModel) => {
     return newPeg(pegModel.normalized)
   })
 })

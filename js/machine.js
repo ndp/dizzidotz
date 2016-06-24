@@ -154,14 +154,17 @@ const renderPeg = (pegModel, screen) => {
 const saveEditorAction$ = Rx.Observable
     .fromEvent(saveButton, 'click')
     .withLatestFrom(editorPegs$, (_, pegs) => {
-                      return {
-                        tonality: currentTonality$.getValue(),
-                        periodMs: msPerPeriod$.getValue(),
-                        pegs: pegs,
-                        svg:  editor.outerHTML.replace(/(style|id)="[^"]+"/g, '')
-                      }
-                    })
-saveEditorAction$.subscribe(persistPatternAction$)
+                                                return {
+                                                  name:  'insert',
+                                                  pattern: {
+                                                    tonality: currentTonality$.getValue(),
+                                                    periodMs: msPerPeriod$.getValue(),
+                                                    pegs:     pegs,
+                                                    svg:      editor.outerHTML.replace(/(style|id)="[^"]+"/g, '')
+                                                  }
+                                                }
+                                              })
+    .subscribe(patternStoreBus$)
 
 resizeAction$.subscribe(saveEditorAction$)
 
@@ -229,7 +232,7 @@ editorMouseup$
            const normalized = normalizeValues(radius, screen.pt, screen.size)
            return {name: 'add peg', peg: newPeg(normalized)}
          })
-    .subscribe(editorPegsCmdBus$)
+    .subscribe(editorCmdBus$)
 
 editorMouseup$.subscribe((e) => {
   startedPegAt = null
