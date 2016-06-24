@@ -7,3 +7,7 @@ function precondition(x, msg) {
 function Math_within(x, min, max) {
   return Math.min(max, Math.max(min, x))
 }
+
+const localStorageKeys = []
+for (let i = 0; i < localStorage.length; i++)
+  localStorageKeys[i] = localStorage.key(i)
