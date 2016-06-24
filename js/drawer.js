@@ -1,7 +1,9 @@
 "use strict";
 
-const savedPatternsState$ = Rx.Observable.range(0, localStorage.length)
+const localStorageKey$ = Rx.Observable.range(0, localStorage.length)
     .map((x) => localStorage.key(x))
+
+const savedPatterns$ = localStorageKey$
     .filter((x) => /pattern.*/.exec(x))
     .map((x) => localStorage.getItem(x))
     .map((x) => JSON.parse(x))
@@ -15,18 +17,29 @@ const persistPatternAction$ = new Rx.Subject()
 
 persistPatternAction$.subscribe((pattern) => {
   pattern.timestamp = (new Date()).getTime()
+  pattern.tonality  = currentTonality$.getValue()
   pattern.name      = `pattern-${pattern.timestamp}`
   localStorage.setItem(pattern.name, JSON.stringify(pattern))
 })
 
 // Currently saved patterns
-const patternsState$ = Rx.Observable.combineLatest(
-    savedPatternsState$,
+const persistedPatternsState$ = Rx.Observable.combineLatest(
+    savedPatterns$,
     persistPatternAction$.startWith(null),
     (savedPatterns, newPattern) => {
       if (newPattern) savedPatterns.unshift(newPattern)
       return savedPatterns
     })
+
+const persistedPatternsBus$ = newCmdBus$(persistedPatternsState$)
+
+//persistedPatternsBus$.on('add', function(state, cmd) {
+//  const newPattern = cmd.pattern
+//  if (newPattern) state.unshift(newPattern)
+//  return state
+//})
+
+
 
 
 // VIEWS
@@ -57,15 +70,18 @@ const renderPatterns = (patterns) => {
   })
 }
 
-patternsState$.subscribe(renderPatterns)
+persistedPatternsState$.subscribe(renderPatterns)
 
 
 // INTENTIONS
 const patternsClicks$ = Rx.Observable.fromEvent(patternListElem, 'click')
 
-const loadPatternCmd$ = patternsClicks$
+const loadPatternClick$ = patternsClicks$
     .map((e) => e.target.closest('a'))
     .filter((link) => link && link.className != 'delete')
+
+loadPatternClick$.subscribe(log('click'))
+const loadPatternCmd$ = loadPatternClick$
     .map(link => link.getAttribute('data-pegs'))
     .map(log('load'))
     .map(pegData => JSON.parse(pegData))
@@ -81,11 +97,9 @@ loadPatternCmd$
 
 
 // INTENTIONS: DELETE
-const delPatternClick$ = patternsClicks$
+const delPatternLi$ = patternsClicks$
     .map((e) => e.target.closest('a'))
     .filter((link) => link && link.className == 'delete')
-
-const delPatternLi$ = delPatternClick$
     .map((link) => link.closest('li'))
 
 const delPatternAction$ = delPatternLi$

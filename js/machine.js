@@ -155,6 +155,8 @@ const saveEditorAction$ = Rx.Observable
     .fromEvent(saveButton, 'click')
     .withLatestFrom(editorPegs$, (_, pegs) => {
                       return {
+                        tonality: currentTonality$.getValue(),
+                        periodMs: msPerPeriod$.getValue(),
                         pegs: pegs,
                         svg:  editor.outerHTML.replace(/(style|id)="[^"]+"/g, '')
                       }
@@ -164,12 +166,14 @@ saveEditorAction$.subscribe(persistPatternAction$)
 resizeAction$.subscribe(saveEditorAction$)
 
 // Remove all the pegs if they are gone
-editorPegs$.filter((pegs) => pegs.length == 0).subscribe(() => {
-  let peg
-  while (peg = editor.getElementsByClassName('peg')[0]) {
-    if (peg.parentNode) peg.parentNode.removeChild(peg)
-  }
-})
+editorPegs$
+    .filter((pegs) => pegs.length == 0)
+    .subscribe(function() {
+                 let peg
+                 while (peg = editor.getElementsByClassName('peg')[0]) {
+                   if (peg.parentNode) peg.parentNode.removeChild(peg)
+                 }
+               })
 
 
 const editorMousedown$ = Rx.Observable.fromEvent(editor, 'mousedown')
