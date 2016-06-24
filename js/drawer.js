@@ -1,7 +1,9 @@
 "use strict";
 
-const savedPatternsState$ = Rx.Observable.range(0, localStorage.length)
+const localStorageKey$ = Rx.Observable.range(0, localStorage.length)
     .map((x) => localStorage.key(x))
+
+const savedPatterns$ = localStorageKey$
     .filter((x) => /pattern.*/.exec(x))
     .map((x) => localStorage.getItem(x))
     .map((x) => JSON.parse(x))
@@ -21,13 +23,23 @@ persistPatternAction$.subscribe((pattern) => {
 })
 
 // Currently saved patterns
-const patternsState$ = Rx.Observable.combineLatest(
-    savedPatternsState$,
+const persistedPatternsState$ = Rx.Observable.combineLatest(
+    savedPatterns$,
     persistPatternAction$.startWith(null),
     (savedPatterns, newPattern) => {
       if (newPattern) savedPatterns.unshift(newPattern)
       return savedPatterns
     })
+
+const persistedPatternsBus$ = newCmdBus$(persistedPatternsState$)
+
+//persistedPatternsBus$.on('add', function(state, cmd) {
+//  const newPattern = cmd.pattern
+//  if (newPattern) state.unshift(newPattern)
+//  return state
+//})
+
+
 
 
 // VIEWS
@@ -58,7 +70,7 @@ const renderPatterns = (patterns) => {
   })
 }
 
-patternsState$.subscribe(renderPatterns)
+persistedPatternsState$.subscribe(renderPatterns)
 
 
 // INTENTIONS
