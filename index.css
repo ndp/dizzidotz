@@ -200,9 +200,7 @@ body {
 }
 
 #drawer li a.delete:hover {
-  color: white;
-  border-color: white;
-  cursor: default;
+  cursor: zoom-out;
   opacity: 1.0;
 }
 
