@@ -20,7 +20,7 @@ const renderPatterns = (patterns) => {
     li.appendChild(link)
 
     const del     = document.createElement('A')
-    del.innerHTML = '<svg viewBox="0 0 100 100" style=""><line x1="0px" y1="0px" x2="100px" y2="100px" style="stroke:mediumpurple;stroke-width:15"></line><line x1="0px" y1="100px" x2="100px" y2="0px" style="stroke:mediumpurple;stroke-width:15"></line></svg>'
+    del.innerHTML = document.getElementById('delete-icon').innerHTML
     del.className = 'delete'
     li.appendChild(del)
 
