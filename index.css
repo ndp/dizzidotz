@@ -11,10 +11,6 @@ body {
   background-size: cover;
 }
 
-#wheel {
-  opacity: 1.0;
-}
-
 #drawer, #ms-per-period, #save-button {
   position: fixed;
 }
@@ -283,16 +279,11 @@ input[type="radio"]:checked + label span {
   transition:background-color 0.4s linear;
 }
 
-
-#drawer svg>circle:first-child, circle#wheel {
+.wheel .bg {
   fill: url(#grad1);
   xfill: url(#rgrad-black-steps);
   xfill: url(#rgrad-forrest);
-}
-
-
-
-circle#wheel {
   stroke:darkslategray;
   stroke-width: 1px;
 }
+

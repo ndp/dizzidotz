@@ -66,6 +66,8 @@ radians$.withLatestFrom(editorPegs$, (angle, pegs) => {
 // VIEW
 const drawerDepth = 115
 const editor      = document.getElementById('editor')
+const wheel       = document.getElementById('wheel')
+const pegsEl      = wheel.getElementsByClassName('pegs')[0]
 const body        = document.getElementsByTagName('body')[0]
 
 const saveButton = document.getElementById('save-button')
@@ -117,7 +119,7 @@ editorPegs$
 editorPegs$
     .subscribe(function(pegs) {
                  const ids    = pegs.map(x => x.id)
-                 const pegEls = editor.getElementsByClassName('peg')
+                 const pegEls = pegsEl.getElementsByClassName('peg')
                  // Note: go backwards, because there appears to be a bug with el.remove() when going forward.
                  for (let i = pegEls.length - 1; i >= 0; i--) {
                    let el   = pegEls[i]
@@ -142,7 +144,7 @@ const findOrCreatePeg = (pegModel) => {
     peg = document.createElementNS("http://www.w3.org/2000/svg", "circle")
     peg.setAttribute('id', pegModel.id)
     peg.setAttribute('class', 'peg')
-    editor.appendChild(peg)
+    pegsEl.appendChild(peg)
   }
   return peg
 }
@@ -167,7 +169,7 @@ const saveEditorAction$ = Rx.Observable
                           tonality: currentTonality$.getValue(),
                           periodMs: msPerPeriod$.getValue(),
                           pegs:     pegs,
-                          svg:      editor.outerHTML.replace(/(style|id)="[^"]+"/g, '')
+                          svg:      `<svg viewBox="${editor.getAttribute('viewBox')}">${wheel.outerHTML.replace(/(style|id)="[^"]+"/g, '')}</svg>`
                         }
                       }
                     })
