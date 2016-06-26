@@ -47,8 +47,8 @@ const newPeg = function(normalized) {
 }
 
 
-const ticker$     = Rx.Observable.interval(msPerTick).pausable(playState$.map(s => s == 'playing' ? 1 : 0))
-const radians$    = ticker$.scan((last) => normalizeRadians(last + radiansPerTick()))
+const ticker$  = Rx.Observable.interval(msPerTick).pausable(playState$.map(s => s == 'playing' ? 1 : 0))
+const radians$ = ticker$.scan((last) => normalizeRadians(last + radiansPerTick()))
 
 // activePegs$ is a stream of the "active" or highlighted peg.
 const activePegs$ = new Rx.Subject()
@@ -67,9 +67,8 @@ radians$.withLatestFrom(editorPegs$, (angle, pegs) => {
 const drawerDepth = 115
 const editor      = document.getElementById('editor')
 const body        = document.getElementsByTagName('body')[0]
-const wheel       = document.getElementById('wheel')
 
-const saveButton       = document.getElementById('save-button')
+const saveButton = document.getElementById('save-button')
 
 const portrait = () => (body.clientHeight > body.clientWidth)
 const radius   = portrait() ?
@@ -93,15 +92,12 @@ resizeAction$.subscribe(() => {
 
 resizeAction$.onNext()
 
-//wheel.setAttribute('cx', radius)
-//wheel.setAttribute('cy', radius)
-//wheel.setAttribute('r', radius)
-
 
 const Color = {
   note:    'violet',
   playing: 'white',
-  growing: 'deeppink'
+  growing: 'deeppink',
+  scratch: 'yellow'
 }
 
 
@@ -117,13 +113,27 @@ editorPegs$
          })
     .subscribe(pegs => pegs.forEach((p) => renderPeg(p[0], p[1])))
 
+//// Remove pegs if they are gone
+editorPegs$
+    .subscribe(function(pegs) {
+                 const ids    = pegs.map(x => x.id)
+                 const pegEls = editor.getElementsByClassName('peg')
+                 // Note: go backwards, because there appears to be a bug with el.remove() when going forward.
+                 for (let i = pegEls.length - 1; i >= 0; i--) {
+                   let el   = pegEls[i]
+                   const id = el.getAttribute('id')
+                   if (ids.indexOf(id) == -1) {
+                     el.remove()
+                   }
+                 }
+               })
+
 const normalizedToScreen = (normalized, radius) => {
   return {
     pt:   vectorToPt(normalized.angle, (1 - normalized.distScore) * radius),
     size: normalized.sizeScore * maxPegSize(radius)
   }
 }
-
 
 
 const findOrCreatePeg = (pegModel) => {
@@ -148,36 +158,22 @@ const renderPeg = (pegModel, screen) => {
 
 
 // INTERACTIONS
-
-
-
 const saveEditorAction$ = Rx.Observable
     .fromEvent(saveButton, 'click')
     .withLatestFrom(editorPegs$, (_, pegs) => {
-                                                return {
-                                                  name:  'insert',
-                                                  pattern: {
-                                                    tonality: currentTonality$.getValue(),
-                                                    periodMs: msPerPeriod$.getValue(),
-                                                    pegs:     pegs,
-                                                    svg:      editor.outerHTML.replace(/(style|id)="[^"]+"/g, '')
-                                                  }
-                                                }
-                                              })
+                      return {
+                        name:    'insert',
+                        pattern: {
+                          tonality: currentTonality$.getValue(),
+                          periodMs: msPerPeriod$.getValue(),
+                          pegs:     pegs,
+                          svg:      editor.outerHTML.replace(/(style|id)="[^"]+"/g, '')
+                        }
+                      }
+                    })
     .subscribe(patternStoreBus$)
 
 resizeAction$.subscribe(saveEditorAction$)
-
-// Remove all the pegs if they are gone
-editorPegs$
-    .filter((pegs) => pegs.length == 0)
-    .subscribe(function() {
-                 let peg
-                 while (peg = editor.getElementsByClassName('peg')[0]) {
-                   if (peg.parentNode) peg.parentNode.removeChild(peg)
-                 }
-               })
-
 
 const editorMousedown$ = Rx.Observable.fromEvent(editor, 'mousedown')
 const editorMouseup$   = Rx.Observable.fromEvent(editor, 'mouseup')
@@ -267,10 +263,35 @@ activePegs$.map((x) => x.sound).subscribe(soundOut$)
 
 
 // Scratchin'
-Rx.Observable.fromEvent(editor, 'mousemove')
-    .throttle(50)
-    //.filter(e => e.shiftKey)
-    .map(e => newSoundData(normalizeEvent(e, radius, maxPegSize() / 10)))
+const scratch$ = Rx.Observable.fromEvent(editor, 'mousemove')
+    .throttle(30)
+    .filter(e => e.shiftKey)
+
+scratch$
+    .map(e => newSoundData(normalizeEvent(e, radius, maxPegSize() / 5)))
     .filter(s => s.frequency)
     .subscribe(soundOut$)
 
+scratch$
+.subscribe(function(e) {
+             const pt     = eventToPt(e, radius)
+             const [angle, dist] = ptToVector(pt)
+             const peg    = {
+               id:    'scratch',
+               angle: angle,
+               dist:  dist,
+             }
+             const screen = {
+               size:  3,
+               pt:    pt,
+               color: Color.scratch
+             }
+             renderPeg(peg, screen)
+           })
+
+scratch$
+    .debounce(100)
+    .subscribe(function() {
+                 const scratch = document.getElementById('scratch')
+                 if (scratch) scratch.remove()
+               })

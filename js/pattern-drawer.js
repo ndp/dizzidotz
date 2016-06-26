@@ -48,10 +48,6 @@ const loadPatternCmd$ = patternsClicks$
                     })
 
 loadPatternCmd$
-    .map('clear')
-    .subscribe(editorCmdBus$)
-
-loadPatternCmd$
     .map((pattern) => {
            return {pattern, name: 'add pattern'}
          }).subscribe(editorCmdBus$)
