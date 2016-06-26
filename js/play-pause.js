@@ -18,3 +18,7 @@ const playPauseClicks$ = Rx.Observable.fromEvent(playPauseEl, 'click')
 playPauseClicks$.map('toggle').subscribe(playStateBus$)
 
 
+const playPauseKeypress$ = Rx.Observable.fromEvent(document, 'keypress')
+    .filter(e => e.keyCode == 32) // space
+    .map('toggle')
+    .subscribe(playStateBus$)
