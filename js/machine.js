@@ -275,16 +275,16 @@ scratch$
 scratch$
 .subscribe(function(e) {
              const pt     = eventToPt(e, radius)
+             const screen = {
+               size:  3,
+               pt:    pt,
+               color: Color.scratch
+             }
              const [angle, dist] = ptToVector(pt)
              const peg    = {
                id:    'scratch',
                angle: angle,
                dist:  dist,
-             }
-             const screen = {
-               size:  3,
-               pt:    pt,
-               color: Color.scratch
              }
              renderPeg(peg, screen)
            })
