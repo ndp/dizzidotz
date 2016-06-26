@@ -33,3 +33,19 @@ A few themes are driving this project:
   * **El**: Suffix added to variables denoting an HTML **element**.
   * **$**: Suffix added to variables denoting a stream. Can be read as "stream."
   * **Iter**: Iterator.
+  
+  
+  
+### Colors
+
+TBD 
+
+What would a set of colors be?
+tonality sets theme
+ * background to wheel
+ * arm
+
+Instruments
+ * on screen
+ * playing
+ * growing

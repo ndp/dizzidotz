@@ -284,7 +284,15 @@ input[type="radio"]:checked + label span {
 }
 
 
-
 #drawer svg>circle:first-child, circle#wheel {
   fill: url(#grad1);
+  xfill: url(#rgrad-black-steps);
+  xfill: url(#rgrad-forrest);
+}
+
+
+
+circle#wheel {
+  stroke:darkslategray;
+  stroke-width: 1px;
 }
