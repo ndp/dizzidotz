@@ -215,6 +215,14 @@ a.button:hover {
   position: absolute;
   cursor: pointer;
   font-size: 24px;
+  height: 48px;
+  width: 48px;
+  background-color: lightblue;
+  border-radius: 50%;
+}
+#play-pause > span {
+  padding: 12px;
+  line-height: 50px;
 }
 
 #play-pause.playing .play {
