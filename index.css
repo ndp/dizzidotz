@@ -11,15 +11,13 @@ body {
   background-size: cover;
 }
 
-#drawer, #ms-per-period, #save-button, #tempo-dial {
+#drawer, #save-button, #tempo-dial {
   position: fixed;
 }
 
 #tempo-dial {
   height: 100px;
   width: 100px;
-  top:0;
-  left:0
 }
 
 #drawer {
@@ -38,7 +36,7 @@ body {
     top: 8px;
   }
 
-  #ms-per-period {
+  #tempo-dial {
     top: 13px;
     right: 150px;
   }
@@ -79,7 +77,7 @@ body {
     top: 10px;
   }
 
-  #ms-per-period {
+  #tempo-dial {
     bottom: 128px;
     right: 10px;
   }
