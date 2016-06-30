@@ -1,5 +1,9 @@
-let Rx
-if (require) Rx = require('rxjs/Rx')
+if (typeof(require) !== 'undefined') Rx = require('rxjs/Rx')
+
+// RxJS 4.0 v. 5.0 compat
+Rx.BehaviorSubject.prototype.next = Rx.BehaviorSubject.prototype.onNext
+Rx.BehaviorSubject.prototype.error = Rx.BehaviorSubject.prototype.oError
+Rx.BehaviorSubject.prototype.complete = Rx.BehaviorSubject.prototype.onComplete
 
 function mapBehaviorSubject(subject$, wrapFn, unwrapFn) {
   // Distinct keeps cycles from triggering.
@@ -26,6 +30,10 @@ function mapBehaviorSubject(subject$, wrapFn, unwrapFn) {
   return wrapped$
 }
 
-if (module) module.exports = {
-  mapBehaviorSubject: mapBehaviorSubject
+
+if (typeof(module) !== 'undefined') {
+  module.exports = {
+    mapBehaviorSubject: mapBehaviorSubject
+  }
 }
+
