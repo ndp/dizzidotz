@@ -1,9 +1,11 @@
 if (typeof(require) !== 'undefined') Rx = require('rxjs/Rx')
 
 // RxJS 4.0 v. 5.0 compat
-Rx.BehaviorSubject.prototype.next = Rx.BehaviorSubject.prototype.onNext
-Rx.BehaviorSubject.prototype.error = Rx.BehaviorSubject.prototype.oError
-Rx.BehaviorSubject.prototype.complete = Rx.BehaviorSubject.prototype.onComplete
+if (!Rx.BehaviorSubject.prototype.next) {
+  Rx.BehaviorSubject.prototype.next     = Rx.BehaviorSubject.prototype.onNext
+  Rx.BehaviorSubject.prototype.error    = Rx.BehaviorSubject.prototype.oError
+  Rx.BehaviorSubject.prototype.complete = Rx.BehaviorSubject.prototype.onComplete
+}
 
 function mapBehaviorSubject(subject$, wrapFn, unwrapFn) {
   // Distinct keeps cycles from triggering.
@@ -31,9 +33,18 @@ function mapBehaviorSubject(subject$, wrapFn, unwrapFn) {
 }
 
 
+function scaleBehaviorSubject(subject$, minOrMax, max) {
+  const [unwrapFn, wrapFn] = linearScaleFns(minOrMax, max)
+  return mapBehaviorSubject(subject$,
+                            wrapFn,
+                            unwrapFn)
+}
+
+
 if (typeof(module) !== 'undefined') {
   module.exports = {
     mapBehaviorSubject: mapBehaviorSubject
   }
 }
+
 
