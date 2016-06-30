@@ -4,9 +4,12 @@
   "description": "Circles, noises",
   "main": "index.js",
   "dependencies": {
-    "http-server": "^0.9.0"
+    "http-server": "latest"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "rxjs": "latest",
+    "chai": "latest"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
