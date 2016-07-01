@@ -20,8 +20,7 @@ A few themes are driving this project:
   
 ### Test Suite
 
-  * [automatic tests](http://localhost:63342/midi/spec/runner
-  .html?hidepassed)
+  * `mocha`
   * add peg: verify sound and highlight
   * restore old pegs: verify sound and highlight
   * save pegs

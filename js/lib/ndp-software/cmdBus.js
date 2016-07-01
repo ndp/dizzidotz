@@ -51,9 +51,14 @@
  ```
  */
 
+function precondition(x, msg) {
+  if (!x) throw msg
+}
+
 function isFunction(x) {
   return typeof x === 'function';
 }
+
 function newCmdBus$(state$) {
   const cmdBus$   = new Rx.Subject()
   const listeners = {}
@@ -76,5 +81,11 @@ function newCmdBus$(state$) {
   return cmdBus$
 }
 
+
+if (typeof(module) !== 'undefined') {
+  module.exports = {
+    newCmdBus$
+  }
+}
 
 
