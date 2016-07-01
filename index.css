@@ -79,7 +79,7 @@ body {
 
 @media (orientation: landscape) {
   #play-pause {
-    right: 230px;
+    right: 228px;
     bottom: 15px;
   }
 
@@ -120,7 +120,7 @@ body {
 
 @media (orientation: portrait) {
   #play-pause {
-    right: 105px;
+    right: 103px;
     bottom: 128px;
   }
 
