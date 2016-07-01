@@ -20,6 +20,14 @@ body {
   width: 100px;
 }
 
+.dial .bg, .dial .reading, .dial .hover, .dial text {
+  transition-property: fill;
+  transition-duration: 3s;
+}
+.dial:hover .bg, .dial:hover .reading, .dial:hover .hover, .dial:hover text {
+  transition-property: fill;
+  transition-duration: .1s;
+}
 .dial .bg {
   fill: gray;
 }
@@ -45,18 +53,19 @@ body {
 
 
 .dial text {
-  stroke: lightgray;
-  font: 12px monospace;
+  stroke: orange;
+  stroke: darkorange;
+  color: darkorange;
+  font: 13px monospace;
   letter-spacing: -2px;
 }
 .dial:hover text {
   stroke: orange;
-  font: 12px monospace;
-  letter-spacing: -2px;
 }
 .dial text.preview {
   stroke: yellow;
 }
+
 #drawer {
   overflow: auto;
   transition-duration: 1s;
