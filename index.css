@@ -20,6 +20,26 @@ body {
   width: 100px;
 }
 
+.dial .bg {
+  fill: darkred;
+}
+
+.dial .reading {
+  fill: orange;
+}
+
+.dial .hover {
+  fill: yellow;
+}
+
+.dial text {
+  stroke: orange;
+  font: 12px monospace;
+  letter-spacing: -2px;
+}
+.dial text.preview {
+  stroke: yellow;
+}
 #drawer {
   overflow: auto;
   transition-duration: 1s;
