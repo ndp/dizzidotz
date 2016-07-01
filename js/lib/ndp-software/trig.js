@@ -32,3 +32,9 @@ function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
 }
 
 
+
+if (typeof(module) !== 'undefined') {
+  module.exports = {
+    normalizeRadians, ptToVector, vectorToPt, polarToCartesian
+  }
+}
