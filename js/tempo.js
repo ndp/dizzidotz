@@ -1,9 +1,41 @@
 // MODEL
 const msPerPeriod$ = new Rx.BehaviorSubject(2000)
 
-// 20050..50 => 0..1
-const normalizedTempo$ = scaleBehaviorSubject(msPerPeriod$, 20000, 50)
+const [unwrapFn, wrapFn] = linearScaleFns(20000, 50)
+const normalizedTempo$ = mapBehaviorSubject(msPerPeriod$,
+                                            wrapFn,
+                                            unwrapFn)
 
 // VIEW
-newDial(document.getElementById('tempo-dial'), normalizedTempo$)
+const preview$ = newDial(document.getElementById('tempo-dial'), normalizedTempo$)
 
+const text = () => document.getElementById('tempo-dial').querySelector('text')
+
+// ms/rev => human readable
+function humanizeTempo(x) {
+  const speed = x < 5000 ? Math.round(60000 / x) : x < 10000 ? Math.round(x / 100) / 10 : Math.round(x / 1000)
+  return `${speed}${x < 5000 ? 'rpm' : 's'}`
+}
+
+msPerPeriod$
+    .merge(preview$.map(unwrapFn))
+    .subscribe(function(x) {
+                 text().textContent = humanizeTempo(x)
+               })
+
+// Set a class on the text
+msPerPeriod$
+    .map('value')
+    .merge(preview$.map('preview'))
+    .subscribe(function(className) {
+                 text().classList[className == 'preview' ? 'add' : 'remove']('preview')
+               })
+
+
+preview$
+    .debounce(400)
+    .withLatestFrom(msPerPeriod$)
+    .subscribe(function(values) {
+                 text().classList.remove('preview')
+                 text().textContent = humanizeTempo(values[1])
+               })
