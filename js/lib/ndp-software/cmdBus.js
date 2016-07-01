@@ -37,26 +37,30 @@
  bus$.addListener('increment', x => x + 1)
  bus$.addListener('decrement', x => x - 1)
 
- bus$.onNext('increment')
+ bus$.next('increment')
  ...
  ```
 
  The bus can also be fed from other streams, as in:
 
-```
+ ```
  Rx.Observable
-   .fromEvent(elem, 'click')
-   .map('increment')
-   .subscribe(bus$)
-```
+ .fromEvent(elem, 'click')
+ .map('increment')
+ .subscribe(bus$)
+ ```
  */
+
+function isFunction(x) {
+  return typeof x === 'function';
+}
 function newCmdBus$(state$) {
-  const cmdBus$ = new Rx.Subject()
+  const cmdBus$   = new Rx.Subject()
   const listeners = {}
 
-  cmdBus$.addListener = function (cmdName, fn) {
+  cmdBus$.addListener = function(cmdName, fn) {
     precondition(cmdName, 'Listeners require a command name')
-    precondition(Rx.helpers.isFunction(fn), 'Listeners require a projection function')
+    precondition(isFunction(fn), 'Listeners require a projection function')
     listeners[cmdName] = fn
   }
 
@@ -65,9 +69,9 @@ function newCmdBus$(state$) {
   cmdBus$
       .map((cmd) => typeof cmd == 'string' ? {name: cmd} : cmd)
       .withLatestFrom(state$, (cmd, state) => {
-        const fn = listeners[cmd.name]
-        return fn ? fn(state, cmd) : state
-      }).subscribe(state$)
+                        const fn = listeners[cmd.name]
+                        return fn ? fn(state, cmd) : state
+                      }).subscribe(state$)
 
   return cmdBus$
 }

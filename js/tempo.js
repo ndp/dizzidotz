@@ -25,15 +25,15 @@ msPerPeriod$
 
 // Set a class on the text
 msPerPeriod$
-    .map('value')
-    .merge(preview$.map('preview'))
+    .mapTo('value')
+    .merge(preview$.mapTo('preview'))
     .subscribe(function(className) {
                  text().classList[className == 'preview' ? 'add' : 'remove']('preview')
                })
 
 
 preview$
-    .debounce(400)
+    .debounceTime(400)
     .withLatestFrom(msPerPeriod$)
     .subscribe(function(values) {
                  text().classList.remove('preview')

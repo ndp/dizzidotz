@@ -47,7 +47,7 @@ const newPeg = function(normalized) {
 }
 
 
-const ticker$  = Rx.Observable.interval(msPerTick).pausable(playState$.map(s => s == 'playing' ? 1 : 0))
+const ticker$  = Rx.Observable.interval(msPerTick).filter(() => playState$.getValue() == 'playing')
 const radians$ = ticker$.scan((last) => normalizeRadians(last + radiansPerTick()))
 
 // activePegs$ is a stream of the "active" or highlighted peg.
@@ -56,7 +56,7 @@ radians$.withLatestFrom(editorPegs$, (angle, pegs) => {
   // Generate stream of active pegs
   pegs.forEach((pegModel) => {
     if (angle <= pegModel.normalized.angle && pegModel.normalized.angle < (angle + radiansPerTick())) {
-      activePegs$.onNext(pegModel)
+      activePegs$.next(pegModel)
     }
   })
 })
@@ -92,7 +92,7 @@ resizeAction$.subscribe(() => {
   editor.setAttribute('viewBox', `0 0 ${2 * radius} ${2 * radius}`)
 })
 
-resizeAction$.onNext()
+resizeAction$.next()
 
 
 const Color = {
@@ -266,7 +266,7 @@ activePegs$.map((x) => x.sound).subscribe(soundOut$)
 
 // Scratchin'
 const scratch$ = Rx.Observable.fromEvent(editor, 'mousemove')
-    .throttle(30)
+    .throttleTime(30)
     .filter(e => e.shiftKey)
 
 scratch$
@@ -292,7 +292,7 @@ scratch$
            })
 
 scratch$
-    .debounce(100)
+    .debounceTime(100)
     .subscribe(function() {
                  const scratch = document.getElementById('scratch')
                  if (scratch) scratch.remove()

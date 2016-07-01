@@ -31,12 +31,20 @@ function newDial(dom, model$) {
       .subscribe(model$)
 
 
+  // A click pauses preview for a while
+  const pauser$ =
+            click$
+                .mapTo(false)
+                .merge(click$.delay(1000).mapTo(true))
+                .startWith(true)
+                .distinctUntilChanged()
+
   const mouseMove$ = Rx.Observable
       .fromEvent(dom, 'mousemove')
-      .throttle(100)
+      .throttleTime(100) // , Rx.Scheduler.requestAnimationFrame
 
   const stop$ = mouseMove$
-      .debounce(3000)
+      .debounceTime(2000)
       .merge(click$)
       .merge(Rx.Observable.fromEvent(dom, 'mouseout'))
 
@@ -47,6 +55,7 @@ function newDial(dom, model$) {
                  })
 
   const preview$ = mouseMove$
+      .filter(() => pauser$.last())
       .map(e => {
              return {x: e.layerX - 50, y: e.layerY - 50}
            })

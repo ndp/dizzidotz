@@ -22,7 +22,7 @@ for (let name of ownPropertiesIter(tonalities)()) {
   label.appendChild(document.createElement('SPAN'))
   scaleDivElem.insertBefore(label, scaleCurrentElem)
 
-  Rx.Observable.fromEvent(input, 'change').map(name).subscribe(currentTonality$)
+  Rx.Observable.fromEvent(input, 'change').mapTo(name).subscribe(currentTonality$)
 }
 
 currentTonality$.subscribe((s) => scaleCurrentElem.innerText = s)

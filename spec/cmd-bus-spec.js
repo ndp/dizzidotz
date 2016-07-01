@@ -5,7 +5,7 @@ QUnit.test("unknown command does not mutate state", (assert) => {
   state$.subscribe((state) => assert.equal(state, 'x'))
 
   const bus$ = newCmdBus$(state$)
-  bus$.onNext({name: 'unknown command'})
+  bus$.next({name: 'unknown command'})
 
   state$.subscribe(assert.async())
 })
@@ -27,7 +27,7 @@ QUnit.test("command mutates state", (assert) => {
 
   const bus$ = newCmdBus$(state$)
   bus$.addListener('increment', x => x + 1)
-  bus$.onNext({name: 'increment'})
+  bus$.next({name: 'increment'})
 
   state$.subscribe((state) => {
     assert.equal(state, 1)
@@ -42,7 +42,7 @@ QUnit.test("command with string only", (assert) => {
 
   const bus$ = newCmdBus$(state$)
   bus$.addListener('increment', x => x + 1)
-  bus$.onNext('increment')
+  bus$.next('increment')
 
   state$.subscribe((state) => {
     assert.equal(state, 1)
