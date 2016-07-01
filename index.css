@@ -20,14 +20,15 @@ body {
   width: 100px;
 }
 
-.dial .bg, .dial .reading, .dial .hover, .dial text {
-  transition-property: fill;
+.fading-fill-children > * {
+  transition-property: fill,stroke;
   transition-duration: 3s;
 }
-.dial:hover .bg, .dial:hover .reading, .dial:hover .hover, .dial:hover text {
-  transition-property: fill;
+.fading-fill-children:hover > * {
+  transition-property: fill,stroke;
   transition-duration: .1s;
 }
+
 .dial .bg {
   fill: gray;
 }
@@ -78,13 +79,13 @@ body {
 
 @media (orientation: landscape) {
   #play-pause {
-    right: 300px;
-    top: 8px;
+    right: 230px;
+    bottom: 15px;
   }
 
   #tempo-dial {
-    top: 13px;
-    right: 150px;
+    bottom: 15px;
+    right: 135px;
   }
 
   #save-button {
@@ -105,8 +106,8 @@ body {
   }
 
   #scale {
-    bottom: 10px;
-    left: 10px;
+    bottom: 15px;
+    left: 15px;
   }
 
 
@@ -119,8 +120,8 @@ body {
 
 @media (orientation: portrait) {
   #play-pause {
-    right: 10px;
-    top: 10px;
+    right: 105px;
+    bottom: 128px;
   }
 
   #tempo-dial {
@@ -134,12 +135,12 @@ body {
   }
 
   #scale {
-    right: 10px;
-    bottom: 130px;
+    right: 15px;
+    top: 15px;
   }
   #scale-current {
     right: 0;
-    top: -20px;
+    top: 30px;
   }
 
 
@@ -265,17 +266,26 @@ a.button:hover {
 #play-pause {
   position: absolute;
   cursor: pointer;
-  font-size: 24px;
   height: 48px;
   width: 48px;
-  background-color: lightblue;
-  border-radius: 50%;
-}
-#play-pause > span {
-  padding: 12px;
-  line-height: 50px;
-}
+  /*background-color: gray;*/
+  /*border-radius: 50%;*/
 
+}
+#play-pause .bg {
+  fill: gray;
+}
+#play-pause:hover .bg {
+  fill: teal;
+}
+#play-pause  .btn {
+  fill: lightgray;
+  stroke: orange;
+  stroke-width: 1px;
+}
+#play-pause:hover  .btn {
+  fill: lightblue;
+}
 #play-pause.playing .play {
   display: none;
 }

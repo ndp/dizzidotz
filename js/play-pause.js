@@ -9,7 +9,7 @@ playStateBus$.on('toggle', state => state == 'playing' ? 'paused' : 'playing')
 const playPauseEl = document.getElementById('play-pause')
 
 playState$.subscribe(x => {
-  playPauseEl.className = x // 'playing' or 'paused'
+  playPauseEl.className = playPauseEl.className.replace(/playing|paused/, x) // x = 'playing' or 'paused'
 })
 
 
