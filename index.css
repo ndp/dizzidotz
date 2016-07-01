@@ -21,18 +21,35 @@ body {
 }
 
 .dial .bg {
-  fill: darkred;
+  fill: gray;
 }
 
 .dial .reading {
-  fill: orange;
+  fill: lightgray;
 }
 
 .dial .hover {
+  fill: lightgray;
+}
+
+.dial:hover .bg {
+  fill: darkred;
+}
+.dial:hover .reading {
+  fill: orange;
+}
+
+.dial:hover .hover {
   fill: yellow;
 }
 
+
 .dial text {
+  stroke: lightgray;
+  font: 12px monospace;
+  letter-spacing: -2px;
+}
+.dial:hover text {
   stroke: orange;
   font: 12px monospace;
   letter-spacing: -2px;

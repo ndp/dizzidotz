@@ -33,7 +33,7 @@ function newDial(dom, model$) {
 
   const mouseMove$ = Rx.Observable
       .fromEvent(dom, 'mousemove')
-      .throttle(30)
+      .throttle(100)
 
   const stop$ = mouseMove$
       .debounce(3000)
