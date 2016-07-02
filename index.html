@@ -25,7 +25,10 @@
 <body>
 <div class="templates" style="display: none">
     <div id="delete-icon">
-        <svg viewBox="0 0 100 100" style=""><line x1="0px" y1="0px" x2="100px" y2="100px" style="stroke:mediumpurple;stroke-width:15"></line><line x1="0px" y1="100px" x2="100px" y2="0px" style="stroke:mediumpurple;stroke-width:15"></line></svg>
+        <svg viewBox="0 0 100 100" class="button">
+            <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" style="filter:url(#dropshadow)"/>
+            <path class='btn' d='M 25 25 L 75 75 M 75 25 L 25 75'></path>
+        </svg>
     </div>
 </div>
 
@@ -84,14 +87,18 @@
         <stop offset="100%" style="stop-color:red;"/>
     </radialGradient>
     <filter id="dropshadow" height="130%" width="130%">
-        <feGaussianBlur in="SourceAlpha" stdDeviation="5"/> <!-- stdDeviation is how much to blur -->
-        <feOffset dx="2" dy="2" result="offsetblur"/> <!-- how much to offset -->
+        <feGaussianBlur in="SourceAlpha" stdDeviation="5"/>
+        <!-- stdDeviation is how much to blur -->
+        <feOffset dx="2" dy="2" result="offsetblur"/>
+        <!-- how much to offset -->
         <feComponentTransfer>
             <feFuncA type="linear" slope="0.8"/>
         </feComponentTransfer>
         <feMerge>
-            <feMergeNode/> <!-- this contains the offset blurred image -->
-            <feMergeNode in="SourceGraphic"/> <!-- this contains the element that the filter is applied to -->
+            <feMergeNode/>
+            <!-- this contains the offset blurred image -->
+            <feMergeNode in="SourceGraphic"/>
+            <!-- this contains the element that the filter is applied to -->
         </feMerge>
     </filter>
 </svg>
@@ -100,21 +107,30 @@
 <svg id="tempo-dial" class='dial fading-fill-children' viewBox="0 0 100 100">
     <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" style="filter:url(#dropshadow)"/>
     <path class='reading' style="filter:url(#dropshadow)"/>
-    <path class='hover' />
+    <path class='hover'/>
     <text x="50" y="50" text-anchor="middle"></text>
 </svg>
 <a id='play-pause' type="button" class="playing">
     <svg viewBox="0 0 100 100" class="fading-fill-children">
-        <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" style="filter:url(#dropshadow)" />
+        <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" style="filter:url(#dropshadow)"/>
         <path class='play btn' d='M 35 25 L 35 75 L 75 50 Z'></path>
         <rect class='pause btn' height='40' width='40' x='30' y='30'></rect>
     </svg>
 </a>
-<a id="save-button" class="button" href="#">&bigoplus;</a>
+<a id="save-button" class="button" href="#"><svg viewBox="0 0 100 100">
+    <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" style="filter:url(#dropshadow)"/>
+    <path class='btn' d='M 50 25 L 50 75 M 75 50 L 25 50'></path>
+</svg></a>
+<a id="delete-all-btn" class="button"
+   href="#">
+    <svg viewBox="0 0 100 100" class="fading-fill-children">
+    <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" style="filter:url(#dropshadow)"/>
+    <path class='btn' d='M 25 25 L 75 75 M 75 25 L 25 75'></path>
+</svg></a>
 
-<div id="scale" >
+<div id="scale">
     <span id="scale-current"></span>
-    </div>
+</div>
 
 <script src="js/lib/ndp-software/util.js" type="application/javascript"></script>
 <script src="js/lib/ndp-software/trig.js" type="application/javascript"></script>

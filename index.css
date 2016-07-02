@@ -20,12 +20,18 @@ body {
   width: 100px;
 }
 
+#save-button {
+  height: 30px;
+  width: 30px;
+}
+
 .fading-fill-children > * {
-  transition-property: fill,stroke;
+  transition-property: fill, stroke;
   transition-duration: 3s;
 }
+
 .fading-fill-children:hover > * {
-  transition-property: fill,stroke;
+  transition-property: fill, stroke;
   transition-duration: .1s;
 }
 
@@ -44,6 +50,7 @@ body {
 .dial:hover .bg {
   fill: darkred;
 }
+
 .dial:hover .reading {
   fill: orange;
 }
@@ -52,7 +59,6 @@ body {
   fill: yellow;
 }
 
-
 .dial text {
   stroke: orange;
   stroke: darkorange;
@@ -60,9 +66,11 @@ body {
   font: 13px monospace;
   letter-spacing: -2px;
 }
+
 .dial:hover text {
   stroke: orange;
 }
+
 .dial text.preview {
   stroke: yellow;
 }
@@ -74,7 +82,7 @@ body {
   margin: 0;
   padding: 0;
   border: 0 solid black;
-  background-color: rgba(255,255,255, .25);
+  background-color: rgba(255, 255, 255, .25);
 }
 
 @media (orientation: landscape) {
@@ -110,7 +118,6 @@ body {
     left: 15px;
   }
 
-
   #scale-current {
     top: -21px;
     left: 0;
@@ -138,11 +145,11 @@ body {
     right: 15px;
     top: 15px;
   }
+
   #scale-current {
     right: 0;
     top: 30px;
   }
-
 
   #drawer {
     right: 0;
@@ -220,7 +227,7 @@ body {
   }
 }
 
-#drawer li a:hover:not(.delete) {
+#drawer li a:hover:not(.delete-pattern) {
   -ms-animation: wiggle .3s 2;
   -moz-animation: wiggle .3s 2;
   -webkit-animation: wiggle .3s 2;
@@ -230,12 +237,10 @@ body {
   /*transform: rotate(180deg);*/
 }
 
-#drawer li a.delete {
+#drawer li a.delete-pattern {
   position: absolute;
   top: -4px;
   right: 0;
-  border: 2px solid mediumpurple;
-  color: mediumpurple;
   width: 20px;
   padding: 2px;
   height: 20px;
@@ -243,24 +248,30 @@ body {
   line-height: 0;
 }
 
-#drawer li:hover a.delete {
+#drawer li:hover a.delete-pattern {
   opacity: 0.9;
 }
 
-#drawer li a.delete:hover {
+#drawer li a.delete-pattern:hover {
   cursor: zoom-out;
   opacity: 1.0;
 }
 
 a.button {
   color: beige;
-  text-decoration: none;
   cursor: move;
-  font-size: 20px;
 }
 
-a.button:hover {
-  color: white;
+.button .bg {
+  fill: gray;
+}
+.button:hover .bg {
+  fill: black;
+}
+
+.button .btn {
+  stroke: white;
+  stroke-width: 4;
 }
 
 #play-pause {
@@ -272,20 +283,25 @@ a.button:hover {
   /*border-radius: 50%;*/
 
 }
+
 #play-pause .bg {
   fill: gray;
 }
+
 #play-pause:hover .bg {
   fill: teal;
 }
-#play-pause  .btn {
+
+#play-pause .btn {
   fill: lightgray;
   stroke: orange;
   stroke-width: 1px;
 }
-#play-pause:hover  .btn {
+
+#play-pause:hover .btn {
   fill: lightblue;
 }
+
 #play-pause.playing .play {
   display: none;
 }
@@ -312,47 +328,55 @@ a.button:hover {
   background-color: white;
 }
 
-
 input[type="radio"] {
-  display:none;
+  display: none;
 }
+
 input[type="radio"] + label {
   color: darkred;
-  font-family:Arial, sans-serif;
-  font-size:14px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
 }
+
 input[type="radio"] + label span {
-  display:inline-block;
-  width:19px;
-  height:19px;
-  margin:-1px 4px 0 0;
-  vertical-align:middle;
-  cursor:pointer;
-  -moz-border-radius:  50%;
-  border-radius:  50%;
+  display: inline-block;
+  width: 19px;
+  height: 19px;
+  margin: -1px 4px 0 0;
+  vertical-align: middle;
+  cursor: pointer;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
 }
 
 input[type="radio"] + label span {
   background-color: purple;
 }
 
-input[type="radio"]:checked + label span{
+input[type="radio"]:checked + label span {
   background-color: mediumpurple;
 }
 
 input[type="radio"] + label span,
 input[type="radio"]:checked + label span {
-  -webkit-transition:background-color 0.4s linear;
-  -o-transition:background-color 0.4s linear;
-  -moz-transition:background-color 0.4s linear;
-  transition:background-color 0.4s linear;
+  -webkit-transition: background-color 0.4s linear;
+  -o-transition: background-color 0.4s linear;
+  -moz-transition: background-color 0.4s linear;
+  transition: background-color 0.4s linear;
 }
 
 .wheel .bg {
   fill: url(#grad1);
   xfill: url(#rgrad-black-steps);
   xfill: url(#rgrad-forrest);
-  stroke:darkslategray;
+  stroke: darkslategray;
   stroke-width: 1px;
 }
 
+#delete-all-btn {
+  position: absolute;
+  right: 15px;
+  bottom: 25px;
+  height: 30px;
+  width: 30px;
+}

@@ -297,3 +297,10 @@ scratch$
                  const scratch = document.getElementById('scratch')
                  if (scratch) scratch.remove()
                })
+
+
+/// DELETE ALL
+Rx.Observable.fromEvent(document.getElementById('delete-all-btn'), 'click')
+    .filter(() => window.confirm("really delete all your data? there’s no going back!"))
+    .mapTo('delete all')
+    .subscribe(patternStoreBus$)

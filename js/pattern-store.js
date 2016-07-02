@@ -1,6 +1,6 @@
 // hashmap of key => stored value
 const patternStore$ = new Rx
-    .BehaviorSubject(localStorageKeys
+    .BehaviorSubject(localStorageKeys()
                          .filter((x) => /pattern.*/.exec(x))
                          .reduce((acc, x) => {
                                    acc[x] = JSON.parse(localStorage.getItem(x))
@@ -28,4 +28,14 @@ patternStoreBus$.on('delete', function(state, cmd) {
   delete state[key]
 
   return state
+})
+
+patternStoreBus$.on('delete all', function(state, cmd) {
+
+  localStorageKeys().forEach(key => {
+    if (!/pattern\-/.exec(key)) return
+    localStorage.removeItem(key)
+  })
+
+  return {}
 })

@@ -2,6 +2,8 @@
 
 
 // VIEWS
+const DELETE_PATTERN_CLASS_NAME = 'delete-pattern'
+
 const patternListElem = document.getElementsByTagName('ol')[0]
 
 const renderPatterns = (patterns) => {
@@ -21,7 +23,7 @@ const renderPatterns = (patterns) => {
 
     const del     = document.createElement('A')
     del.innerHTML = document.getElementById('delete-icon').innerHTML
-    del.className = 'delete'
+    del.className = DELETE_PATTERN_CLASS_NAME
     li.appendChild(del)
 
     patternListElem.appendChild(li)
@@ -40,7 +42,7 @@ const patternsClicks$ = Rx.Observable.fromEvent(patternListElem, 'click')
 // INTENTIONS: LOAD
 const loadPatternCmd$ = patternsClicks$
     .map((e) => e.target.closest('a'))
-    .filter((link) => link && link.className != 'delete')
+    .filter((link) => link && link.className != DELETE_PATTERN_CLASS_NAME)
     .map((link) => link.closest('li'))
     .map(li => li.getAttribute('data-key'))
     .withLatestFrom(patternStore$, function(name, patterns) {
@@ -56,7 +58,7 @@ loadPatternCmd$
 // INTENTIONS: DELETE
 patternsClicks$
     .map((e) => e.target.closest('a'))
-    .filter((link) => link && link.className == 'delete')
+    .filter((link) => link && link.className == DELETE_PATTERN_CLASS_NAME)
     .map((link) => link.closest('li'))
     .map((li) => li.getAttribute('data-key'))
     .map(key => {

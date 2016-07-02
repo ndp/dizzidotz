@@ -1,4 +1,4 @@
-const log = (x) => (y,z) => console.log(x, y, z) || y
+const log = (x) => (y, z) => console.log(x, y, z) || y
 
 function precondition(x, msg) {
   if (!x) throw msg
@@ -41,15 +41,18 @@ function linearScaleFns(minOrMax, max) {
 }
 
 
-const localStorageKeys = []
-if (typeof(localStorage) !== 'undefined') {
-  for (let i = 0; i < localStorage.length; i++)
-    localStorageKeys[i] = localStorage.key(i)
+function localStorageKeys() {
+  const keys = []
+  if (typeof(localStorage) !== 'undefined') {
+    for (let i = 0; i < localStorage.length; i++)
+      keys[i] = localStorage.key(i)
+  }
+  return keys
 }
 
 
 if (typeof(module) !== 'undefined') {
   module.exports = {
-    linearScaleFns:     linearScaleFns
+    linearScaleFns, localStorageKeys
   }
 }
