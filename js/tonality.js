@@ -1,8 +1,7 @@
 // MODEL
 const tonalities = createTonalities()
 
-const currentTonality$ = new Rx.BehaviorSubject(localStorage['tonality'] || 'blues')
-currentTonality$.subscribe((s) => localStorage['tonality'] = s)
+const currentTonality$ = new Rx.BehaviorSubject('blues')
 
 // VIEW
 // Build scale control

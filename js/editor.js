@@ -11,8 +11,11 @@ editorCmdBus$.on('add peg', (state, cmd) => {
 editorCmdBus$.on('clear', () => [])
 
 editorCmdBus$.on('add pattern', (state, cmd) => {
-  return cmd.pattern.pegs.map((pegModel) => {
-    return newPeg(pegModel.normalized)
+  const pattern = cmd.pattern
+  currentTonality$.next(pattern.tonality)
+  msPerPeriod$.next(pattern.periodMs)
+  return pattern.pegs.map((pegModel) => {
+    return newPeg(pegModel.normalized || pegModel)
   })
 })
 

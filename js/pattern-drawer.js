@@ -40,19 +40,16 @@ patternStore$
 const patternsClicks$ = Rx.Observable.fromEvent(patternListElem, 'click')
 
 // INTENTIONS: LOAD
-const loadPatternCmd$ = patternsClicks$
+patternsClicks$
     .map((e) => e.target.closest('a'))
     .filter((link) => link && link.className != DELETE_PATTERN_CLASS_NAME)
     .map((link) => link.closest('li'))
     .map(li => li.getAttribute('data-key'))
-    .withLatestFrom(patternStore$, function(name, patterns) {
-                      return patterns[name]
-                    })
-
-loadPatternCmd$
+    .withLatestFrom(patternStore$, (name, patterns) => patterns[name] )
     .map((pattern) => {
-           return {pattern, name: 'add pattern'}
-         }).subscribe(editorCmdBus$)
+           return { pattern, name: 'add pattern'}
+         })
+    .subscribe(editorCmdBus$)
 
 
 // INTENTIONS: DELETE

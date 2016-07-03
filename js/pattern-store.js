@@ -13,7 +13,7 @@ const patternStoreBus$ = newCmdBus$(patternStore$)
 patternStoreBus$.on('insert', function(state, cmd) {
   const pattern       = cmd.pattern
   pattern.timestamp   = (new Date()).getTime()
-  pattern.name        = `pattern-${pattern.timestamp}`
+  pattern.name        = pattern.name || `pattern-${pattern.timestamp}`
 
   localStorage.setItem(pattern.name, JSON.stringify(pattern))
   state[pattern.name] = pattern

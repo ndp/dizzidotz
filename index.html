@@ -117,16 +117,46 @@
         <rect class='pause btn' height='40' width='40' x='30' y='30'></rect>
     </svg>
 </a>
-<a id="save-button" class="button" href="#"><svg viewBox="0 0 100 100">
-    <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" style="filter:url(#dropshadow)"/>
-    <path class='btn' d='M 50 25 L 50 75 M 75 50 L 25 50'></path>
-</svg></a>
+<a id="save-button" class="button" href="#">
+    <svg viewBox="0 0 100 100">
+        <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" style="filter:url(#dropshadow)"/>
+        <path class='btn' d='M 50 30 L 50 70 M 70 50 L 30 50'></path>
+    </svg>
+</a>
 <a id="delete-all-btn" class="button"
    href="#">
     <svg viewBox="0 0 100 100" class="fading-fill-children">
-    <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" style="filter:url(#dropshadow)"/>
-    <path class='btn' d='M 25 25 L 75 75 M 75 25 L 25 75'></path>
-</svg></a>
+        <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" style="filter:url(#dropshadow)"/>
+        <path class='btn' d='M 30 30 L 70 70 M 70 30 L 30 70'></path>
+    </svg>
+</a>
+
+<!--<a id="delete-all-btn" class="button"-->
+   <!--href="#">-->
+    <!--<svg viewBox="0 0 100 100" class="fading-fill-children">-->
+        <!--<circle class='bg' r="46" cx="50" cy="50" stroke-width="0" style="filter:url(#dropshadow)"/>-->
+        <!--<path stroke='#666' stroke-width='4px' d='-->
+    <!--M 35 35 L 75 75-->
+    <!--M 75 35 L 35 75'></path>-->
+        <!--<path stroke='#999' stroke-width='4px' d='-->
+    <!--M 30 30 L 70 70-->
+    <!--M 70 30 L 30 70'></path>-->
+        <!--<path stroke='#fff' stroke-width='4px' d='-->
+    <!--M 25 25 L 65 65-->
+    <!--M 65 25 L 25 65'></path>-->
+    <!--</svg>-->
+<!--</a>-->
+
+
+<a id="permalink-button" class="button" href="#">
+    <svg viewBox="0 0 100 100">
+        <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" style="filter:url(#dropshadow)"/>
+        <path class='btn' fill='none' d='
+    M 30 35 L 30 75 L 70 75 L 70 35 L 30 35
+    M 35 25 L 50 10 L 65 25
+    M 50 10 L 50 40'></path>
+    </svg>
+</a>
 
 <div id="scale">
     <span id="scale-current"></span>
@@ -147,6 +177,7 @@
 <script src="js/editor.js" type="application/javascript"></script>
 <script src="js/pattern-store.js" type="application/javascript"></script>
 <script src="js/pattern-drawer.js" type="application/javascript"></script>
+<script src="js/lib/lz-string.min.js" type="application/javascript"></script>
 <script src="js/machine.js" type="application/javascript"></script>
 
 </body>

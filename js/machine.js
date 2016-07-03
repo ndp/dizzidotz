@@ -12,12 +12,11 @@ const maxPegSize = (r = radius) => r / 5
 
 
 const normalizeValues = (radius, pt, size) => {
-  const r     = {}
-  const [angle, dist] = ptToVector(pt)
-  r.angle     = angle
-  r.distScore = 1 - (dist / radius)
-  r.sizeScore = size / maxPegSize(radius)
-  r.tonality  = currentTonality$.getValue()
+  const r = {}
+  const [rad, dist] = ptToVector(pt)
+  r.rad   = rad
+  r.mag   = 1 - (dist / radius)
+  r.sz    = size / maxPegSize(radius)
   return r
 }
 
@@ -27,14 +26,12 @@ const normalizeEvent = (e, radius, size) =>
 
 const newSoundData = (normalized) => {
   const tonality  = normalized.tonality || currentTonality$.getValue()
-  const frequency = tonalities[tonality](normalized.distScore)
+  const frequency = tonalities[tonality](normalized.mag)
   return {
-    scale:    tonality,
-    tonality: tonality,
               frequency,
-    volume:   normalized.sizeScore * 30,
-    velocity: normalized.sizeScore,
-    duration: normalized.sizeScore
+    volume:   normalized.sz * 30,
+    velocity: normalized.sz,
+    duration: normalized.sz
   }
 }
 
@@ -55,7 +52,7 @@ const activePegs$ = new Rx.Subject()
 radians$.withLatestFrom(editorPegs$, (angle, pegs) => {
   // Generate stream of active pegs
   pegs.forEach((pegModel) => {
-    if (angle <= pegModel.normalized.angle && pegModel.normalized.angle < (angle + radiansPerTick())) {
+    if (angle <= pegModel.normalized.rad && pegModel.normalized.rad < (angle + radiansPerTick())) {
       activePegs$.next(pegModel)
     }
   })
@@ -132,8 +129,8 @@ editorPegs$
 
 const normalizedToScreen = (normalized, radius) => {
   return {
-    pt:   vectorToPt(normalized.angle, (1 - normalized.distScore) * radius),
-    size: normalized.sizeScore * maxPegSize(radius)
+    pt:   vectorToPt(normalized.rad, (1 - normalized.mag) * radius),
+    size: normalized.sz * maxPegSize(radius)
   }
 }
 
@@ -275,21 +272,21 @@ scratch$
     .subscribe(soundOut$)
 
 scratch$
-.subscribe(function(e) {
-             const pt     = eventToPt(e, radius)
-             const screen = {
-               size:  3,
-               pt:    pt,
-               color: Color.scratch
-             }
-             const [angle, dist] = ptToVector(pt)
-             const peg    = {
-               id:    'scratch',
-               angle: angle,
-               dist:  dist,
-             }
-             renderPeg(peg, screen)
-           })
+    .subscribe(function(e) {
+                 const pt     = eventToPt(e, radius)
+                 const screen = {
+                   size:  3,
+                   pt:    pt,
+                   color: Color.scratch
+                 }
+                 const [angle, dist] = ptToVector(pt)
+                 const peg    = {
+                   id:    'scratch',
+                   angle: angle,
+                   dist:  dist,
+                 }
+                 renderPeg(peg, screen)
+               })
 
 scratch$
     .debounceTime(100)
@@ -304,3 +301,57 @@ Rx.Observable.fromEvent(document.getElementById('delete-all-btn'), 'click')
     .filter(() => window.confirm("really delete all your data? there’s no going back!"))
     .mapTo('delete all')
     .subscribe(patternStoreBus$)
+
+
+function roundIt(x) {
+  const c = 100000000.0
+  return Math.round(x * c) / c
+}
+
+function compressedModel(pegs) {
+  const model = {
+    tonality: currentTonality$.getValue(),
+    periodMs: msPerPeriod$.getValue(),
+    pegs:     pegs.map(function(peg) {
+      return {
+        rad: roundIt(peg.normalized.rad),
+        mag: roundIt(peg.normalized.mag),
+        sz:  roundIt(peg.normalized.sz)
+      }
+    })
+  }
+  // max length 2000
+  const json = JSON.stringify(model)
+  //console.log(json, json.length)
+  const compressed = LZString.compressToEncodedURIComponent(json)
+  return compressed
+}
+
+Rx.Observable.fromEvent(document.getElementById('permalink-button'), 'click')
+  //.do(e => e.stopImmediatePropagation())
+    .do(e => e.preventDefault())
+    .withLatestFrom(editorPegs$, (_, pegs) => pegs)
+    .subscribe(function(pegs) {
+                 const newHref = document.location.href.replace(/\?.*/, '') + '?v1=' + compressedModel(pegs)
+                 window.history.replaceState({}, '', newHref)
+               })
+
+
+// Load a pattern from the URL, if needed
+Rx.Observable
+    .of(document.location)
+    .map(x => x.search)
+    .filter(x => x.indexOf('v1=') !== -1)
+    .map(x => x.replace(/\??v1=/, ''))
+    .map(x => LZString.decompressFromEncodedURIComponent(x))
+    .filter(x => x)
+    .map(x => JSON.parse(x))
+    .map(x => {
+           return {
+             name:    'add pattern',
+             pattern: x
+           }
+         })
+    .subscribe(x => editorCmdBus$.next(x))
+
+

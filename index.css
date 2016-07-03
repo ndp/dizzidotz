@@ -380,3 +380,11 @@ input[type="radio"]:checked + label span {
   height: 30px;
   width: 30px;
 }
+
+#permalink-button {
+  position: absolute;
+  right: 55px;
+  bottom: 25px;
+  height: 30px;
+  width: 30px;
+}
