@@ -303,8 +303,10 @@ Rx.Observable.fromEvent(document.getElementById('delete-all-btn'), 'click')
     .subscribe(patternStoreBus$)
 
 
-function roundIt(x) {
-  const c = 100000000.0
+// Needed otherwise JSON gets filled with really long precision numbers, where
+// that level of precision is not needed for regular old JSON
+function roundForJSON(x) {
+  const c = 1000000.0
   return Math.round(x * c) / c
 }
 
@@ -314,9 +316,9 @@ function compressedModel(pegs) {
     periodMs: msPerPeriod$.getValue(),
     pegs:     pegs.map(function(peg) {
       return {
-        rad: roundIt(peg.normalized.rad),
-        mag: roundIt(peg.normalized.mag),
-        sz:  roundIt(peg.normalized.sz)
+        rad: roundForJSON(peg.normalized.rad),
+        mag: roundForJSON(peg.normalized.mag),
+        sz:  roundForJSON(peg.normalized.sz)
       }
     })
   }
@@ -327,12 +329,18 @@ function compressedModel(pegs) {
   return compressed
 }
 
-Rx.Observable.fromEvent(document.getElementById('permalink-button'), 'click')
-  //.do(e => e.stopImmediatePropagation())
+Rx.Observable
+    .fromEvent(document.getElementById('permalink-button'), 'click')
     .do(e => e.preventDefault())
     .withLatestFrom(editorPegs$, (_, pegs) => pegs)
-    .subscribe(function(pegs) {
-                 const newHref = document.location.href.replace(/\?.*/, '') + '?v1=' + compressedModel(pegs)
+    .map(pegs => compressedModel(pegs))
+    .do(x => {
+         if (x.length > 2000) {
+           window.alert('This dotz is too complicated to share in a URL. Sorriz. Lemme know, and I’ll make it work... - dr. dotz.')
+         }
+        })
+    .subscribe(function(serialized) {
+                 const newHref = document.location.href.replace(/\?.*/, '') + '?v1=' + serialized
                  window.history.replaceState({}, '', newHref)
                })
 
