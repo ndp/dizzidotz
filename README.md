@@ -26,6 +26,11 @@ A few themes are driving this project:
   * save pegs
   * restore newly saved pegs: verify sound and highlight
   * scratch
+  
+### Development
+
+  * [Heroku dashboard](https://dashboard.heroku.com/pipelines/68ffa886-6dea-4a15-ad6a-eed1aeb03cbb)
+  * [Staging](https://dizzidotz-staging.herokuapp.com/)
 
 ### Source Code Style Guide & Glossary
 
@@ -48,3 +53,9 @@ Instruments
  * on screen
  * playing
  * growing
+
+
+### References
+
+  * http://tonejs.org/docs/
+  * https://plus.maths.org/content/magical-mathematics-music
