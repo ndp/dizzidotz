@@ -12,6 +12,7 @@ editorCmdBus$.on('clear', () => [])
 
 editorCmdBus$.on('add pattern', (state, cmd) => {
   const pattern = cmd.pattern
+  name$.next(pattern.name || 'My Dotz')
   currentTonality$.next(pattern.tonality)
   msPerPeriod$.next(pattern.periodMs)
   return pattern.pegs.map((pegModel) => {

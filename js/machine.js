@@ -10,6 +10,9 @@ const radiansPerTick = () => {
 
 const maxPegSize = (r = radius) => r / 5
 
+const name$ = new Rx.BehaviorSubject('My Dotz')
+
+name$.subscribe(x => console.log(`Name is "${x}".`))
 
 const normalizeValues = (radius, pt, size) => {
   const r = {}
@@ -163,6 +166,7 @@ const saveEditorAction$ = Rx.Observable
                       return {
                         name:    'insert',
                         pattern: {
+                          name: name$.getValue(),
                           tonality: currentTonality$.getValue(),
                           periodMs: msPerPeriod$.getValue(),
                           pegs:     pegs,
@@ -312,6 +316,7 @@ function roundForJSON(x) {
 
 function compressedModel(pegs) {
   const model = {
+    name: name$.getValue(),
     tonality: currentTonality$.getValue(),
     periodMs: msPerPeriod$.getValue(),
     pegs:     pegs.map(function(peg) {
