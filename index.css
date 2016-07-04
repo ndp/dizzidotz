@@ -224,14 +224,6 @@ body {
   z-index: 0;
 }
 
-#drawer li a {
-  z-index: 10;
-  cursor: zoom-in;
-  opacity: 0.7;
-  -webkit-transition: width 2s, height 2s, background-color 2s, -webkit-transform 2s;
-  transition: opacity 1s, width 2s, height 2s, background-color 2s, transform 2s;
-}
-
 @-ms-keyframes wiggle {
   0% {
     -ms-transform: rotate(3deg);
@@ -310,15 +302,15 @@ body {
   to { transform: rotate(360deg); }
 }
 
+#drawer li a.pattern {
+  z-index: 10;
+  cursor: zoom-in;
+  opacity: 0.7;
+  transition: opacity 1s;
+}
 
-#drawer li a:hover:not(.delete-pattern) {
-  /*-ms-animation: wiggle .3s 2;*/
-  /*-moz-animation: wiggle .3s 2;*/
-  /*-webkit-animation: wiggle .3s 2;*/
-  /*animation: wiggle .3s 2;*/
+#drawer li a.pattern:hover {
   opacity: 1.0;
-  /*-webkit-transform: rotate(180deg);*/
-  /*transform: rotate(180deg);*/
 }
 
 #drawer li a.delete-pattern {
@@ -343,7 +335,7 @@ body {
 }
 
 #drawer li .name {
-  z-index: 1;
+  z-index: -10;
   display: none;
   position: absolute;
   top: -12%;

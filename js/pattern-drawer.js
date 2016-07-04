@@ -18,7 +18,7 @@ const renderPatterns = (patterns) => {
     link.innerHTML     = pattern.svg
 
     const li = document.createElement('LI')
-    li.setAttribute('data-key', pattern.name)
+    li.setAttribute('data-key', pattern.key || pattern.name)
     li.appendChild(link)
 
     const del     = document.createElement('A')
@@ -61,7 +61,7 @@ patternsClicks$
     .filter((link) => link && link.className != DELETE_PATTERN_CLASS_NAME)
     .map((link) => link.closest('li'))
     .map(li => li.getAttribute('data-key'))
-    .withLatestFrom(patternStore$, (name, patterns) => patterns[name])
+    .withLatestFrom(patternStore$, (key, patterns) => patterns[key])
     .map((pattern) => {
            return {pattern, name: 'add pattern'}
          })
