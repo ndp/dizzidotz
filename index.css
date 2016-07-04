@@ -170,9 +170,11 @@ body {
   margin: 5px;
   padding: 0;
   float: left;
+  z-index: 0;
 }
 
 #drawer li a {
+  z-index: 10;
   cursor: zoom-in;
   opacity: 0.7;
   -webkit-transition: width 2s, height 2s, background-color 2s, -webkit-transform 2s;
@@ -227,23 +229,68 @@ body {
   }
 }
 
+
+@-webkit-keyframes rotate-ccw {
+  from { -webkit-transform: rotate(360deg); }
+  to { -webkit-transform: rotate(0); }
+}
+@-moz-keyframes rotate-ccw {
+  from { -moz-transform: rotate(360deg); }
+  to { -moz-transform: rotate(0); }
+}
+@-ms-keyframes rotate-ccw {
+  from { -ms-transform: rotate(360deg); }
+  to { -ms-transform: rotate(0); }
+}
+@-o-keyframes rotate-ccw {
+  from { -o-transform: rotate(360deg); }
+  to { -o-transform: rotate(0); }
+}
+@keyframes rotate-ccw {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0); }
+}
+
+/*@-webkit-keyframes rotate-cw {*/
+  /*from { -webkit-transform: rotate(0deg); }*/
+  /*to { -webkit-transform: rotate(360deg); }*/
+/*}*/
+/*@-moz-keyframes rotate-cw {*/
+  /*from { -moz-transform: rotate(0deg); }*/
+  /*to { -moz-transform: rotate(360deg); }*/
+/*}*/
+/*@-ms-keyframes rotate-cw {*/
+  /*from { -ms-transform: rotate(0deg); }*/
+  /*to { -ms-transform: rotate(360deg); }*/
+/*}*/
+/*@-o-keyframes rotate-cw {*/
+  /*from { -o-transform: rotate(0deg); }*/
+  /*to { -o-transform: rotate(360deg); }*/
+/*}*/
+@keyframes rotate-cw {
+  from { transform: rotate(-90deg); }
+  to { transform: rotate(270deg); }
+}
+
+
 #drawer li a:hover:not(.delete-pattern) {
-  -ms-animation: wiggle .3s 2;
-  -moz-animation: wiggle .3s 2;
-  -webkit-animation: wiggle .3s 2;
-  animation: wiggle .3s 2;
+  /*-ms-animation: wiggle .3s 2;*/
+  /*-moz-animation: wiggle .3s 2;*/
+  /*-webkit-animation: wiggle .3s 2;*/
+  /*animation: wiggle .3s 2;*/
   opacity: 1.0;
   /*-webkit-transform: rotate(180deg);*/
   /*transform: rotate(180deg);*/
 }
 
 #drawer li a.delete-pattern {
+  z-index: 100;
   position: absolute;
-  top: -4px;
-  right: 0;
-  width: 20px;
+  top: -8px;
+  right: -8px;
+  width: 26px;
   padding: 2px;
-  height: 20px;
+  height: 26px;
   opacity: 0;
   line-height: 0;
 }
@@ -255,6 +302,25 @@ body {
 #drawer li a.delete-pattern:hover {
   cursor: zoom-out;
   opacity: 1.0;
+}
+
+#drawer li .name {
+  z-index: 1;
+  display: none;
+  position: absolute;
+  top: -12%;
+  left: -12%;
+  width: 124%;
+  height: 124%;
+  font: xx-large monospace;
+  animation-name: rotate-cw;
+  animation-duration: 15s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+#drawer li:hover .name {
+  display: block;
 }
 
 a.button {
