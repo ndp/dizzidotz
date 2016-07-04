@@ -11,6 +11,22 @@ body {
   background-size: cover;
 }
 
+
+#logo {
+  position: fixed;
+  top:0;
+  left:0;
+  width: 20%;
+  height: 20%;
+}
+
+#logo text {
+  color: white;
+  fill: black;
+  font: 900 x-large ImpactLabelReversed, monospace;
+}
+
+
 #drawer, #save-button, #tempo-dial {
   position: fixed;
 }
