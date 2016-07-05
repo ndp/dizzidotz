@@ -21,7 +21,7 @@ body {
   animation-delay: 1s;
   animation-name: rotate-cw;
   animation-duration: 1s;
-  animation-iteration-count: 3;
+  animation-iteration-count: 2;
   animation-timing-function: linear;
 }
 
@@ -49,7 +49,7 @@ body {
 #logo text:last-child {
   transform: rotate(-180deg) translate(0,-25px);
   animation-delay: 4s;
-  animation-name: rotate-cw;
+  animation-name: rotate-ccw;
   animation-duration: 1s;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
@@ -277,6 +277,11 @@ body {
   to { transform: rotate(0deg); }
 }
 
+@keyframes rotate-ccw-9oclock {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
 /*@-webkit-keyframes rotate-cw {*/
   /*from { -webkit-transform: rotate(0deg); }*/
   /*to { -webkit-transform: rotate(360deg); }*/
@@ -316,7 +321,7 @@ body {
 #drawer li a.delete-pattern {
   z-index: 100;
   position: absolute;
-  top: -8px;
+  bottom: -8px;
   right: -8px;
   width: 26px;
   padding: 2px;
@@ -343,7 +348,7 @@ body {
   width: 124%;
   height: 124%;
   font: xx-large monospace;
-  animation-name: rotate-cw-9-oclock;
+  animation-name: rotate-ccw;
   animation-duration: 15s;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
