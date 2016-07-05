@@ -272,6 +272,11 @@ body {
   }
 }
 
+@keyframes fade-in {
+  from {opacity: 0}
+  to {opacity: 1.0}
+}
+
 @keyframes rotate-ccw {
   from { transform: rotate(360deg); }
   to { transform: rotate(0deg); }
@@ -466,6 +471,10 @@ input[type="radio"]:checked + label span {
   transition: background-color 0.4s linear;
 }
 
+#editor .wheel, #editor #hand {
+  opacity: 0;
+  animation: fade-in 1s linear 4s forwards;
+}
 .wheel .bg {
   fill: url(#grad1);
   xfill: url(#rgrad-black-steps);
