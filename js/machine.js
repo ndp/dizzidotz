@@ -385,3 +385,9 @@ Rx.Observable
                    name$.next(newName)
                  }
                })
+
+
+const keyPress$ = Rx.Observable
+    .fromEvent(document, 'keypress')
+
+keyPress$.subscribe(log('char'))
