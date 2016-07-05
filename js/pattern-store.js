@@ -72,5 +72,5 @@ patternStoreBus$.on('create missing templates', function(state, cmd) {
   return state;
 })
 
-patternStoreBus$.next('create missing tonalities')
+setTimeout(() => patternStoreBus$.next('create missing templates'), 3000)
 

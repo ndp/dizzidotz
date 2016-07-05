@@ -60,7 +60,7 @@ function isFunction(x) {
 }
 
 function newCmdBus$(state$) {
-  const cmdBus$   = new Rx.Subject()
+  const cmdBus$   = new Rx.Subject(Rx.Scheduler.currentThread)
   const listeners = {}
 
   cmdBus$.addListener = function(cmdName, fn) {
