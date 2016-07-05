@@ -350,7 +350,7 @@ Rx.Observable
          }
         })
     .subscribe(function(serialized) {
-                 const newHref = document.location.href.replace(/\?.*/, '') + '?v1=' + serialized
+                 const newHref = document.location.href.replace(/[#\?].*/, '') + '?v1=' + serialized
                  window.history.replaceState({}, '', newHref)
                })
 
