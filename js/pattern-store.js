@@ -56,7 +56,7 @@ patternStoreBus$.on('create template', function(state, cmd) {
       tonality: cmd.tonality,
       periodMs: 2000,
       pegs:     [],
-      svg:      `<svg viewBox="0 0 618 618"><g class="wheel">
+      svg:      `<svg viewBox="0 0 618 618"><g class="wheel ${cmd.tonality}">
         <circle class="bg" cx="50%" cy="50%" r="49%"></circle></g></svg>`
     }
 

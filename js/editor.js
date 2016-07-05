@@ -16,7 +16,9 @@ editorCmdBus$.on('add pattern', (state, cmd) => {
   name$.next(pattern.name || 'My Dotz')
   currentTonality$.next(pattern.tonality)
   msPerPeriod$.next(pattern.periodMs)
+  document.getElementById('wheel').classList = `wheel ${pattern.tonality}`
   return pattern.pegs.map((pegModel) => {
+    // if there is no sub-structure, then values assumed to be the normalized ones
     return newPeg(pegModel.normalized || pegModel)
   })
 })
