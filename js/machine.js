@@ -2,34 +2,35 @@
 
 // MODEL
 const msPerTick = 20
+const NORMALIZED_RADIUS = 600
 
 const radiansPerTick = () => {
   return (msPerTick / msPerPeriod$.getValue() * radiansPerPeriod)
 }
 
 
-const maxPegSize = (r = radius) => r / 5
+const maxPegSize = () => 120.0
 
 const name$ = new Rx.BehaviorSubject('My Dotz')
 
-name$.subscribe(x => console.log(`Name is "${x}".`))
+//name$.subscribe(x => console.log(`Name is "${x}".`))
 
 name$.subscribe(function(name) {
   const el     = document.querySelector('#pattern-name text')
   el.innerHTML = name
 })
 
-const normalizeValues = (radius, pt, size) => {
+const normalizeValues = (pt, size) => {
   const r = {}
   const [rad, dist] = ptToVector(pt)
   r.rad   = rad
-  r.mag   = 1 - (dist / radius)
-  r.sz    = size / maxPegSize(radius)
+  r.mag   = 1 - (dist / NORMALIZED_RADIUS)
+  r.sz    = size / maxPegSize()
   return r
 }
 
-const normalizeEvent = (e, radius, size) =>
-    normalizeValues(radius, eventToPt(e, radius), size)
+const normalizeEvent = (e, size) =>
+    normalizeValues(eventToPt(e), size)
 
 
 const newSoundData = (normalized) => {
@@ -77,14 +78,13 @@ const body        = document.getElementsByTagName('body')[0]
 
 const saveButton = document.getElementById('save-button')
 
-const portrait = () => (body.clientHeight > body.clientWidth)
-const radius   = portrait() ?
-Math.min(body.clientHeight - 2 * drawerDepth, body.clientWidth) / 2
-    : Math.min(body.clientHeight, body.clientWidth - 2 * drawerDepth) / 2
-
 
 const resizeAction$ = new Rx.Subject()
 resizeAction$.subscribe(() => {
+  const portrait = () => (body.clientHeight > body.clientWidth)
+  const radius   = portrait() ?
+  Math.min(body.clientHeight - 2 * drawerDepth, body.clientWidth) / 2
+      : Math.min(body.clientHeight, body.clientWidth - 2 * drawerDepth) / 2
   editor.style.width  = 2 * radius
   editor.style.height = 2 * radius
   if (portrait()) {
@@ -94,11 +94,13 @@ resizeAction$.subscribe(() => {
     editor.style.marginTop  = `${(body.clientHeight / 2) - radius}px`
     editor.style.marginLeft = `${((body.clientWidth - drawerDepth) / 2) - radius}px`
   }
-  editor.setAttribute('viewBox', `0 0 ${2 * radius} ${2 * radius}`)
 })
 
 resizeAction$.next()
 
+Rx.Observable
+    .fromEvent(window, 'resize')
+    .subscribe(resizeAction$)
 
 const Color = {
   note:    'violet',
@@ -113,7 +115,7 @@ editorPegs$
     .map((pegs) => {
            const newPegs = []
            pegs.forEach((pegModel) => {
-             const screen = normalizedToScreen(pegModel.normalized, radius)
+             const screen = normalizedToScreen(pegModel.normalized)
              newPegs.push([pegModel, screen])
            })
            return newPegs
@@ -135,10 +137,10 @@ editorPegs$
                  }
                })
 
-const normalizedToScreen = (normalized, radius) => {
+const normalizedToScreen = (normalized) => {
   return {
-    pt:   vectorToPt(normalized.rad, (1 - normalized.mag) * radius),
-    size: normalized.sz * maxPegSize(radius)
+    pt:   vectorToPt(normalized.rad, (1 - normalized.mag) * NORMALIZED_RADIUS),
+    size: normalized.sz * maxPegSize()
   }
 }
 
@@ -157,8 +159,8 @@ const findOrCreatePeg = (pegModel) => {
 const renderPeg = (pegModel, screen) => {
   //console.log(pegModel)
   const e = findOrCreatePeg(pegModel)
-  e.setAttribute("cx", screen.pt.x + radius)
-  e.setAttribute("cy", screen.pt.y + radius)
+  e.setAttribute("cx", screen.pt.x + NORMALIZED_RADIUS)
+  e.setAttribute("cy", screen.pt.y + NORMALIZED_RADIUS)
   e.setAttribute("r", screen.size)
   e.setAttribute("fill", screen.highlightcolor || screen.color || Color.note)
 }
@@ -187,9 +189,11 @@ const editorMousedown$ = Rx.Observable.fromEvent(editor, 'mousedown')
 const editorMouseup$   = Rx.Observable.fromEvent(editor, 'mouseup')
 
 
-var eventToPt = function(e, radius) {
-  const x = (e.offsetX || e.clientX) - radius
-  const y = (e.offsetY || e.clientY) - radius
+var eventToPt = function(e) {
+  const bounds = editor.getBoundingClientRect()
+  //const width = bounds.right - bounds.left
+  const x = ((e.x - bounds.left) / editor.clientWidth - 0.5) * 2.0 * NORMALIZED_RADIUS
+  const y = ((e.y - bounds.top) / editor.clientHeight - 0.5) * 2.0 * NORMALIZED_RADIUS
   return {x: x, y: y}
 }
 
@@ -202,7 +206,7 @@ const calcSizeWhileGrowing = (start = startedPegAt) => {
 
 editorMousedown$.subscribe((e) => {
   startedPegAt = (new Date()).getTime()
-  const pt     = eventToPt(e, radius)
+  const pt     = eventToPt(e)
   const [angle, dist] = ptToVector(pt)
 
   const interval = setInterval(() => {
@@ -228,12 +232,12 @@ editorMousedown$.subscribe((e) => {
 
 editorMouseup$
     .map((e) => {
-           const pt   = eventToPt(e, radius)
+           const pt   = eventToPt(e)
            const size = calcSizeWhileGrowing()
            return {pt, size}
          })
     .map((screen) => {
-           const normalized = normalizeValues(radius, screen.pt, screen.size)
+           const normalized = normalizeValues(screen.pt, screen.size)
            return {name: 'add peg', peg: newPeg(normalized)}
          })
     .subscribe(editorCmdBus$)
@@ -248,10 +252,10 @@ radians$.subscribe((angle) => {
   const hand     = document.getElementById('hand')
   const duration = msPerTick * .75 // smaller than interval so we don't drop behind
   Velocity(hand, {
-    x1: radius + Math.cos(angle) * radius,
-    y1: radius + Math.sin(angle) * radius,
-    x2: radius,
-    y2: radius
+    x1: NORMALIZED_RADIUS + Math.cos(angle) * NORMALIZED_RADIUS,
+    y1: NORMALIZED_RADIUS + Math.sin(angle) * NORMALIZED_RADIUS,
+    x2: NORMALIZED_RADIUS,
+    y2: NORMALIZED_RADIUS
   }, {duration: duration, easing: "linear", queue: false});
 })
 
@@ -276,13 +280,13 @@ const scratch$ = Rx.Observable.fromEvent(editor, 'mousemove')
     .filter(e => e.shiftKey)
 
 scratch$
-    .map(e => newSoundData(normalizeEvent(e, radius, maxPegSize() / 5)))
+    .map(e => newSoundData(normalizeEvent(e, maxPegSize() / 5)))
     .filter(s => s.frequency)
     .subscribe(soundOut$)
 
 scratch$
     .subscribe(function(e) {
-                 const pt     = eventToPt(e, radius)
+                 const pt     = eventToPt(e)
                  const screen = {
                    size:  3,
                    pt:    pt,
