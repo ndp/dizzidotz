@@ -1,5 +1,8 @@
 // MODEL
-const playState$ = new Rx.BehaviorSubject('playing')
+const STORE_KEY  = 'play-pause'
+const playState$ = new Rx.BehaviorSubject(localStorage['STORE_KEY'] || 'playing')
+playState$
+    .subscribe(x => localStorage['STORE_KEY'] = x)
 
 playStateBus$ = newCmdBus$(playState$)
 playStateBus$.on('toggle', state => state == 'playing' ? 'paused' : 'playing')
