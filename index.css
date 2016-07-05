@@ -474,6 +474,12 @@ input[type="radio"]:checked + label span {
 #pattern-name .bg {
   fill: pink;
 }
+
+#pattern-name:hover .bg {
+  fill: lightpink;
+}
+
+
 #pattern-name textPath {
   stroke: 1;
   color: white;
@@ -481,11 +487,15 @@ input[type="radio"]:checked + label span {
   font-weight: 400;
 }
 #pattern-name #scale-current {
+  font: xx-small courier;
+}
+#pattern-name #scale-current:first-letter {
   font: x-small courier;
 }
 #pattern-name image {
   display: none;
 }
 #pattern-name:hover image {
+  fill: white;
   display: block;
 }
