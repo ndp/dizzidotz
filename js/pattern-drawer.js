@@ -19,7 +19,6 @@ const renderPatterns = (patterns) => {
 
     const li = document.createElement('LI')
     li.setAttribute('data-key', pattern.key || pattern.name)
-    li.appendChild(link)
 
     const del     = document.createElement('A')
     del.innerHTML = document.getElementById('delete-icon').innerHTML
