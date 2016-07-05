@@ -132,6 +132,7 @@
         <path class='btn' d='M 50 30 L 50 70 M 70 50 L 30 50'></path>
     </svg>
 </a>
+
 <a id="delete-all-btn" class="button"
    href="#">
     <svg viewBox="0 0 100 100" class="fading-fill-children">
@@ -140,31 +141,31 @@
     </svg>
 </a>
 
-<!--<a id="delete-all-btn" class="button"-->
-<!--href="#">-->
-<!--<svg viewBox="0 0 100 100" class="fading-fill-children">-->
-<!--<circle class='bg' r="46" cx="50" cy="50" stroke-width="0" style="filter:url(#dropshadow)"/>-->
-<!--<path stroke='#666' stroke-width='4px' d='-->
-<!--M 35 35 L 75 75-->
-<!--M 75 35 L 35 75'></path>-->
-<!--<path stroke='#999' stroke-width='4px' d='-->
-<!--M 30 30 L 70 70-->
-<!--M 70 30 L 30 70'></path>-->
-<!--<path stroke='#fff' stroke-width='4px' d='-->
-<!--M 25 25 L 65 65-->
-<!--M 65 25 L 25 65'></path>-->
-<!--</svg>-->
-<!--</a>-->
-
-
 <a id="pattern-name" class="" href="#">
     <svg viewBox="0 0 100 100">
         <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" style="filter:url(#dropshadow)"/>
-        <text x="50%" y="50%" text-anchor="middle" ></text>
-        <image xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="./img/pencil.svg" x="44" y="60" height="15px" width="15px"></image>
+        <defs>
+            <path id="top-curve-100-path"
+                  dxx="M 10.607689879511682 43.05407289332279 A 40 40 0 0 1 89.39231012048832 43.05407289332279"
+                  d="M 15.531728644572716 43.92231378165744 A 35 35 0 0 1 84.46827135542728 43.92231378165744"/>
+            <path id="bottom-curve-100-path"
+                  d="M 15.358983848622458 70 A 40 40 0 0 0 84.64101615137756 70"/>
+        </defs>
+        <use xlink:href="#top-curve-100-path" fill="none"/>
+        <use xlink:href="#bottom-curve-100-path" fill="none"/>
+        <image xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="./img/pencil.svg" x="44" y="60" height="15px"
+               width="15px"></image>
+        <text fill="#fff" text-anchor="middle">
+            <textPath class="name" startOffSet="50%" xlink:href="#top-curve-100-path">${pattern
+            .name}</textPath>
+        </text>
+        <text fill="#fff" text-anchor="middle">
+            <textPath id="scale-current" startOffSet="50%" xlink:href="#bottom-curve-100-path">${pattern
+            .name}</textPath>
+        </text>
     </svg>
-    <span id="scale-current"></span>
 </a>
+
 
 <a id="permalink-button" class="button" href="#">
     <svg viewBox="0 0 100 100">

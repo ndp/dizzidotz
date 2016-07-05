@@ -397,18 +397,6 @@ a.button {
   display: none;
 }
 
-#scale-current {
-  position: absolute;
-  display: inline-block;
-  color: black;
-  font: 20px ImpactLabelRegular, monospace;
-  padding: 0;
-  background-color: white;
-  top: 22px;
-  left: 63px;
-  transform: rotate(30deg);
-}
-
 input[type="radio"] {
   display: none;
 }
@@ -486,11 +474,14 @@ input[type="radio"]:checked + label span {
 #pattern-name .bg {
   fill: pink;
 }
-#pattern-name text {
+#pattern-name textPath {
   stroke: 1;
   color: white;
-  font: x-small courier;
+  font: small courier;
   font-weight: 400;
+}
+#pattern-name #scale-current {
+  font: x-small courier;
 }
 #pattern-name image {
   display: none;

@@ -7,4 +7,4 @@ const currentTonality$ = new Rx.BehaviorSubject('blues')
 // Build scale control
 const scaleCurrentElem    = document.getElementById('scale-current')
 
-currentTonality$.subscribe((s) => scaleCurrentElem.innerText = s)
+currentTonality$.subscribe((s) => scaleCurrentElem.innerHTML = `&#127925; ${s}`)

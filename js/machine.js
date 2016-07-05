@@ -16,7 +16,7 @@ const name$ = new Rx.BehaviorSubject('My Dotz')
 //name$.subscribe(x => console.log(`Name is "${x}".`))
 
 name$.subscribe(function(name) {
-  const el     = document.querySelector('#pattern-name text')
+  const el     = document.querySelector('#pattern-name .name')
   el.innerHTML = name
 })
 
