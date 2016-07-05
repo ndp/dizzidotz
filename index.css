@@ -335,7 +335,7 @@ body {
   height: 124%;
   font: xx-large monospace;
   animation-name: rotate-ccw;
-  animation-duration: 15s;
+  animation-duration: 30s;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
 }
