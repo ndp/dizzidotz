@@ -15,10 +15,10 @@ const renderPatterns = (patterns) => {
     link.style.height  = '100px'
     link.style.width   = '100px'
     link.style.display = 'block'
-    link.innerHTML     = pattern.svg
+    if (pattern.svg)    link.innerHTML     = pattern.svg
 
     const li = document.createElement('LI')
-    li.setAttribute('data-key', pattern.key || pattern.name)
+    li.setAttribute('data-key', pattern.key)
 
     const del     = document.createElement('A')
     del.innerHTML = document.getElementById('delete-icon').innerHTML
@@ -38,7 +38,9 @@ const renderPatterns = (patterns) => {
     </g>
 </svg>`
     li.appendChild(name)
-    li.appendChild(del)
+    if (!pattern.key.match(/^template/)) {
+      li.appendChild(del)
+    }
     li.appendChild(link)
 
     patternListElem.appendChild(li)

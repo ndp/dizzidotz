@@ -11,6 +11,7 @@ editorCmdBus$.on('add peg', (state, cmd) => {
 editorCmdBus$.on('clear', () => [])
 
 editorCmdBus$.on('add pattern', (state, cmd) => {
+  console.log('adding one: ', cmd)
   const pattern = cmd.pattern
   name$.next(pattern.name || 'My Dotz')
   currentTonality$.next(pattern.tonality)

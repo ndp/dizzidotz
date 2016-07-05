@@ -164,15 +164,6 @@ body {
     width: 0;
   }
 
-  #scale {
-    bottom: 15px;
-    left: 15px;
-  }
-
-  #scale-current {
-    top: -21px;
-    left: 0;
-  }
 
 }
 
@@ -190,16 +181,6 @@ body {
   #save-button {
     left: 10px;
     bottom: 125px;
-  }
-
-  #scale {
-    right: 15px;
-    top: 15px;
-  }
-
-  #scale-current {
-    right: 0;
-    top: 30px;
   }
 
   #drawer {
@@ -416,15 +397,6 @@ a.button {
   display: none;
 }
 
-#scale {
-  position: absolute;
-}
-
-#scale > input {
-  -moz-appearance: checkbox;
-  -webkit-appearance: checkbox;
-}
-
 #scale-current {
   position: absolute;
   display: inline-block;
@@ -432,6 +404,9 @@ a.button {
   font: 20px ImpactLabelRegular, monospace;
   padding: 0;
   background-color: white;
+  top: 22px;
+  left: 63px;
+  transform: rotate(30deg);
 }
 
 input[type="radio"] {

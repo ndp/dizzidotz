@@ -1,9 +1,14 @@
 // hashmap of key => stored value
 const patternStore$ = new Rx
     .BehaviorSubject(localStorageKeys()
-                         .filter((x) => /pattern.*/.exec(x))
+                         .filter((x) => /^(pattern|template).*/.exec(x))
                          .reduce((acc, x) => {
-                                   acc[x] = JSON.parse(localStorage.getItem(x))
+                                   const item = localStorage.getItem(x)
+                                   try {
+                                     acc[x] = JSON.parse(item)
+                                   } catch (x) {
+                                     console.log(`Unable to load or parse [${x}]: ${ item}`)
+                                   }
                                    return acc
                                  }, {}))
 
@@ -11,10 +16,10 @@ const patternStore$ = new Rx
 const patternStoreBus$ = newCmdBus$(patternStore$)
 
 patternStoreBus$.on('insert', function(state, cmd) {
-  const pattern       = cmd.pattern
-  pattern.timestamp   = (new Date()).getTime()
-  pattern.key         = pattern.key || `pattern-${pattern.timestamp}`
-  pattern.name        = pattern.name || `Pattern ${pattern.timestamp}`
+  const pattern      = cmd.pattern
+  pattern.timestamp  = (new Date()).getTime()
+  pattern.key        = pattern.key || `pattern-${pattern.timestamp}`
+  pattern.name       = pattern.name || `Pattern ${pattern.timestamp}`
 
   localStorage.setItem(pattern.key, JSON.stringify(pattern))
   state[pattern.key] = pattern
@@ -40,3 +45,32 @@ patternStoreBus$.on('delete all', function(state, cmd) {
 
   return {}
 })
+
+patternStoreBus$.on('create template', function(state, cmd) {
+  const key = `template-${cmd.tonality}`
+  if (!localStorage[key]) {
+
+    const template = {
+      name:     cmd.tonality,
+      key:      key,
+      tonality: cmd.tonality,
+      periodMs: 2000,
+      pegs:     [],
+      svg:      `<svg viewBox="0 0 618 618"><g class="wheel">
+        <circle class="bg" cx="50%" cy="50%" r="49%"></circle></g></svg>`
+    }
+
+    patternStoreBus$.next({name: 'insert', pattern: template})
+  }
+  return state;
+})
+
+patternStoreBus$.on('create missing templates', function(state, cmd) {
+  for (let name of ownPropertiesIter(tonalities)()) {
+    patternStoreBus$.next({name: 'create template', tonality: name})
+  }
+  return state;
+})
+
+patternStoreBus$.next('create missing tonalities')
+
