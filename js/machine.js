@@ -14,6 +14,11 @@ const name$ = new Rx.BehaviorSubject('My Dotz')
 
 name$.subscribe(x => console.log(`Name is "${x}".`))
 
+name$.subscribe(function(name) {
+  const el     = document.querySelector('#pattern-name text')
+  el.innerHTML = name
+})
+
 const normalizeValues = (radius, pt, size) => {
   const r = {}
   const [rad, dist] = ptToVector(pt)
@@ -166,7 +171,7 @@ const saveEditorAction$ = Rx.Observable
                       return {
                         name:    'insert',
                         pattern: {
-                          name: name$.getValue(),
+                          name:     name$.getValue(),
                           tonality: currentTonality$.getValue(),
                           periodMs: msPerPeriod$.getValue(),
                           pegs:     pegs,
@@ -316,7 +321,7 @@ function roundForJSON(x) {
 
 function compressedModel(pegs) {
   const model = {
-    name: name$.getValue(),
+    name:     name$.getValue(),
     tonality: currentTonality$.getValue(),
     periodMs: msPerPeriod$.getValue(),
     pegs:     pegs.map(function(peg) {
@@ -368,3 +373,11 @@ Rx.Observable
     .subscribe(x => editorCmdBus$.next(x))
 
 
+Rx.Observable
+    .fromEvent(document.getElementById('pattern-name'), 'click')
+    .subscribe(function() {
+                 const newName = prompt("New name", name$.getValue())
+                 if (newName != null) {
+                   name$.next(newName)
+                 }
+               })

@@ -498,3 +498,28 @@ input[type="radio"]:checked + label span {
   height: 30px;
   width: 30px;
 }
+
+#pattern-name {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 20%;
+  height: 20%;
+  opacity: 0;
+  animation: fade-in 1s linear 4s forwards;
+}
+#pattern-name .bg {
+  fill: pink;
+}
+#pattern-name text {
+  stroke: 1;
+  color: white;
+  font: x-small courier;
+  font-weight: 400;
+}
+#pattern-name image {
+  display: none;
+}
+#pattern-name:hover image {
+  display: block;
+}
