@@ -136,6 +136,46 @@ body {
   background-color: rgba(255, 255, 255, .25);
 }
 
+
+#pattern-name {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 20%;
+  height: 20%;
+  opacity: 0;
+  animation: fade-in 1s linear 4s forwards;
+}
+#pattern-name .bg {
+  fill: pink;
+}
+
+#pattern-name:hover .bg {
+  fill: lightpink;
+}
+
+
+#pattern-name textPath {
+  stroke: 1;
+  color: white;
+  font: small courier;
+  font-weight: 400;
+}
+#pattern-name #scale-current {
+  font: xx-small courier;
+}
+#pattern-name #scale-current:first-letter {
+  font: x-small courier;
+}
+#pattern-name image {
+  display: none;
+}
+#pattern-name:hover image {
+  fill: white;
+  display: block;
+}
+
+
 @media (orientation: landscape) {
   #play-pause {
     right: 228px;
@@ -162,6 +202,10 @@ body {
 
   #drawer:empty {
     width: 0;
+  }
+
+  #pattern-name {
+    right: 135px;
   }
 
 
@@ -405,10 +449,45 @@ a.button {
 }
 .wheel .bg {
   fill: url(#grad1);
-  xfill: url(#rgrad-black-steps);
-  xfill: url(#rgrad-forrest);
   stroke: darkslategray;
   stroke-width: 1px;
+}
+
+.wheel.harmonicMinor .bg {
+  fill: url(#rgrad-forrest);
+}
+
+.wheel.blues .bg {
+  fill: url(#rgrad-purple);
+}
+
+.wheel.major .bg {
+  fill: url(#rgrad-blue-glow);
+}
+
+.wheel.majorTriad .bg {
+  fill: url(#rgrad-yellow);
+}
+
+.wheel.perfect .bg {
+  fill: url(#rgrad-pink);
+}
+
+.wheel.fifths .bg {
+  fill: url(#rgrad-brown);
+  color: bro
+}
+
+.wheel.chromatic .bg {
+  fill: url(#rgrad-rainbow);
+}
+
+.wheel.continuous .bg {
+  fill: url(#rgrad-b-and-w);
+}
+
+.wheel.octaves .bg {
+  fill: url(#rgrad-black-steps);
 }
 
 #delete-all-btn {
@@ -427,40 +506,3 @@ a.button {
   width: 30px;
 }
 
-#pattern-name {
-  position: fixed;
-  right: 0;
-  top: 0;
-  width: 20%;
-  height: 20%;
-  opacity: 0;
-  animation: fade-in 1s linear 4s forwards;
-}
-#pattern-name .bg {
-  fill: pink;
-}
-
-#pattern-name:hover .bg {
-  fill: lightpink;
-}
-
-
-#pattern-name textPath {
-  stroke: 1;
-  color: white;
-  font: small courier;
-  font-weight: 400;
-}
-#pattern-name #scale-current {
-  font: xx-small courier;
-}
-#pattern-name #scale-current:first-letter {
-  font: x-small courier;
-}
-#pattern-name image {
-  display: none;
-}
-#pattern-name:hover image {
-  fill: white;
-  display: block;
-}
