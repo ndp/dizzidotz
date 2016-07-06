@@ -1,15 +1,15 @@
 "use strict";
 
 // MODEL
-const msPerTick = 20
-const NORMALIZED_RADIUS = 600
+const NORMALIZED_RADIUS = 600 // main editor is 1200 virtual pizels
+const maxPegSize = () => NORMALIZED_RADIUS / 5
 
+const MS_PER_TICK = 20
 const radiansPerTick = () => {
-  return (msPerTick / msPerPeriod$.getValue() * radiansPerPeriod)
+  return (MS_PER_TICK / msPerPeriod$.getValue() * radiansPerPeriod)
 }
 
 
-const maxPegSize = () => 120.0
 
 const name$ = new Rx.BehaviorSubject('My Dotz')
 
@@ -53,7 +53,7 @@ const newPeg = function(normalized) {
 }
 
 
-const ticker$  = Rx.Observable.interval(msPerTick).filter(() => playState$.getValue() == 'playing')
+const ticker$  = Rx.Observable.interval(MS_PER_TICK).filter(() => playState$.getValue() == 'playing')
 const radians$ = ticker$.scan((last) => normalizeRadians(last + radiansPerTick()))
 
 // activePegs$ is a stream of the "active" or highlighted peg.
@@ -226,7 +226,7 @@ editorMouseup$.subscribe((e) => {
 // Move the clock hand
 radians$.subscribe((angle) => {
   const hand     = document.getElementById('hand')
-  const duration = msPerTick * .75 // smaller than interval so we don't drop behind
+  const duration = MS_PER_TICK * .75 // smaller than interval so we don't drop behind
   Velocity(hand, {
     x1: NORMALIZED_RADIUS + Math.cos(angle) * NORMALIZED_RADIUS,
     y1: NORMALIZED_RADIUS + Math.sin(angle) * NORMALIZED_RADIUS,
