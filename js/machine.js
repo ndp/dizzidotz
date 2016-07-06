@@ -79,12 +79,6 @@ const body        = document.getElementsByTagName('body')[0]
 const saveButton = document.getElementById('save-button')
 
 
-const resizeAction$ = new Rx.Subject()
-resizeAction$.next()
-Rx.Observable
-    .fromEvent(window, 'resize')
-    .subscribe(resizeAction$)
-
 const Color = {
   note:    'violet',
   playing: 'white',
@@ -166,7 +160,6 @@ const saveEditorAction$ = Rx.Observable
                     })
     .subscribe(patternStoreBus$)
 
-resizeAction$.subscribe(saveEditorAction$)
 
 const editorMousedown$ = Rx.Observable.fromEvent(editor, 'mousedown')
 const editorMouseup$   = Rx.Observable.fromEvent(editor, 'mouseup')
