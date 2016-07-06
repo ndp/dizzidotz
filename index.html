@@ -32,15 +32,35 @@
     </div>
 </div>
 
-<a href='/'>
+<a id="pattern-name" class="" href="#">
+    <svg viewBox="0 0 100 100">
+        <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" style="filter:url(#dropshadow)"/>
+        <defs>
+            <path id="top-curve-100-path"
+                  d="M 17.110758272493207 61.970705016398405 A 35 35 0 1 1 82.8892417275068 61.970705016398405"/>
+            <path id="bottom-curve-100-path"
+                  d="M 12.41229516856366 63.680805733026745 A 40 40 0 0 0 87.58770483143634 63.680805733026745"/>
+        </defs>
+        <use xlink:href="#top-curve-100-path" fill="none"/>
+        <use xlink:href="#bottom-curve-100-path" fill="none"/>
+        <image xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="./img/pencil.svg" x="7" y="48" height="12"
+               width="12"></image>
+        <text fill="#fff" text-anchor="middle">
+            <textPath class="name" startOffSet="50%" xlink:href="#top-curve-100-path"></textPath>
+        </text>
+        <text fill="#fff" text-anchor="middle">
+            <textPath id="scale-current" startOffSet="50%" xlink:href="#bottom-curve-100-path"></textPath>
+        </text>
+    </svg>
+</a>
+
 <svg id="logo" viewBox="0 0 100 100">
-    <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" style="filter:url(#dropshadow)"/>
+    <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" />
     <g transform="translate(50 50)">
         <text x="0" y="-5" text-anchor="middle">Dizzi</text>
         <text x="0" y="20" width='70' height='30' text-anchor="middle">Dotz</text>
     </g>
 </svg>
-</a>
 
 
 <svg id='editor' viewBox="0 0 1200 1200">
@@ -169,29 +189,6 @@
     </svg>
 </a>
 
-<a id="pattern-name" class="" href="#">
-    <svg viewBox="0 0 100 100">
-        <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" style="filter:url(#dropshadow)"/>
-        <defs>
-            <path id="top-curve-100-path"
-                  d="M 17.110758272493207 61.970705016398405 A 35 35 0 1 1 82.8892417275068 61.970705016398405"/>
-            <path id="bottom-curve-100-path"
-                  d="M 12.41229516856366 63.680805733026745 A 40 40 0 0 0 87.58770483143634 63.680805733026745"/>
-        </defs>
-        <use xlink:href="#top-curve-100-path" fill="none"/>
-        <use xlink:href="#bottom-curve-100-path" fill="none"/>
-        <image xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="./img/pencil.svg" x="40" y="38" height="18px"
-               width="18px"></image>
-        <text fill="#fff" text-anchor="middle">
-            <textPath class="name" startOffSet="50%" xlink:href="#top-curve-100-path">${pattern
-            .name}</textPath>
-        </text>
-        <text fill="#fff" text-anchor="middle">
-            <textPath id="scale-current" startOffSet="50%" xlink:href="#bottom-curve-100-path">${pattern
-            .name}</textPath>
-        </text>
-    </svg>
-</a>
 
 
 <a id="permalink-button" class="button" href="#">
