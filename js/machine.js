@@ -80,24 +80,7 @@ const saveButton = document.getElementById('save-button')
 
 
 const resizeAction$ = new Rx.Subject()
-resizeAction$.subscribe(() => {
-  const portrait = () => (body.clientHeight > body.clientWidth)
-  const radius   = portrait() ?
-  Math.min(body.clientHeight - 2 * drawerDepth, body.clientWidth) / 2
-      : Math.min(body.clientHeight, body.clientWidth - 2 * drawerDepth) / 2
-  editor.style.width  = 2 * radius
-  editor.style.height = 2 * radius
-  if (portrait()) {
-    editor.style.marginTop  = `${((body.clientHeight - drawerDepth) / 2) - radius}px`
-    editor.style.marginLeft = `${(body.clientWidth / 2) - radius}px`
-  } else {
-    editor.style.marginTop  = `${(body.clientHeight / 2) - radius}px`
-    editor.style.marginLeft = `${((body.clientWidth - drawerDepth) / 2) - radius}px`
-  }
-})
-
 resizeAction$.next()
-
 Rx.Observable
     .fromEvent(window, 'resize')
     .subscribe(resizeAction$)
