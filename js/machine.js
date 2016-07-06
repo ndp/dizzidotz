@@ -11,14 +11,6 @@ const radiansPerTick = () => {
 
 
 
-const name$ = new Rx.BehaviorSubject('My Dotz')
-
-//name$.subscribe(x => console.log(`Name is "${x}".`))
-
-name$.subscribe(function(name) {
-  const el     = document.querySelector('#pattern-name .name')
-  el.innerHTML = name
-})
 
 const normalizeValues = (pt, size) => {
   const r = {}
@@ -353,14 +345,6 @@ Rx.Observable
     .subscribe(x => editorCmdBus$.next(x))
 
 
-Rx.Observable
-    .fromEvent(document.getElementById('pattern-name'), 'click')
-    .subscribe(function() {
-                 const newName = prompt("New name", name$.getValue())
-                 if (newName != null) {
-                   name$.next(newName)
-                 }
-               })
 
 
 const keyPress$ = Rx.Observable
