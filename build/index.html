@@ -17,7 +17,12 @@
 
     <script src="js/lib/Tone.min.js"></script>
     <script src="js/lib/velocity.min.js" type="application/javascript"></script>
-    <script src="js/lib/Rx.umd.js" type="application/javascript"></script>
+    <script>var global=global||this;</script>
+    <script type="application/javascript">
+//        window.onerror = function(m) {
+//          window.open(`http://stackoverflow.com/search?q=[js] + ${m}`)
+//        }
+    </script>
 
     <link rel="stylesheet" href="Impact-Label-fontfacekit/stylesheet.css" type="text/css"/>
     <link rel="stylesheet" href="index.css" type="text/css"/>
@@ -202,24 +207,7 @@
 </a>
 
 
-<script src="js/lib/ndp-software/util.js" type="application/javascript"></script>
-<script src="js/lib/ndp-software/trig.js" type="application/javascript"></script>
-<script src="js/lib/ndp-software/svg.js" type="application/javascript"></script>
-<script src="js/lib/ndp-software/cmdBus.js" type="application/javascript"></script>
-<script src="js/play-pause.js" type="application/javascript"></script>
-<script src="js/lib/ndp-software/generators.js" type="application/javascript"></script>
-<script src="js/tonality-factory.js" type="application/javascript"></script>
-<script src="js/tonality.js" type="application/javascript"></script>
-<script src="js/noise.js" type="application/javascript"></script>
-<script src="js/lib/ndp-software/map-behavior-subject.js" type="application/javascript"></script>
-<script src="js/dial.js" type="application/javascript"></script>
-<script src="js/tempo.js" type="application/javascript"></script>
-<script src="js/editor.js" type="application/javascript"></script>
-<script src="js/pattern-store.js" type="application/javascript"></script>
-<script src="js/pattern-drawer.js" type="application/javascript"></script>
-<script src="js/lib/lz-string.min.js" type="application/javascript"></script>
-<script src="js/name.js" type="application/javascript"></script>
-<script src="js/machine.js" type="application/javascript"></script>
-
+<script src="./js/lib/lz-string.min.js" type="application/javascript"></script>
+<script src="bundle.js" type="application/javascript"></script>
 </body>
 </html>

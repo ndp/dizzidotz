@@ -1,4 +1,8 @@
-function newDial(dom, model$) {
+import Rx from 'rxjs/Rx'
+import {svgClippedArc} from './lib/ndp-software/svg.js'
+import {ptToVector, normalizeRadians} from './lib/ndp-software/trig.js'
+
+export function newDial(dom, model$) {
 
   // VIEW
   model$.subscribe(function(x) {
@@ -21,6 +25,7 @@ function newDial(dom, model$) {
   // INTENT
   const click$ = Rx.Observable
       .fromEvent(dom, 'click')
+      .do(e => e.preventDefault())
 
   click$
       .map(e => {

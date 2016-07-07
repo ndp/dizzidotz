@@ -1,0 +1,11 @@
+@font-face {
+	font-family: 'ImpactLabelReversedRegular';
+	src: local('☺'),
+    url('Impact_label_reversed-webfont.woff') format('woff'),
+    url('Impact_label_reversed-webfont.ttf') format('truetype'),
+    url('Impact_label_reversed-webfont.svg#webfont6oy8XCTs') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+

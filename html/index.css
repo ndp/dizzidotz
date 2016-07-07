@@ -1,0 +1,566 @@
+html, body, svg {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: black;
+  background: url(../img/bg/wood20.jpg);
+  background-size: cover;
+}
+
+
+#logo {
+  position: absolute;
+  animation-delay: 1s;
+  animation-name: rotate-cw;
+  animation-duration: 1s;
+  animation-iteration-count: 2;
+  animation-timing-function: linear;
+}
+
+#logo .bg {
+  fill: lightgoldenrodyellow;
+  animation: fill-pulse-yellow 10s 1;
+}
+
+@keyframes fill-pulse-yellow {
+  0% {
+    fill: lightgoldenrodyellow;
+  }
+  5% {
+    fill: yellow;
+  }
+  50% {
+    fill: yellow;
+  }
+  100% {
+    fill: lightgoldenrodyellow;
+  }
+}
+
+
+#logo text:last-child {
+  position: absolute;
+  transform: rotate(-180deg) translate(0,-25px);
+  animation-delay: 4s;
+  animation-name: rotate-ccw;
+  animation-duration: 1s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+#logo text {
+  color: white;
+  fill: black;
+  font: 900 x-large ImpactLabelReversed, monospace;
+}
+
+
+#drawer, #save-button, #tempo-dial {
+  position: absolute;
+}
+
+#tempo-dial {
+  opacity: 0;
+  animation: fade-in 1s linear 4s forwards;
+}
+
+.fading-fill-children > * {
+  transition-property: fill, stroke;
+  transition-duration: 3s;
+}
+
+.fading-fill-children:hover > * {
+  transition-property: fill, stroke;
+  transition-duration: .1s;
+}
+
+.dial .bg {
+  fill: gray;
+}
+
+.dial .reading {
+  fill: lightgray;
+}
+
+.dial .hover {
+  fill: lightgray;
+}
+
+.dial:hover .bg {
+  fill: darkred;
+}
+
+.dial:hover .reading {
+  fill: orange;
+}
+
+.dial:hover .hover {
+  fill: yellow;
+}
+
+.dial text {
+  stroke: orange;
+  stroke: darkorange;
+  color: darkorange;
+  font: 13px monospace;
+  letter-spacing: -2px;
+}
+
+.dial:hover text {
+  stroke: orange;
+}
+
+.dial text.preview {
+  stroke: yellow;
+}
+
+#drawer {
+  overflow: auto;
+  transition-duration: 1s;
+  transition-property: all;
+  margin: 0;
+  padding: 0;
+  border: 0 solid black;
+  background-color: rgba(255, 255, 255, .25);
+}
+
+
+#pattern-name {
+  position: absolute;
+  opacity: 0;
+  animation: fade-in 1s linear 4s forwards;
+}
+#pattern-name .bg {
+  fill: pink;
+}
+
+#pattern-name:hover .bg {
+  fill: lightpink;
+}
+
+
+#pattern-name textPath {
+  stroke: 1;
+  color: white;
+  font: x-small courier;
+  font-weight: 400;
+}
+#pattern-name #scale-current {
+  font: xx-small courier;
+}
+#pattern-name image {
+  display: none;
+}
+#pattern-name:hover image {
+  fill: white;
+  display: block;
+}
+
+
+@media (orientation: landscape) {
+
+  body {
+    min-width: 134vh;
+  }
+  #editor {
+    width: 100vh;
+    height: 100vh;
+    top: 0;
+    margin-left: 16vh;
+  }
+
+  #logo {
+    top:5vh;
+    left:5vh;
+    width: 18vh;
+    height: 18vh;
+  }
+
+  #pattern-name {
+    left: 0;
+    top: 0;
+    width: 28vh;
+    height: 28vh;
+  }
+
+  #play-pause {
+    width: 10vh;
+    height: 10vh;
+    top: 44vh;
+    left: 7vh;
+  }
+
+  #tempo-dial {
+    top: 28vh;
+    left: 2vh;
+    height: 17vh;
+    width: 17vh;
+  }
+
+  #save-button {
+    height: 10vh;
+    width: 10vh;
+    left: 106vh;
+    top: 1vh;
+  }
+
+  #delete-all-btn {
+    position: absolute;
+    right: 1vh;
+    bottom: 1vh;
+    height: 5vh;
+    width: 5vh;
+  }
+
+  #permalink-button {
+    position: absolute;
+    left: 95vh;
+    top: 1vh;
+    height: 10vh;
+    width: 10vh
+  }
+
+  #drawer {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    min-width: 19vh;
+    width: auto;
+    border-left-width: 0px;
+    left: 117vh;
+  }
+
+  #drawer:empty {
+    width: 0;
+  }
+
+}
+
+@media (orientation: portrait) {
+  body {
+    /*min-height: 137vh;*/
+  }
+  #editor {
+    width: 98vw;
+    height: 98vw;
+    margin-top: 15vw;
+    margin-left: 0;
+  }
+
+  #logo {
+    top:5vw;
+    left:5vw;
+    width: 18vw;
+    height: 18vw;
+  }
+
+  #pattern-name {
+    left: 0;
+    top: 0;
+    width: 28vw;
+    height: 28vw;
+  }
+
+  #play-pause {
+    width: 10vw;
+    height: 10vw;
+    top: 6vw;
+    left: 46vw;
+  }
+
+  #tempo-dial {
+    top: 0vw;
+    left: 28vw;
+    height: 18vw;
+    width: 18vw;
+  }
+
+  #save-button {
+    height: 10vw;
+    width: 10vw;
+    left: 1vw;
+    top: 105vw;
+  }
+
+  #delete-all-btn {
+    position: absolute;
+    right: 1vw;
+    top: 110vw;
+    height: 5vw;
+    width: 5vw;
+  }
+
+  #permalink-button {
+    position: absolute;
+    top: 1vw;
+    right: 1vw;
+    height: 10vw;
+    width: 10vw;
+  }
+
+
+  #drawer {
+    top: 116vw;
+    height: auto;
+    width: 100%;
+    border-top-width: 0px;
+  }
+
+  #drawer:empty {
+    width: 0;
+  }
+}
+
+#drawer li {
+  position: relative;
+  display: block;
+  margin: 5px;
+  padding: 0;
+  float: left;
+  z-index: 0;
+}
+
+@-ms-keyframes wiggle {
+  0% {
+    -ms-transform: rotate(3deg);
+  }
+  50% {
+    -ms-transform: rotate(-3deg);
+  }
+  100% {
+    -ms-transform: rotate(3deg);
+  }
+}
+
+@-moz-keyframes wiggle {
+  0% {
+    -moz-transform: rotate(3deg);
+  }
+  50% {
+    -moz-transform: rotate(-3deg);
+  }
+  100% {
+    -moz-transform: rotate(3deg);
+  }
+}
+
+@-webkit-keyframes wiggle {
+  0% {
+    -webkit-transform: rotate(3deg);
+  }
+  50% {
+    -webkit-transform: rotate(-3deg);
+  }
+  100% {
+    -webkit-transform: rotate(3deg);
+  }
+}
+
+@keyframes wiggle {
+  0% {
+    transform: rotate(3deg);
+  }
+  50% {
+    transform: rotate(-3deg);
+  }
+  100% {
+    transform: rotate(3deg);
+  }
+}
+
+@keyframes fade-in {
+  from {opacity: 0}
+  to {opacity: 1.0}
+}
+
+@keyframes rotate-ccw {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+@keyframes rotate-ccw-9oclock {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+/*@-webkit-keyframes rotate-cw {*/
+  /*from { -webkit-transform: rotate(0deg); }*/
+  /*to { -webkit-transform: rotate(360deg); }*/
+/*}*/
+/*@-moz-keyframes rotate-cw {*/
+  /*from { -moz-transform: rotate(0deg); }*/
+  /*to { -moz-transform: rotate(360deg); }*/
+/*}*/
+/*@-ms-keyframes rotate-cw {*/
+  /*from { -ms-transform: rotate(0deg); }*/
+  /*to { -ms-transform: rotate(360deg); }*/
+/*}*/
+/*@-o-keyframes rotate-cw {*/
+  /*from { -o-transform: rotate(0deg); }*/
+  /*to { -o-transform: rotate(360deg); }*/
+/*}*/
+@keyframes rotate-cw-9-oclock {
+  from { transform: rotate(-90deg); }
+  to { transform: rotate(270deg); }
+}
+@keyframes rotate-cw {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+#drawer li a.pattern {
+  z-index: 10;
+  cursor: zoom-in;
+  opacity: 0.7;
+  transition: opacity 1s;
+}
+
+#drawer li a.pattern:hover {
+  opacity: 1.0;
+}
+
+#drawer li a.delete-pattern {
+  z-index: 100;
+  position: absolute;
+  bottom: -8px;
+  right: -8px;
+  width: 26px;
+  padding: 2px;
+  height: 26px;
+  opacity: 0;
+  line-height: 0;
+}
+
+#drawer li:hover a.delete-pattern {
+  opacity: 0.9;
+}
+
+#drawer li a.delete-pattern:hover {
+  cursor: zoom-out;
+  opacity: 1.0;
+}
+
+#drawer li .name {
+  z-index: -10;
+  display: none;
+  position: absolute;
+  top: -12%;
+  left: -12%;
+  width: 124%;
+  height: 124%;
+  font: xx-large monospace;
+  animation-name: rotate-ccw;
+  animation-duration: 30s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+#drawer li:hover .name {
+  display: block;
+}
+
+a.button {
+  color: beige;
+  cursor: move;
+}
+
+.button .bg {
+  fill: gray;
+}
+.button:hover .bg {
+  fill: black;
+}
+
+.button .btn {
+  stroke: white;
+  stroke-width: 4;
+}
+
+#play-pause {
+  position: absolute;
+  cursor: pointer;
+  opacity: 0;
+  animation: fade-in 1s linear 4s forwards;
+
+}
+
+#play-pause .bg {
+  fill: lightgray;
+}
+
+#play-pause:hover .bg {
+  fill: lightblue;
+}
+
+#play-pause .btn {
+  fill: gray;
+  stroke: darkgray;
+  stroke-width: 1px;
+}
+
+#play-pause:hover .btn {
+  fill: deepskyblue;
+  stroke: blue;
+}
+
+#play-pause.playing .play {
+  display: none;
+}
+
+#play-pause.paused .pause {
+  display: none;
+}
+
+
+#editor .wheel, #editor #hand {
+  opacity: 0;
+  animation: fade-in 1s linear 4s forwards;
+}
+.wheel .bg {
+  fill: url(#grad1);
+  stroke: darkslategray;
+  stroke-width: 1px;
+}
+
+.wheel.harmonicMinor .bg {
+  fill: url(#rgrad-forrest);
+}
+
+.wheel.blues .bg {
+  fill: url(#rgrad-purple);
+}
+
+.wheel.major .bg {
+  fill: url(#rgrad-blue-glow);
+}
+
+.wheel.majorTriad .bg {
+  fill: url(#rgrad-yellow);
+}
+
+.wheel.perfect .bg {
+  fill: url(#rgrad-pink);
+}
+
+.wheel.fifths .bg {
+  fill: url(#rgrad-brown);
+  color: bro
+}
+
+.wheel.chromatic .bg {
+  fill: url(#rgrad-rainbow);
+}
+
+.wheel.continuous .bg {
+  fill: url(#rgrad-b-and-w);
+}
+
+.wheel.octaves .bg {
+  fill: url(#rgrad-black-steps);
+}
+

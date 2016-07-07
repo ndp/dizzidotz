@@ -1,5 +1,11 @@
+import Rx from 'rxjs/Rx'
+import {newCmdBus$ } from './lib/ndp-software/cmdBus.js'
+import { localStorageKeys } from './lib/ndp-software/util.js'
+import { ownPropertiesIter } from './lib/ndp-software/generators.js'
+import { tonalities } from './tonality.js'
+
 // hashmap of key => stored value
-const patternStore$ = new Rx
+export const patternStore$ = new Rx
     .BehaviorSubject(localStorageKeys()
                          .filter((x) => /^(pattern|template).*/.exec(x))
                          .reduce((acc, x) => {
@@ -7,13 +13,13 @@ const patternStore$ = new Rx
                                    try {
                                      acc[x] = JSON.parse(item)
                                    } catch (x) {
-                                     console.log(`Unable to load or parse [${x}]: ${ item}`)
+                                     global.console.log(`Unable to load or parse [${x}]: ${ item}`)
                                    }
                                    return acc
                                  }, {}))
 
 
-const patternStoreBus$ = newCmdBus$(patternStore$)
+export const patternStoreBus$ = newCmdBus$(patternStore$)
 
 patternStoreBus$.on('insert', function(state, cmd) {
   const pattern      = cmd.pattern

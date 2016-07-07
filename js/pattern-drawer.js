@@ -1,5 +1,7 @@
-"use strict";
-
+import Rx from 'rxjs/Rx'
+import { patternStore$ } from './pattern-store.js'
+import { patternStoreBus$ } from './pattern-store.js'
+import { editorCmdBus$ } from './editor.js'
 
 // VIEWS
 const DELETE_PATTERN_CLASS_NAME = 'delete-pattern'
@@ -54,7 +56,9 @@ patternStore$
 
 
 // INTENTIONS
-const patternsClicks$ = Rx.Observable.fromEvent(patternListElem, 'click')
+const patternsClicks$ = Rx.Observable
+    .fromEvent(patternListElem, 'click')
+    .do(e => e.preventDefault())
 
 // INTENTIONS: LOAD
 patternsClicks$

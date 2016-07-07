@@ -7,7 +7,7 @@ html, body, svg {
 
 body {
   background-color: black;
-  background: url(img/bg/wood20.jpg);
+  background: url(../img/bg/wood20.jpg);
   background-size: cover;
 }
 
@@ -290,7 +290,7 @@ body {
   #delete-all-btn {
     position: absolute;
     right: 1vw;
-    bottom: 1vw;
+    top: 110vw;
     height: 5vw;
     width: 5vw;
   }

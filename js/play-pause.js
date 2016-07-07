@@ -1,10 +1,13 @@
+import Rx from 'rxjs/Rx'
+import {newCmdBus$} from './lib/ndp-software/cmdBus.js'
+
 // MODEL
 const STORE_KEY  = 'play-pause'
-const playState$ = new Rx.BehaviorSubject(localStorage[STORE_KEY] || 'playing')
+export const playState$ = new Rx.BehaviorSubject(localStorage[STORE_KEY] || 'playing')
 playState$
     .subscribe(x => localStorage[STORE_KEY] = x)
 
-playStateBus$ = newCmdBus$(playState$)
+const playStateBus$ = newCmdBus$(playState$)
 playStateBus$.on('toggle', state => state == 'playing' ? 'paused' : 'playing')
 
 
@@ -17,7 +20,9 @@ playState$.subscribe(x => {
 
 
 // INTENT
-const playPauseClicks$ = Rx.Observable.fromEvent(playPauseEl, 'click')
+const playPauseClicks$ = Rx.Observable
+    .fromEvent(playPauseEl, 'click')
+    .do(e => e.preventDefault())
 playPauseClicks$.mapTo('toggle').subscribe(playStateBus$)
 
 

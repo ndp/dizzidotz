@@ -1,1 +1,1 @@
-web: ./node_modules/.bin/http-server
+web: npm run server

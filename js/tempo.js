@@ -1,5 +1,11 @@
+import Rx from 'rxjs/Rx'
+import {linearScaleFns} from './lib/ndp-software/util.js'
+import {mapBehaviorSubject} from './lib/ndp-software/map-behavior-subject.js'
+import {newDial} from './dial.js'
+
+
 // MODEL
-const msPerPeriod$ = new Rx.BehaviorSubject(2000)
+export const msPerPeriod$ = new Rx.BehaviorSubject(2000)
 
 const [unwrapFn, wrapFn] = linearScaleFns(20000, 50)
 const normalizedTempo$ = mapBehaviorSubject(msPerPeriod$,
