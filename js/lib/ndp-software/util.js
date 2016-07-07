@@ -1,4 +1,4 @@
-const log = (x) => (y, z) => console.log(x, y, z) || y
+export const log = (x) => (y, z) => global.console.log(x, y, z) || y
 
 function precondition(x, msg) {
   if (!x) throw msg
@@ -18,7 +18,7 @@ function Math_within(x, min, max) {
  * first function (n) => x, where x is normalized 0..1, and x is the specified range
  * the second function does the reverse scaling
  */
-function linearScaleFns(minOrMax, max) {
+export function linearScaleFns(minOrMax, max) {
   let min
 
   if (typeof(max) == 'undefined') {
@@ -41,7 +41,7 @@ function linearScaleFns(minOrMax, max) {
 }
 
 
-function localStorageKeys() {
+export function localStorageKeys() {
   const keys = []
   if (typeof(localStorage) !== 'undefined') {
     for (let i = 0; i < localStorage.length; i++)

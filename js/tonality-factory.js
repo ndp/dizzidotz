@@ -1,4 +1,6 @@
-function createTonalities() {
+import * as generators from './lib/ndp-software/generators.js'
+
+export function createTonalities() {
 // equal tempered scale
   const semitone = Math.pow(2, 1 / 12)
 // ref. http://www.phy.mtu.edu/~suits/NoteFreqCalcs.html
@@ -16,13 +18,13 @@ function createTonalities() {
   const majorSeventhAbove  = (ν) => ν * Math.pow(semitone, 11)
 
   function buildOctaves(lo, hi) {
-    const octaveIter = doubleIter(lo)
-    const notes      = whileLessThan(octaveIter, hi)
+    const octaveIter = generators.doubleIter(lo)
+    const notes      = generators.whileLessThan(octaveIter, hi)
     return [...notes]
   }
 
   function buildRange(lo, hi) {
-    return [...whileLessThan(counterIter(lo), hi)]
+    return [...generators.whileLessThan(generators.counterIter(lo), hi)]
   }
 
 

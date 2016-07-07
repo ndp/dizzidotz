@@ -1,4 +1,15 @@
-"use strict";
+import Rx from 'rxjs/Rx'
+
+import {editorPegs$, editorCmdBus$} from './editor.js'
+import {patternStoreBus$} from './pattern-store.js'
+import {currentTonality$} from './tonality.js'
+import {playState$} from './play-pause.js'
+import {soundOut$} from './noise.js'
+import {msPerPeriod$} from './tempo.js'
+import {log} from './lib/ndp-software/util.js'
+import {normalizeRadians} from './lib/ndp-software/trig.js'
+import * as trig from './lib/ndp-software/trig.js'
+import {name$} from './name.js'
 
 // MODEL
 const NORMALIZED_RADIUS = 600 // main editor is 1200 virtual pizels
@@ -6,7 +17,7 @@ const maxPegSize = () => NORMALIZED_RADIUS / 5
 
 const MS_PER_TICK = 20
 const radiansPerTick = () => {
-  return (MS_PER_TICK / msPerPeriod$.getValue() * radiansPerPeriod)
+  return (MS_PER_TICK / msPerPeriod$.getValue() * trig.radiansPerPeriod)
 }
 
 
@@ -50,15 +61,17 @@ const radians$ = ticker$.scan((last) => normalizeRadians(last + radiansPerTick()
 
 // activePegs$ is a stream of the "active" or highlighted peg.
 const activePegs$ = new Rx.Subject()
-radians$.withLatestFrom(editorPegs$, (angle, pegs) => {
-  // Generate stream of active pegs
-  pegs.forEach((pegModel) => {
-    if (angle <= pegModel.normalized.rad && pegModel.normalized.rad < (angle + radiansPerTick())) {
-      activePegs$.next(pegModel)
-    }
-  })
-})
-    .subscribe(() => null)
+
+radians$
+    .withLatestFrom(editorPegs$, (angle, pegs) => {
+                      // Generate stream of active pegs
+                      pegs.forEach((pegModel) => {
+                        if (angle <= pegModel.normalized.rad && pegModel.normalized.rad < (angle + radiansPerTick())) {
+                          activePegs$.next(pegModel)
+                        }
+                      })
+                    })
+    .subscribe(x => null)
 
 
 // VIEW
@@ -126,7 +139,6 @@ const findOrCreatePeg = (pegModel) => {
 }
 
 const renderPeg = (pegModel, screen) => {
-  //console.log(pegModel)
   const e = findOrCreatePeg(pegModel)
   e.setAttribute("cx", screen.pt.x + NORMALIZED_RADIUS)
   e.setAttribute("cy", screen.pt.y + NORMALIZED_RADIUS)
@@ -306,7 +318,6 @@ function compressedModel(pegs) {
   }
   // max length 2000
   const json = JSON.stringify(model)
-  //console.log(json, json.length)
   const compressed = LZString.compressToEncodedURIComponent(json)
   return compressed
 }
@@ -350,4 +361,4 @@ Rx.Observable
 const keyPress$ = Rx.Observable
     .fromEvent(document, 'keypress')
 
-keyPress$.subscribe(log('char'))
+//keyPress$.subscribe(log('char'))

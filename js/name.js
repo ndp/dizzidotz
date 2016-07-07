@@ -1,6 +1,7 @@
+import Rx from 'rxjs/Rx'
 
 // MODEL
-const name$ = new Rx.BehaviorSubject('My Dotz')
+export const name$ = new Rx.BehaviorSubject('My Dotz')
 
 
 // VIEW

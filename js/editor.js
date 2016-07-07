@@ -1,5 +1,11 @@
-const editorPegs$       = new Rx.BehaviorSubject([])
-const editorCmdBus$ = newCmdBus$(editorPegs$)
+import Rx from 'rxjs/Rx'
+import {newCmdBus$ } from './lib/ndp-software/cmdBus.js'
+import {currentTonality$} from './tonality.js'
+import {msPerPeriod$} from './tempo.js'
+import {name$} from './name.js'
+
+export const editorPegs$          = new Rx.BehaviorSubject([])
+export const editorCmdBus$ = newCmdBus$(editorPegs$)
 
 
 // MODEL COMMANDS
@@ -11,8 +17,8 @@ editorCmdBus$.on('add peg', (state, cmd) => {
 editorCmdBus$.on('clear', () => [])
 
 editorCmdBus$.on('add pattern', (state, cmd) => {
-  console.log('add pattern: ', cmd)
-  const pattern = cmd.pattern
+  global.console.log('add pattern: ', cmd)
+  const pattern                              = cmd.pattern
   name$.next(pattern.name || 'My Dotz')
   currentTonality$.next(pattern.tonality)
   msPerPeriod$.next(pattern.periodMs)

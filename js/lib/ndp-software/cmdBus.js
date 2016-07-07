@@ -51,6 +51,8 @@
  ```
  */
 
+import Rx from 'rxjs/Rx'
+
 function precondition(x, msg) {
   if (!x) throw msg
 }
@@ -59,7 +61,7 @@ function isFunction(x) {
   return typeof x === 'function';
 }
 
-function newCmdBus$(state$) {
+export function newCmdBus$(state$) {
   const cmdBus$   = new Rx.Subject(Rx.Scheduler.currentThread)
   const listeners = {}
 
