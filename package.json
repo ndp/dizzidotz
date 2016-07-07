@@ -28,6 +28,7 @@
     "build": "webpack",
     "watch": "webpack --watch",
     "start": "webpack-dev-server --hot --inline",
+    "server": "cd build && ../node_modules/.bin/http-server -e html -d false",
     "test": "mocha  --compilers js:babel-core/register"
   },
   "author": "",

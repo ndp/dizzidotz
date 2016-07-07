@@ -1,1 +1,1 @@
-web: cd build && ../node_modules/.bin/http-server -e html -d false -c-1
+web: npm run server
