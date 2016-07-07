@@ -3,14 +3,24 @@ import {newCmdBus$ } from './lib/ndp-software/cmdBus.js'
 import {currentTonality$} from './tonality.js'
 import {msPerPeriod$} from './tempo.js'
 import {name$} from './name.js'
+import {newSoundData} from './noise.js'
 
 export const editorPegs$          = new Rx.BehaviorSubject([])
 export const editorCmdBus$ = newCmdBus$(editorPegs$)
 
 
+const newPeg = function(normalized) {
+  return {
+    id:         `peg-${(new Date()).getTime()}${Math.random()}`,
+    normalized: normalized,
+    sound:      newSoundData(normalized)
+  }
+}
+
+
 // MODEL COMMANDS
 editorCmdBus$.on('add peg', (state, cmd) => {
-  state.push(cmd.peg)
+  state.push(newPeg(cmd.peg))
   return state
 })
 

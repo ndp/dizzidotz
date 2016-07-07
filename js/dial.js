@@ -25,6 +25,7 @@ export function newDial(dom, model$) {
   // INTENT
   const click$ = Rx.Observable
       .fromEvent(dom, 'click')
+      .do(e => e.preventDefault())
 
   click$
       .map(e => {

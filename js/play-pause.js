@@ -20,7 +20,9 @@ playState$.subscribe(x => {
 
 
 // INTENT
-const playPauseClicks$ = Rx.Observable.fromEvent(playPauseEl, 'click')
+const playPauseClicks$ = Rx.Observable
+    .fromEvent(playPauseEl, 'click')
+    .do(e => e.preventDefault())
 playPauseClicks$.mapTo('toggle').subscribe(playStateBus$)
 
 

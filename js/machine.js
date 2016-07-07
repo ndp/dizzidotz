@@ -2,14 +2,15 @@ import Rx from 'rxjs/Rx'
 
 import {editorPegs$, editorCmdBus$} from './editor.js'
 import {patternStoreBus$} from './pattern-store.js'
-import {currentTonality$} from './tonality.js'
+import {currentTonality$, tonalities} from './tonality.js'
 import {playState$} from './play-pause.js'
 import {soundOut$} from './noise.js'
 import {msPerPeriod$} from './tempo.js'
-import {log} from './lib/ndp-software/util.js'
+import {labelLog} from './lib/ndp-software/util.js'
 import {normalizeRadians} from './lib/ndp-software/trig.js'
 import * as trig from './lib/ndp-software/trig.js'
 import {name$} from './name.js'
+import {newSoundData} from './noise.js'
 
 // MODEL
 const NORMALIZED_RADIUS = 600 // main editor is 1200 virtual pizels
@@ -25,7 +26,7 @@ const radiansPerTick = () => {
 
 const normalizeValues = (pt, size) => {
   const r = {}
-  const [rad, dist] = ptToVector(pt)
+  const [rad, dist] = trig.ptToVector(pt)
   r.rad   = rad
   r.mag   = 1 - (dist / NORMALIZED_RADIUS)
   r.sz    = size / maxPegSize()
@@ -36,26 +37,9 @@ const normalizeEvent = (e, size) =>
     normalizeValues(eventToPt(e), size)
 
 
-const newSoundData = (normalized) => {
-  const tonality  = normalized.tonality || currentTonality$.getValue()
-  const frequency = tonalities[tonality](normalized.mag)
-  return {
-              frequency,
-    volume:   normalized.sz * 30,
-    velocity: normalized.sz,
-    duration: normalized.sz
-  }
-}
-
-const newPeg = function(normalized) {
-  return {
-    id:         `peg-${(new Date()).getTime()}${Math.random()}`,
-    normalized: normalized,
-    sound:      newSoundData(normalized)
-  }
-}
 
 
+playState$.subscribe(labelLog('playing state'))
 const ticker$  = Rx.Observable.interval(MS_PER_TICK).filter(() => playState$.getValue() == 'playing')
 const radians$ = ticker$.scan((last) => normalizeRadians(last + radiansPerTick()))
 
@@ -121,7 +105,7 @@ editorPegs$
 
 const normalizedToScreen = (normalized) => {
   return {
-    pt:   vectorToPt(normalized.rad, (1 - normalized.mag) * NORMALIZED_RADIUS),
+    pt:   trig.vectorToPt(normalized.rad, (1 - normalized.mag) * NORMALIZED_RADIUS),
     size: normalized.sz * maxPegSize()
   }
 }
@@ -150,6 +134,7 @@ const renderPeg = (pegModel, screen) => {
 // INTERACTIONS
 const saveEditorAction$ = Rx.Observable
     .fromEvent(saveButton, 'click')
+    .do(e => e.preventDefault())
     .withLatestFrom(editorPegs$, (_, pegs) => {
                       return {
                         name:    'insert',
@@ -187,7 +172,7 @@ const calcSizeWhileGrowing = (start = startedPegAt) => {
 editorMousedown$.subscribe((e) => {
   startedPegAt = (new Date()).getTime()
   const pt     = eventToPt(e)
-  const [angle, dist] = ptToVector(pt)
+  const [angle, dist] = trig.ptToVector(pt)
 
   const interval = setInterval(() => {
     if (startedPegAt) {
@@ -218,7 +203,7 @@ editorMouseup$
          })
     .map((screen) => {
            const normalized = normalizeValues(screen.pt, screen.size)
-           return {name: 'add peg', peg: newPeg(normalized)}
+           return {name: 'add peg', peg: normalized}
          })
     .subscribe(editorCmdBus$)
 
@@ -272,7 +257,7 @@ scratch$
                    pt:    pt,
                    color: Color.scratch
                  }
-                 const [angle, dist] = ptToVector(pt)
+                 const [angle, dist] = trig.ptToVector(pt)
                  const peg    = {
                    id:    'scratch',
                    angle: angle,
@@ -291,6 +276,7 @@ scratch$
 
 /// DELETE ALL
 Rx.Observable.fromEvent(document.getElementById('delete-all-btn'), 'click')
+    .do(e => e.preventDefault())
     .filter(() => window.confirm("really delete all your data? there’s no going back!"))
     .mapTo('delete all')
     .subscribe(patternStoreBus$)
@@ -361,4 +347,4 @@ Rx.Observable
 const keyPress$ = Rx.Observable
     .fromEvent(document, 'keypress')
 
-//keyPress$.subscribe(log('char'))
+keyPress$.subscribe(labelLog('char'))

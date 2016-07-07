@@ -28,7 +28,6 @@ module.exports = {
                './js/editor.js',
                './js/pattern-store.js',
                './js/pattern-drawer.js',
-               './js/lib/lz-string.min.js',
                './js/name.js',
                './js/machine.js',
              'babel-polyfill'],

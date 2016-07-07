@@ -84,10 +84,3 @@ export function newCmdBus$(state$) {
 }
 
 
-if (typeof(module) !== 'undefined') {
-  module.exports = {
-    newCmdBus$
-  }
-}
-
-

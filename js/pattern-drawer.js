@@ -56,7 +56,9 @@ patternStore$
 
 
 // INTENTIONS
-const patternsClicks$ = Rx.Observable.fromEvent(patternListElem, 'click')
+const patternsClicks$ = Rx.Observable
+    .fromEvent(patternListElem, 'click')
+    .do(e => e.preventDefault())
 
 // INTENTIONS: LOAD
 patternsClicks$

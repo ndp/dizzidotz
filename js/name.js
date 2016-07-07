@@ -16,6 +16,7 @@ name$.subscribe(function(name) {
 // Change name
 Rx.Observable
     .fromEvent(document.getElementById('pattern-name'), 'click')
+    .do(e => e.preventDefault())
     .subscribe(function() {
                  const newName = prompt("New name", name$.getValue())
                  if (newName != null) {
