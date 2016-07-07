@@ -1,1 +1,1 @@
-web: ./node_modules/.bin/http-server
+web: cd build && ../node_modules/.bin/http-server -e html -d false -c-1
