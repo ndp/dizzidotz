@@ -1,5 +1,6 @@
-const assert = require('chai').assert;
-const {newCmdBus$} = require('../js/lib/ndp-software/cmdBus.js')
+import {assert} from 'chai';
+import Rx from 'rxjs/Rx'
+import {newCmdBus$} from '../js/lib/ndp-software/cmdBus.js'
 
 describe('CmdBus', function() {
 
