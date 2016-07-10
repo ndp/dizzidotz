@@ -16,8 +16,8 @@ body {
   position: absolute;
   animation-delay: 1s;
   animation-name: rotate-cw;
-  animation-duration: 1s;
-  animation-iteration-count: 2;
+  animation-duration: 0.5s;
+  animation-iteration-count: 3;
   animation-timing-function: linear;
 }
 
@@ -45,9 +45,9 @@ body {
 #logo text:last-child {
   position: absolute;
   transform: rotate(-180deg) translate(0,-25px);
-  animation-delay: 4s;
+  animation-delay: 3.5s;
   animation-name: rotate-ccw;
-  animation-duration: 1s;
+  animation-duration: 0.7s;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
 }
