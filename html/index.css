@@ -464,42 +464,44 @@ body {
   display: block;
 }
 
-a.button {
-  color: beige;
-  cursor: move;
-}
 
 .button .bg {
-  fill: gray;
-}
-.button:hover .bg {
-  fill: black;
-}
-
-.button .btn {
-  stroke: white;
-  stroke-width: 4;
-}
-
-}
-
-#play-pause .bg {
   fill: lightgray;
 }
 
-#play-pause:hover .bg {
+.button:hover .bg {
   fill: lightblue;
 }
 
-#play-pause .btn {
+.button .btn {
   fill: gray;
-  stroke: darkgray;
+  stroke: gray;
   stroke-width: 1px;
 }
 
-#play-pause:hover .btn {
+.button:hover .btn {
   fill: deepskyblue;
-  stroke: blue;
+  stroke: lightblue;
+}
+
+.button .btn.stroked {
+  fill: none;
+  stroke: gray;
+  stroke-width: 4;
+}
+
+.button:hover .btn.stroked {
+  fill: none;
+  stroke: deepskyblue;
+}
+
+
+
+#play-pause {
+  position: absolute;
+  cursor: pointer;
+  opacity: 0;
+  animation: fade-in 1s linear 4s forwards;
 }
 
 #play-pause.playing .play {
