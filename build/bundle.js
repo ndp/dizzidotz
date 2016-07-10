@@ -26710,16 +26710,17 @@
 	});
 	
 	patternStoreBus$.on('create template', function (state, cmd) {
-	  var key = 'template-' + cmd.tonality;
+	  var tonality = cmd.tonality;
+	  var key = 'template-' + tonality;
 	  if (!localStorage[key]) {
 	
 	    var template = {
-	      name: cmd.tonality,
 	      key: key,
-	      tonality: cmd.tonality,
+	      name: tonality,
+	      tonality: tonality,
 	      periodMs: 2000,
 	      pegs: [],
-	      svg: '<svg viewBox="0 0 618 618"><g class="wheel ' + cmd.tonality + '">\n        <circle class="bg" cx="50%" cy="50%" r="49%"></circle></g></svg>'
+	      svg: '<svg viewBox="0 0 1200 1200"><g class="wheel ' + tonality + '">\n        <circle class="bg" cx="50%" cy="50%" r="49%"></circle></g></svg>'
 	    };
 	
 	    patternStoreBus$.next({ name: 'insert', pattern: template });
