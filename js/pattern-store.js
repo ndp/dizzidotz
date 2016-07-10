@@ -53,16 +53,17 @@ patternStoreBus$.on('delete all', function(state, cmd) {
 })
 
 patternStoreBus$.on('create template', function(state, cmd) {
-  const key = `template-${cmd.tonality}`
+  const tonality = cmd.tonality
+  const key = `template-${tonality}`
   if (!localStorage[key]) {
 
     const template = {
-      name:     cmd.tonality,
       key:      key,
-      tonality: cmd.tonality,
+      name:     tonality,
+      tonality: tonality,
       periodMs: 2000,
       pegs:     [],
-      svg:      `<svg viewBox="0 0 618 618"><g class="wheel ${cmd.tonality}">
+      svg:      `<svg viewBox="0 0 1200 1200"><g class="wheel ${tonality}">
         <circle class="bg" cx="50%" cy="50%" r="49%"></circle></g></svg>`
     }
 
