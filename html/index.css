@@ -166,62 +166,62 @@ body {
   body {
     min-width: 134vh;
   }
+  #pattern-name {
+    left: 3vh;
+    top: 81vh;
+    width: 15vh;
+    height: 15vh;
+  }
+
+  #logo {
+    top:0vh;
+    left:0vh;
+    width: 19vh;
+    height: 19vh;
+  }
+
   #editor {
     width: 100vh;
     height: 100vh;
     top: 0;
-    margin-left: 16vh;
-  }
-
-  #logo {
-    top:5vh;
-    left:5vh;
-    width: 18vh;
-    height: 18vh;
-  }
-
-  #pattern-name {
-    left: 0;
-    top: 0;
-    width: 28vh;
-    height: 28vh;
-  }
-
-  #play-pause {
-    width: 10vh;
-    height: 10vh;
-    top: 44vh;
-    left: 7vh;
+    margin-left: 2vh;
   }
 
   #tempo-dial {
-    top: 28vh;
-    left: 2vh;
-    height: 17vh;
-    width: 17vh;
+    top: 4vh;
+    left: 88vh;
+    height: 19vh;
+    width: 19vh;
+  }
+
+  #play-pause {
+    top: 0vh;
+    left: 79vh;
+    width: 12vh;
+    height: 12vh;
   }
 
   #save-button {
-    height: 10vh;
-    width: 10vh;
-    left: 106vh;
+    height: 9vh;
+    width: 9vh;
+    left: 107vh;
     top: 1vh;
   }
 
   #delete-all-btn {
     position: absolute;
-    right: 1vh;
+    left: 109vh;
     bottom: 1vh;
-    height: 5vh;
-    width: 5vh;
+    height: 7vh;
+    width: 7vh;
   }
 
   #permalink-button {
     position: absolute;
-    left: 95vh;
-    top: 1vh;
-    height: 10vh;
-    width: 10vh
+    left: 96vh;
+    top: 22vh;
+    height: 9vh;
+    width: 9vh
   }
 
   #drawer {
@@ -248,59 +248,59 @@ body {
   #editor {
     width: 98vw;
     height: 98vw;
-    margin-top: 15vw;
+    margin-top: 12vw;
     margin-left: 0;
+  }
+
+  #pattern-name {
+    left: 58vw;
+    top: 0;
+    width: 15vw;
+    height: 15vw;
   }
 
   #logo {
     top:5vw;
     left:5vw;
-    width: 18vw;
-    height: 18vw;
-  }
-
-  #pattern-name {
-    left: 0;
-    top: 0;
-    width: 28vw;
-    height: 28vw;
-  }
-
-  #play-pause {
-    width: 10vw;
-    height: 10vw;
-    top: 6vw;
-    left: 46vw;
+    width: 19vw;
+    height: 19vw;
   }
 
   #tempo-dial {
-    top: 0vw;
-    left: 28vw;
-    height: 18vw;
-    width: 18vw;
+    top: 4vw;
+    left: 71vw;
+    height: 19vw;
+    width: 19vw;
+  }
+
+  #play-pause {
+    top: 1vw;
+    left: 46vw;
+    width: 12vw;
+    height: 12vw;
   }
 
   #save-button {
-    height: 10vw;
-    width: 10vw;
     left: 1vw;
     top: 105vw;
+    height: 9vw;
+    width: 9vw;
   }
 
   #delete-all-btn {
     position: absolute;
+    top: 108vw;
     right: 1vw;
-    top: 110vw;
-    height: 5vw;
-    width: 5vw;
+    height: 7vw;
+    width: 7vw;
   }
 
   #permalink-button {
     position: absolute;
-    top: 1vw;
-    right: 1vw;
-    height: 10vw;
-    width: 10vw;
+    top: 21vw;
+    left: 84vw;
+    height: 9vw;
+    width: 9vw;
   }
 
 
@@ -480,12 +480,6 @@ a.button {
   stroke: white;
   stroke-width: 4;
 }
-
-#play-pause {
-  position: absolute;
-  cursor: pointer;
-  opacity: 0;
-  animation: fade-in 1s linear 4s forwards;
 
 }
 
