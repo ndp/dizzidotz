@@ -63,9 +63,19 @@ body {
   position: absolute;
 }
 
-#tempo-dial {
+.slow-fade-in {
   opacity: 0;
-  animation: fade-in 1s linear 4s forwards;
+  animation: fade-in 1s linear 5s forwards;
+}
+
+.slow-fade-in-stage-2 {
+  opacity: 0;
+  animation: fade-in 1s linear 7s forwards;
+}
+
+.slow-fade-in-stage-3 {
+  opacity: 0;
+  animation: fade-in 1s linear 10s forwards;
 }
 
 .fading-fill-children > * {
@@ -131,8 +141,6 @@ body {
 
 #pattern-name {
   position: absolute;
-  opacity: 0;
-  animation: fade-in 1s linear 4s forwards;
 }
 #pattern-name .bg {
   fill: pink;
@@ -188,15 +196,15 @@ body {
   }
 
   #tempo-dial {
-    top: 4vh;
-    left: 88vh;
+    top: 9vh;
+    left: 91vh;
     height: 19vh;
     width: 19vh;
   }
 
   #play-pause {
-    top: 0vh;
-    left: 79vh;
+    top: 1vh;
+    left: 81vh;
     width: 12vh;
     height: 12vh;
   }
@@ -218,8 +226,8 @@ body {
 
   #permalink-button {
     position: absolute;
-    left: 96vh;
-    top: 22vh;
+    left: 91vh;
+    top: 78vh;
     height: 9vh;
     width: 9vh
   }
@@ -500,8 +508,6 @@ body {
 #play-pause {
   position: absolute;
   cursor: pointer;
-  opacity: 0;
-  animation: fade-in 1s linear 4s forwards;
 }
 
 #play-pause.playing .play {
@@ -513,30 +519,26 @@ body {
 }
 
 
-#editor .wheel, #editor #hand {
-  opacity: 0;
-  animation: fade-in 1s linear 4s forwards;
-}
 .wheel .bg {
-  fill: url(#grad1);
+  fill: url(#rgrad-purple);
   stroke: darkslategray;
   stroke-width: 1px;
 }
 
 .wheel.harmonicMinor .bg {
-  fill: url(#rgrad-forrest);
+  fill: url(#rgrad-sea-green);
 }
 
 .wheel.blues .bg {
-  fill: url(#rgrad-purple);
+  fill: url(#rgrad-dark-blue);
 }
 
 .wheel.major .bg {
-  fill: url(#rgrad-blue-glow);
+  fill: url(#rgrad-yellow);
 }
 
 .wheel.majorTriad .bg {
-  fill: url(#rgrad-yellow);
+  fill: url(#rgrad-sun);
 }
 
 .wheel.perfect .bg {
@@ -544,19 +546,18 @@ body {
 }
 
 .wheel.fifths .bg {
-  fill: url(#rgrad-brown);
-  color: bro
+  fill: url(#rgrad-purple);
 }
 
 .wheel.chromatic .bg {
-  fill: url(#rgrad-rainbow);
+  fill: url(#rgrad-lime-green);
 }
 
 .wheel.continuous .bg {
-  fill: url(#rgrad-b-and-w);
+  fill: url(#rgrad-blue-glow);
 }
 
 .wheel.octaves .bg {
-  fill: url(#rgrad-black-steps);
+  fill: url(#rgrad-b-and-w);
 }
 
