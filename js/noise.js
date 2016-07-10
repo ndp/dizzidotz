@@ -18,8 +18,8 @@ export const newSoundData = (normalized) => {
   const frequency = tonalities[tonality](normalized.mag)
   return {
               frequency,
-    volume:   normalized.sz * 30,
-    velocity: normalized.sz,
+    volume:   normalized.sz * 20,   // 0.0 .. 1.0  => 30 .. 70
+    velocity: 1-normalized.sz,
     duration: normalized.sz
   }
 }
