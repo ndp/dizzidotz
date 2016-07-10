@@ -29,7 +29,11 @@ editorCmdBus$.on('clear', () => [])
 editorCmdBus$.on('add pattern', (state, cmd) => {
   global.console.log('add pattern: ', cmd)
   const pattern                              = cmd.pattern
-  name$.next(pattern.name || 'My Dotz')
+  if (!/^template.*/.exec(pattern.key)) {
+    name$.next(pattern.name || 'My Dotz')
+  } else {
+    name$.next('My Dotz')
+  }
   currentTonality$.next(pattern.tonality)
   msPerPeriod$.next(pattern.periodMs)
   document.getElementById('wheel').classList = `wheel ${pattern.tonality}`
