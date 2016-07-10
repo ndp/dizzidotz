@@ -26334,8 +26334,8 @@
 	  var frequency = _tonality.tonalities[tonality](normalized.mag);
 	  return {
 	    frequency: frequency,
-	    volume: normalized.sz * 30,
-	    velocity: normalized.sz,
+	    volume: normalized.sz * 20, // 0.0 .. 1.0  => 30 .. 70
+	    velocity: 1 - normalized.sz,
 	    duration: normalized.sz
 	  };
 	};
@@ -26584,7 +26584,11 @@
 	editorCmdBus$.on('add pattern', function (state, cmd) {
 	  global.console.log('add pattern: ', cmd);
 	  var pattern = cmd.pattern;
-	  _name.name$.next(pattern.name || 'My Dotz');
+	  if (!/^template.*/.exec(pattern.key)) {
+	    _name.name$.next(pattern.name || 'My Dotz');
+	  } else {
+	    _name.name$.next('My Dotz');
+	  }
 	  _tonality.currentTonality$.next(pattern.tonality);
 	  _tempo.msPerPeriod$.next(pattern.periodMs);
 	  document.getElementById('wheel').classList = 'wheel ' + pattern.tonality;
