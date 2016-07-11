@@ -40,7 +40,7 @@ const normalizeEvent = (e, size) =>
 
 
 playState$.subscribe(labelLog('playing state'))
-const ticker$  = Rx.Observable.interval(MS_PER_TICK).filter(() => playState$.getValue() == 'playing')
+const ticker$  = Rx.Observable.interval(MS_PER_TICK).delay(6000).filter(() => playState$.getValue() == 'playing')
 const radians$ = ticker$.scan((last) => normalizeRadians(last + radiansPerTick()))
 
 // activePegs$ is a stream of the "active" or highlighted peg.
