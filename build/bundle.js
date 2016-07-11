@@ -26923,7 +26923,7 @@
 	};
 	
 	_playPause.playState$.subscribe((0, _util.labelLog)('playing state'));
-	var ticker$ = _Rx2.default.Observable.interval(MS_PER_TICK).filter(function () {
+	var ticker$ = _Rx2.default.Observable.interval(MS_PER_TICK).delay(6000).filter(function () {
 	  return _playPause.playState$.getValue() == 'playing';
 	});
 	var radians$ = ticker$.scan(function (last) {
