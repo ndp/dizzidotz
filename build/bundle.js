@@ -27231,9 +27231,7 @@
 	    name: 'add pattern',
 	    pattern: x
 	  };
-	}).subscribe(function (x) {
-	  return _editor.editorCmdBus$.next(x);
-	});
+	}).subscribe(_editor.editorCmdBus$);
 	
 	var keyPress$ = _Rx2.default.Observable.fromEvent(document, 'keypress');
 	

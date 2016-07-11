@@ -339,7 +339,7 @@ Rx.Observable
              pattern: x
            }
          })
-    .subscribe(x => editorCmdBus$.next(x))
+    .subscribe(editorCmdBus$)
 
 
 
