@@ -7,23 +7,44 @@ html, body, svg {
 
 body {
   background-color: black;
-  background: url(../img/bg/wood20.jpg);
+  background: url(b1b3d69b26fb6c81e8bd06ec161f1ad5.jpg);
   background-size: cover;
 }
 
 
 #logo {
   position: absolute;
-  animation-delay: 1s;
-  animation-name: rotate-cw;
-  animation-duration: 0.5s;
-  animation-iteration-count: 3;
-  animation-timing-function: linear;
+  -webkit-animation-delay: 1s;
+          animation-delay: 1s;
+  -webkit-animation-name: rotate-cw;
+          animation-name: rotate-cw;
+  -webkit-animation-duration: 0.5s;
+          animation-duration: 0.5s;
+  -webkit-animation-iteration-count: 3;
+          animation-iteration-count: 3;
+  -webkit-animation-timing-function: linear;
+          animation-timing-function: linear;
 }
 
 #logo .bg {
   fill: lightgoldenrodyellow;
-  animation: fill-pulse-yellow 10s 1;
+  -webkit-animation: fill-pulse-yellow 10s 1;
+          animation: fill-pulse-yellow 10s 1;
+}
+
+@-webkit-keyframes fill-pulse-yellow {
+  0% {
+    fill: lightgoldenrodyellow;
+  }
+  5% {
+    fill: yellow;
+  }
+  50% {
+    fill: yellow;
+  }
+  100% {
+    fill: lightgoldenrodyellow;
+  }
 }
 
 @keyframes fill-pulse-yellow {
@@ -44,12 +65,18 @@ body {
 
 #logo text:last-child {
   position: absolute;
-  transform: rotate(-180deg) translate(0,-25px);
-  animation-delay: 3.5s;
-  animation-name: rotate-ccw;
-  animation-duration: 0.7s;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
+  -webkit-transform: rotate(-180deg) translate(0,-25px);
+          transform: rotate(-180deg) translate(0,-25px);
+  -webkit-animation-delay: 3.5s;
+          animation-delay: 3.5s;
+  -webkit-animation-name: rotate-ccw;
+          animation-name: rotate-ccw;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: 1;
+          animation-iteration-count: 1;
+  -webkit-animation-fill-mode: forwards;
+          animation-fill-mode: forwards;
 }
 
 #logo text {
@@ -65,27 +92,34 @@ body {
 
 .slow-fade-in {
   opacity: 0;
-  animation: fade-in 1s linear 5s forwards;
+  -webkit-animation: fade-in 1s linear 5s forwards;
+          animation: fade-in 1s linear 5s forwards;
 }
 
 .slow-fade-in-stage-2 {
   opacity: 0;
-  animation: fade-in 1s linear 7s forwards;
+  -webkit-animation: fade-in 1s linear 7s forwards;
+          animation: fade-in 1s linear 7s forwards;
 }
 
 .slow-fade-in-stage-3 {
   opacity: 0;
-  animation: fade-in 1s linear 10s forwards;
+  -webkit-animation: fade-in 1s linear 10s forwards;
+          animation: fade-in 1s linear 10s forwards;
 }
 
 .fading-fill-children > * {
+  -webkit-transition-property: fill, stroke;
   transition-property: fill, stroke;
-  transition-duration: 3s;
+  -webkit-transition-duration: 3s;
+          transition-duration: 3s;
 }
 
 .fading-fill-children:hover > * {
+  -webkit-transition-property: fill, stroke;
   transition-property: fill, stroke;
-  transition-duration: .1s;
+  -webkit-transition-duration: .1s;
+          transition-duration: .1s;
 }
 
 .dial .bg {
@@ -130,7 +164,9 @@ body {
 
 #drawer {
   overflow: auto;
-  transition-duration: 1s;
+  -webkit-transition-duration: 1s;
+          transition-duration: 1s;
+  -webkit-transition-property: all;
   transition-property: all;
   margin: 0;
   padding: 0;
@@ -333,52 +369,39 @@ body {
   z-index: 0;
 }
 
-@-ms-keyframes wiggle {
-  0% {
-    -ms-transform: rotate(3deg);
-  }
-  50% {
-    -ms-transform: rotate(-3deg);
-  }
-  100% {
-    -ms-transform: rotate(3deg);
-  }
-}
-
-@-moz-keyframes wiggle {
-  0% {
-    -moz-transform: rotate(3deg);
-  }
-  50% {
-    -moz-transform: rotate(-3deg);
-  }
-  100% {
-    -moz-transform: rotate(3deg);
-  }
-}
-
 @-webkit-keyframes wiggle {
   0% {
     -webkit-transform: rotate(3deg);
+            transform: rotate(3deg);
   }
   50% {
     -webkit-transform: rotate(-3deg);
+            transform: rotate(-3deg);
   }
   100% {
     -webkit-transform: rotate(3deg);
+            transform: rotate(3deg);
   }
 }
 
 @keyframes wiggle {
   0% {
-    transform: rotate(3deg);
+    -webkit-transform: rotate(3deg);
+            transform: rotate(3deg);
   }
   50% {
-    transform: rotate(-3deg);
+    -webkit-transform: rotate(-3deg);
+            transform: rotate(-3deg);
   }
   100% {
-    transform: rotate(3deg);
+    -webkit-transform: rotate(3deg);
+            transform: rotate(3deg);
   }
+}
+
+@-webkit-keyframes fade-in {
+  from {opacity: 0}
+  to {opacity: 1.0}
 }
 
 @keyframes fade-in {
@@ -386,45 +409,50 @@ body {
   to {opacity: 1.0}
 }
 
+@-webkit-keyframes rotate-ccw {
+  from { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
+  to { -webkit-transform: rotate(0deg); transform: rotate(0deg); }
+}
+
 @keyframes rotate-ccw {
-  from { transform: rotate(360deg); }
-  to { transform: rotate(0deg); }
+  from { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
+  to { -webkit-transform: rotate(0deg); transform: rotate(0deg); }
+}
+
+@-webkit-keyframes rotate-ccw-9oclock {
+  from { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
+  to { -webkit-transform: rotate(0deg); transform: rotate(0deg); }
 }
 
 @keyframes rotate-ccw-9oclock {
-  from { transform: rotate(360deg); }
-  to { transform: rotate(0deg); }
+  from { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
+  to { -webkit-transform: rotate(0deg); transform: rotate(0deg); }
 }
 
-/*@-webkit-keyframes rotate-cw {*/
-  /*from { -webkit-transform: rotate(0deg); }*/
-  /*to { -webkit-transform: rotate(360deg); }*/
-/*}*/
-/*@-moz-keyframes rotate-cw {*/
-  /*from { -moz-transform: rotate(0deg); }*/
-  /*to { -moz-transform: rotate(360deg); }*/
-/*}*/
-/*@-ms-keyframes rotate-cw {*/
-  /*from { -ms-transform: rotate(0deg); }*/
-  /*to { -ms-transform: rotate(360deg); }*/
-/*}*/
-/*@-o-keyframes rotate-cw {*/
-  /*from { -o-transform: rotate(0deg); }*/
-  /*to { -o-transform: rotate(360deg); }*/
-/*}*/
+@-webkit-keyframes rotate-cw-9-oclock {
+  from { -webkit-transform: rotate(-90deg); transform: rotate(-90deg); }
+  to { -webkit-transform: rotate(270deg); transform: rotate(270deg); }
+}
+
 @keyframes rotate-cw-9-oclock {
-  from { transform: rotate(-90deg); }
-  to { transform: rotate(270deg); }
+  from { -webkit-transform: rotate(-90deg); transform: rotate(-90deg); }
+  to { -webkit-transform: rotate(270deg); transform: rotate(270deg); }
+}
+@-webkit-keyframes rotate-cw {
+  from { -webkit-transform: rotate(0deg); transform: rotate(0deg); }
+  to { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
 }
 @keyframes rotate-cw {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from { -webkit-transform: rotate(0deg); transform: rotate(0deg); }
+  to { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
 }
 
 #drawer li a.pattern {
   z-index: 10;
+  cursor: -webkit-zoom-in;
   cursor: zoom-in;
   opacity: 0.7;
+  -webkit-transition: opacity 1s;
   transition: opacity 1s;
 }
 
@@ -449,6 +477,7 @@ body {
 }
 
 #drawer li a.delete-pattern:hover {
+  cursor: -webkit-zoom-out;
   cursor: zoom-out;
   opacity: 1.0;
 }
@@ -462,10 +491,14 @@ body {
   width: 124%;
   height: 124%;
   font: xx-large monospace;
-  animation-name: rotate-ccw;
-  animation-duration: 30s;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
+  -webkit-animation-name: rotate-ccw;
+          animation-name: rotate-ccw;
+  -webkit-animation-duration: 30s;
+          animation-duration: 30s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+          animation-timing-function: linear;
 }
 
 #drawer li:hover .name {
@@ -561,3 +594,5 @@ body {
   fill: url(#rgrad-b-and-w);
 }
 
+
+/*# sourceMappingURL=styles.css.map*/
