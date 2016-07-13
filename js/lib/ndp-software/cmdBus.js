@@ -78,7 +78,8 @@ export function newCmdBus$(state$) {
       .withLatestFrom(state$, (cmd, state) => {
                         const fn = listeners[cmd.name]
                         return fn ? fn(state, cmd) : state
-                      }).subscribe(state$)
+                      })
+      .subscribe(state$)
 
   return cmdBus$
 }
