@@ -46,7 +46,7 @@ export function newDial(dom, model$) {
 
   const mouseMove$ = Rx.Observable
       .fromEvent(dom, 'mousemove')
-      .throttleTime(100) // , Rx.Scheduler.requestAnimationFrame
+      .throttleTime(100, Rx.Scheduler.animationFrame)
 
   const stop$ = mouseMove$
       .debounceTime(2000)

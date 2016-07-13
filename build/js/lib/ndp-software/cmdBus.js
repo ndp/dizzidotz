@@ -51,7 +51,8 @@
  ```
  */
 
-import Rx from 'rxjs/Rx'
+import {Subject} from 'rxjs/Subject'
+//import {Scheduler} from 'rxjs/Scheduler'
 
 function precondition(x, msg) {
   if (!x) throw msg
@@ -62,7 +63,7 @@ function isFunction(x) {
 }
 
 export function newCmdBus$(state$) {
-  const cmdBus$   = new Rx.Subject(Rx.Scheduler.currentThread)
+  const cmdBus$   = new Subject() // Scheduler.asap
   const listeners = {}
 
   cmdBus$.addListener = function(cmdName, fn) {
@@ -80,6 +81,12 @@ export function newCmdBus$(state$) {
                         return fn ? fn(state, cmd) : state
                       })
       .subscribe(state$)
+
+  cmdBus$.subscribe(
+      function(v) { console.log('cmdBus$next:', v)},
+      function(v) { console.log('cmdBus$error:', v)},
+      function(v) { console.log('cmdBus$complete:', v)}
+  )
 
   return cmdBus$
 }
