@@ -1,4 +1,11 @@
-import Rx from 'rxjs/Rx'
+import {Observable} from 'rxjs/Observable'
+
+import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/do'
+import 'rxjs/add/operator/filter'
+import 'rxjs/add/operator/withLatestFrom'
+
+
 import { patternStore$ } from './pattern-store.js'
 import { patternStoreBus$ } from './pattern-store.js'
 import { editorCmdBus$ } from './editor.js'
@@ -57,28 +64,22 @@ patternStore$
 
 
 // INTENTIONS
-const patternsClicks$ = Rx.Observable
+const patternsClicks$ = Observable
     .fromEvent(patternListElem, 'click')
     .do(e => e.preventDefault())
 
 // INTENTIONS: LOAD
 patternsClicks$
     .map((e) => e.target.closest('a'))
-    .do(labelLog('paternClick'))
     .filter(link => link && link.className != DELETE_PATTERN_CLASS_NAME)
     .map(link => link.closest('li'))
-    .do(labelLog('link'))
     .map(li => li.getAttribute('data-key'))
-    .do(labelLog('dataKey'))
     .withLatestFrom(patternStore$, (key, patterns) => patterns[key])
-    .do(labelLog('withLatestFrom'))
     .map(pattern => {
            return {pattern, name: 'add pattern'}
          })
-    .do(labelLog('load pattern'))
     .subscribe(function(x) { editorCmdBus$.next(x)  })
 
-editorCmdBus$.subscribe(labelLog('editorCmdBus$ cmd: '))
 
 // INTENTIONS: DELETE
 patternsClicks$

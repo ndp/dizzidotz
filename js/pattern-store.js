@@ -1,12 +1,13 @@
-import Rx from 'rxjs/Rx'
+import {BehaviorSubject} from 'rxjs/BehaviorSubject'
+
 import {newCmdBus$ } from './lib/ndp-software/cmdBus.js'
 import { localStorageKeys } from './lib/ndp-software/util.js'
 import { ownPropertiesIter } from './lib/ndp-software/generators.js'
 import { tonalities } from './tonality.js'
 
 // hashmap of key => stored value
-export const patternStore$ = new Rx
-    .BehaviorSubject(localStorageKeys()
+export const patternStore$ = new
+    BehaviorSubject(localStorageKeys()
                          .filter((x) => /^(pattern|template).*/.exec(x))
                          .reduce((acc, x) => {
                                    const item = localStorage.getItem(x)

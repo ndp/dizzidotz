@@ -1,10 +1,10 @@
-import Rx from 'rxjs/Rx'
+import {BehaviorSubject} from 'rxjs/BehaviorSubject'
 import {createTonalities} from './tonality-factory.js'
 
 // MODEL
 export const tonalities = createTonalities()
 
-export const currentTonality$ = new Rx.BehaviorSubject('blues')
+export const currentTonality$ = new BehaviorSubject('blues')
 
 // VIEW
 // Build scale control

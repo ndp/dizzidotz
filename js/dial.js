@@ -1,4 +1,14 @@
-import Rx from 'rxjs/Rx'
+import {Observable} from 'rxjs/Observable'
+import 'rxjs/add/observable/fromEvent'
+import 'rxjs/add/operator/delay'
+import 'rxjs/add/operator/mapTo'
+import 'rxjs/add/operator/merge'
+import 'rxjs/add/operator/startWith'
+import 'rxjs/add/operator/distinctUntilChanged'
+import 'rxjs/add/operator/throttleTime'
+import 'rxjs/add/operator/debounceTime'
+import {animationFrame} from 'rxjs/scheduler/AnimationFrameScheduler'
+
 import {svgClippedArc} from './lib/ndp-software/svg.js'
 import {ptToVector, normalizeRadians} from './lib/ndp-software/trig.js'
 
@@ -23,7 +33,7 @@ export function newDial(dom, model$) {
   }
 
   // INTENT
-  const click$ = Rx.Observable
+  const click$ = Observable
       .fromEvent(dom, 'click')
       .do(e => e.preventDefault())
 
@@ -44,14 +54,14 @@ export function newDial(dom, model$) {
                 .startWith(true)
                 .distinctUntilChanged()
 
-  const mouseMove$ = Rx.Observable
+  const mouseMove$ = Observable
       .fromEvent(dom, 'mousemove')
-      .throttleTime(100, Rx.Scheduler.animationFrame)
+      .throttleTime(100, animationFrame)
 
   const stop$ = mouseMove$
       .debounceTime(2000)
       .merge(click$)
-      .merge(Rx.Observable.fromEvent(dom, 'mouseout'))
+      .merge(Observable.fromEvent(dom, 'mouseout'))
 
   stop$
       .subscribe(function() {

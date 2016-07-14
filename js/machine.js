@@ -1,4 +1,14 @@
-import Rx from 'rxjs/Rx'
+import {Observable} from 'rxjs/Observable'
+import {Subject} from 'rxjs/Subject'
+
+import 'rxjs/add/observable/interval'
+import 'rxjs/add/observable/fromEvent'
+import 'rxjs/add/observable/of'
+import 'rxjs/add/operator/withLatestFrom'
+import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/filter'
+import 'rxjs/add/operator/scan'
+
 
 import {editorPegs$, editorCmdBus$} from './editor.js'
 import {patternStoreBus$} from './pattern-store.js'
@@ -16,12 +26,10 @@ import {newSoundData} from './noise.js'
 const NORMALIZED_RADIUS = 600 // main editor is 1200 virtual pizels
 const maxPegSize = () => NORMALIZED_RADIUS / 5
 
-const MS_PER_TICK = 20
+const MS_PER_TICK    = 20
 const radiansPerTick = () => {
   return (MS_PER_TICK / msPerPeriod$.getValue() * trig.radiansPerPeriod)
 }
-
-
 
 
 const normalizeValues = (pt, size) => {
@@ -37,14 +45,12 @@ const normalizeEvent = (e, size) =>
     normalizeValues(eventToPt(e), size)
 
 
-
-
 playState$.subscribe(labelLog('playing state'))
-const ticker$  = Rx.Observable.interval(MS_PER_TICK).delay(6000).filter(() => playState$.getValue() == 'playing')
-const radians$ = ticker$.scan((last) => normalizeRadians(last + radiansPerTick()))
+const ticker$        = Observable.interval(MS_PER_TICK).delay(6000).filter(() => playState$.getValue() == 'playing')
+const radians$       = ticker$.scan((last) => normalizeRadians(last + radiansPerTick()))
 
 // activePegs$ is a stream of the "active" or highlighted peg.
-const activePegs$ = new Rx.Subject()
+const activePegs$ = new Subject()
 
 radians$
     .withLatestFrom(editorPegs$, (angle, pegs) => {
@@ -132,7 +138,7 @@ const renderPeg = (pegModel, screen) => {
 
 
 // INTERACTIONS
-const saveEditorAction$ = Rx.Observable
+const saveEditorAction$ = Observable
     .fromEvent(saveButton, 'click')
     .do(e => e.preventDefault())
     .withLatestFrom(editorPegs$, (_, pegs) => {
@@ -150,8 +156,8 @@ const saveEditorAction$ = Rx.Observable
     .subscribe(patternStoreBus$)
 
 
-const editorMousedown$ = Rx.Observable.fromEvent(editor, 'mousedown')
-const editorMouseup$   = Rx.Observable.fromEvent(editor, 'mouseup')
+const editorMousedown$ = Observable.fromEvent(editor, 'mousedown')
+const editorMouseup$   = Observable.fromEvent(editor, 'mouseup')
 
 
 var eventToPt = function(e) {
@@ -240,7 +246,7 @@ activePegs$.map((x) => x.sound).subscribe(soundOut$)
 
 
 // Scratchin'
-const scratch$ = Rx.Observable.fromEvent(editor, 'mousemove')
+const scratch$ = Observable.fromEvent(editor, 'mousemove')
     .throttleTime(30)
     .filter(e => e.shiftKey)
 
@@ -275,7 +281,7 @@ scratch$
 
 
 /// DELETE ALL
-Rx.Observable.fromEvent(document.getElementById('delete-all-btn'), 'click')
+Observable.fromEvent(document.getElementById('delete-all-btn'), 'click')
     .do(e => e.preventDefault())
     .filter(() => window.confirm("really delete all your data? there’s no going back!"))
     .mapTo('delete all')
@@ -303,20 +309,20 @@ function compressedModel(pegs) {
     })
   }
   // max length 2000
-  const json = JSON.stringify(model)
+  const json       = JSON.stringify(model)
   const compressed = LZString.compressToEncodedURIComponent(json)
   return compressed
 }
 
-Rx.Observable
+Observable
     .fromEvent(document.getElementById('permalink-button'), 'click')
     .do(e => e.preventDefault())
     .withLatestFrom(editorPegs$, (_, pegs) => pegs)
     .map(pegs => compressedModel(pegs))
     .do(x => {
-         if (x.length > 2000) {
-           window.alert('This dotz is too complicated to share in a URL. Sorriz. Lemme know, and I’ll make it work... - dr. dotz.')
-         }
+          if (x.length > 2000) {
+            window.alert('This dotz is too complicated to share in a URL. Sorriz. Lemme know, and I’ll make it work... - dr. dotz.')
+          }
         })
     .subscribe(function(serialized) {
                  const newHref = document.location.href.replace(/[#\?].*/, '') + '?v1=' + serialized
@@ -325,7 +331,7 @@ Rx.Observable
 
 
 // Load a pattern from the URL, if needed
-Rx.Observable
+Observable
     .of(document.location)
     .map(x => x.search)
     .filter(x => x.indexOf('v1=') !== -1)
@@ -339,12 +345,10 @@ Rx.Observable
              pattern: x
            }
          })
-    .subscribe(editorCmdBus$)
+    .subscribe(function(x) {editorCmdBus$.next(x)})
 
 
-
-
-const keyPress$ = Rx.Observable
+const keyPress$ = Observable
     .fromEvent(document, 'keypress')
 
 keyPress$.subscribe(labelLog('char'))

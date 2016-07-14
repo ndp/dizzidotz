@@ -52,7 +52,11 @@
  */
 
 import {Subject} from 'rxjs/Subject'
-//import {Scheduler} from 'rxjs/Scheduler'
+import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/withLatestFrom'
+import {asap} from 'rxjs/scheduler/asap'
+import {async} from 'rxjs/scheduler/async'
+
 
 function precondition(x, msg) {
   if (!x) throw msg
@@ -63,7 +67,7 @@ function isFunction(x) {
 }
 
 export function newCmdBus$(state$) {
-  const cmdBus$   = new Subject() // Scheduler.asap
+  const cmdBus$   = new Subject(async)
   const listeners = {}
 
   cmdBus$.addListener = function(cmdName, fn) {

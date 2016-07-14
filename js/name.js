@@ -1,7 +1,11 @@
-import Rx from 'rxjs/Rx'
+import {Observable} from 'rxjs/Observable'
+import {BehaviorSubject} from 'rxjs/BehaviorSubject'
+
+import 'rxjs/add/observable/fromEvent'
+import 'rxjs/add/operator/do'
 
 // MODEL
-export const name$ = new Rx.BehaviorSubject('My Dotz')
+export const name$ = new BehaviorSubject('My Dotz')
 
 
 // VIEW
@@ -14,7 +18,7 @@ name$.subscribe(function(name) {
 // INTENT
 
 // Change name
-Rx.Observable
+Observable
     .fromEvent(document.getElementById('pattern-name'), 'click')
     .do(e => e.preventDefault())
     .subscribe(function() {

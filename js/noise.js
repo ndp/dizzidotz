@@ -1,10 +1,10 @@
-import Rx from 'rxjs/Rx'
+import {Subject} from 'rxjs/Subject'
 
 import {currentTonality$, tonalities} from './tonality.js'
 
 const synth = new Tone.PolySynth(10, Tone.SimpleSynth).toMaster()
 
-export const soundOut$ = new Rx.Subject()
+export const soundOut$ = new Subject()
 
 soundOut$.subscribe((sound) => {
   synth.volume.value = 0 // Normalize it from whatever it was
