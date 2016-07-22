@@ -1,6 +1,5 @@
-const assert = require('chai').assert;
-const {linearScaleFns} = require('../js/lib/ndp-software/util.js')
-
+import {assert} from 'chai';
+import {linearScaleFns} from '../js/lib/ndp-software/util.js'
 
 describe('util.js: ', function() {
 

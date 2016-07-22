@@ -1,9 +1,14 @@
-import Rx from 'rxjs/Rx'
+import {Observable} from 'rxjs/Observable'
+import {BehaviorSubject} from 'rxjs/BehaviorSubject'
+import 'rxjs/add/observable/fromEvent'
+import 'rxjs/add/operator/do'
+import 'rxjs/add/operator/mapTo'
+import 'rxjs/add/operator/filter'
 import {newCmdBus$} from './lib/ndp-software/cmdBus.js'
 
 // MODEL
 const STORE_KEY  = 'play-pause'
-export const playState$ = new Rx.BehaviorSubject(localStorage[STORE_KEY] || 'playing')
+export const playState$ = new BehaviorSubject(localStorage[STORE_KEY] || 'playing')
 playState$
     .subscribe(x => localStorage[STORE_KEY] = x)
 
@@ -20,13 +25,13 @@ playState$.subscribe(x => {
 
 
 // INTENT
-const playPauseClicks$ = Rx.Observable
+const playPauseClicks$ = Observable
     .fromEvent(playPauseEl, 'click')
     .do(e => e.preventDefault())
 playPauseClicks$.mapTo('toggle').subscribe(playStateBus$)
 
 
-const playPauseKeypress$ = Rx.Observable.fromEvent(document, 'keypress')
+const playPauseKeypress$ = Observable.fromEvent(document, 'keypress')
     .filter(e => e.keyCode == 32) // space
     .mapTo('toggle')
     .subscribe(playStateBus$)

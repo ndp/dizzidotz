@@ -1,8 +1,10 @@
-import Rx from 'rxjs/Rx'
+import {BehaviorSubject} from 'rxjs/BehaviorSubject'
+import 'rxjs/add/operator/distinct'
+
 
 export function mapBehaviorSubject(subject$, wrapFn, unwrapFn) {
   // Distinct keeps cycles from triggering.
-  const wrapped$ = new Rx.BehaviorSubject(wrapFn(subject$.getValue()))
+  const wrapped$ = new BehaviorSubject(wrapFn(subject$.getValue()))
   subject$.distinct().subscribe(function(x) {
                                   wrapped$.next(wrapFn(x))
                                 },

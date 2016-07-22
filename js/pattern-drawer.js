@@ -1,7 +1,15 @@
-import Rx from 'rxjs/Rx'
+import {Observable} from 'rxjs/Observable'
+
+import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/do'
+import 'rxjs/add/operator/filter'
+import 'rxjs/add/operator/withLatestFrom'
+
+
 import { patternStore$ } from './pattern-store.js'
 import { patternStoreBus$ } from './pattern-store.js'
 import { editorCmdBus$ } from './editor.js'
+import { labelLog } from './lib/ndp-software/util.js'
 
 // VIEWS
 const DELETE_PATTERN_CLASS_NAME = 'delete-pattern'
@@ -56,21 +64,21 @@ patternStore$
 
 
 // INTENTIONS
-const patternsClicks$ = Rx.Observable
+const patternsClicks$ = Observable
     .fromEvent(patternListElem, 'click')
     .do(e => e.preventDefault())
 
 // INTENTIONS: LOAD
 patternsClicks$
     .map((e) => e.target.closest('a'))
-    .filter((link) => link && link.className != DELETE_PATTERN_CLASS_NAME)
-    .map((link) => link.closest('li'))
+    .filter(link => link && link.className != DELETE_PATTERN_CLASS_NAME)
+    .map(link => link.closest('li'))
     .map(li => li.getAttribute('data-key'))
     .withLatestFrom(patternStore$, (key, patterns) => patterns[key])
-    .map((pattern) => {
+    .map(pattern => {
            return {pattern, name: 'add pattern'}
          })
-    .subscribe(editorCmdBus$)
+    .subscribe(function(x) { editorCmdBus$.next(x)  })
 
 
 // INTENTIONS: DELETE

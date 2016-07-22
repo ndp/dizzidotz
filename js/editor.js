@@ -1,11 +1,13 @@
-import Rx from 'rxjs/Rx'
+import {BehaviorSubject} from 'rxjs/BehaviorSubject'
+
 import {newCmdBus$ } from './lib/ndp-software/cmdBus.js'
+
 import {currentTonality$} from './tonality.js'
 import {msPerPeriod$} from './tempo.js'
 import {name$} from './name.js'
 import {newSoundData} from './noise.js'
 
-export const editorPegs$          = new Rx.BehaviorSubject([])
+export const editorPegs$          = new BehaviorSubject([])
 export const editorCmdBus$ = newCmdBus$(editorPegs$)
 
 

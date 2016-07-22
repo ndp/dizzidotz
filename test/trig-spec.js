@@ -1,61 +1,61 @@
-const assert = require('chai').assert;
+import {assert} from 'chai';
 const {ptToVector,vectorToPt, normalizeRadians} = require('../js/lib/ndp-software/trig.js')
 
-const assertClose = (r, e) => {
-  assert.equal(Math.abs(r - e) < 0.000000001, true, `Expect ${r} to be near ${e}.`)
-}
 
-const assertArrayClose = (r, e) => {
-  e.forEach((_, i) => {
-    assertClose(r[i], e[i])
-  })
-}
+const threshold = 0.00000001
 
 describe('normalizeRadians', function() {
   it("0", function() {
-    assertClose(normalizeRadians(0), 0);
+    assert.closeTo(normalizeRadians(0), 0, threshold)
   });
   it("2π", function() {
-    assertClose(normalizeRadians(Math.PI * 2), 0);
+    assert.closeTo(normalizeRadians(Math.PI * 2), 0, threshold)
   });
   it("-2π", function() {
-    assertClose(normalizeRadians(Math.PI * -2), 0);
+    assert.closeTo(normalizeRadians(Math.PI * -2), 0, threshold)
   });
   it("4π", function() {
-    assertClose(normalizeRadians(Math.PI * 4), 0);
+    assert.closeTo(normalizeRadians(Math.PI * 4), 0, threshold)
   });
 
   it("1/2π", function() {
-    assertClose(normalizeRadians(.5 * Math.PI), .5 * Math.PI);
+    assert.closeTo(normalizeRadians(.5 * Math.PI), .5 * Math.PI, threshold)
   });
 
   it("5/2π", function() {
-    assertClose(normalizeRadians(2.5 * Math.PI), .5 * Math.PI);
+    assert.closeTo(normalizeRadians(2.5 * Math.PI), .5 * Math.PI, threshold)
   });
 
   it("-3/2π", function() {
-    assertClose(normalizeRadians(-1.5 * Math.PI), .5 * Math.PI);
+    assert.closeTo(normalizeRadians(-1.5 * Math.PI), .5 * Math.PI, threshold)
   });
 
   it("-7/2π", function() {
-    assertClose(normalizeRadians(-3.5 * Math.PI), .5 * Math.PI);
+    assert.closeTo(normalizeRadians(-3.5 * Math.PI), .5 * Math.PI, threshold)
   });
 
 
   it("π", function() {
-    assertClose(normalizeRadians(Math.PI), Math.PI);
+    assert.closeTo(normalizeRadians(Math.PI), Math.PI, threshold)
   });
   it("3π", function() {
-    assertClose(normalizeRadians(Math.PI * 3), Math.PI);
+    assert.closeTo(normalizeRadians(Math.PI * 3), Math.PI, threshold)
   });
   it("-π", function() {
-    assertClose(normalizeRadians(Math.PI * -1), Math.PI);
+    assert.closeTo(normalizeRadians(Math.PI * -1), Math.PI, threshold)
   });
   it("3π", function() {
-    assertClose(normalizeRadians(Math.PI * -3), Math.PI);
+    assert.closeTo(normalizeRadians(Math.PI * -3), Math.PI, threshold)
   });
 
 })
+
+
+const assertArrayClose = (r, e) => {
+  e.forEach((_, i) => {
+    assert.closeTo(r[i], e[i], threshold)
+  })
+}
 
 
 describe('ptToVector', function() {

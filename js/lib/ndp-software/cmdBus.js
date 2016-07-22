@@ -51,7 +51,12 @@
  ```
  */
 
-import Rx from 'rxjs/Rx'
+import {Subject} from 'rxjs/Subject'
+import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/withLatestFrom'
+import {asap} from 'rxjs/scheduler/asap'
+import {async} from 'rxjs/scheduler/async'
+
 
 function precondition(x, msg) {
   if (!x) throw msg
@@ -62,7 +67,7 @@ function isFunction(x) {
 }
 
 export function newCmdBus$(state$) {
-  const cmdBus$   = new Rx.Subject(Rx.Scheduler.currentThread)
+  const cmdBus$   = new Subject(async)
   const listeners = {}
 
   cmdBus$.addListener = function(cmdName, fn) {
@@ -78,7 +83,14 @@ export function newCmdBus$(state$) {
       .withLatestFrom(state$, (cmd, state) => {
                         const fn = listeners[cmd.name]
                         return fn ? fn(state, cmd) : state
-                      }).subscribe(state$)
+                      })
+      .subscribe(state$)
+
+  cmdBus$.subscribe(
+      function(v) { console.log('cmdBus$next:', v)},
+      function(v) { console.log('cmdBus$error:', v)},
+      function(v) { console.log('cmdBus$complete:', v)}
+  )
 
   return cmdBus$
 }
