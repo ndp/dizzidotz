@@ -1,7 +1,7 @@
 {
   "name": "dizzidotz",
   "version": "1.0.0",
-  "description": "Circles, noises",
+  "description": "Circles, noises  Copyright(c)2016 All Rights Reserved",
   "main": "index.js",
   "dependencies": {
     "http-server": "latest",
@@ -9,9 +9,11 @@
   },
   "devDependencies": {
     "autoprefixer": "^6.3.7",
-    "babel": "^6.5.2",
+    "babel-cli": "^6.11.4",
     "babel-core": "^6.10.4",
     "babel-loader": "^6.2.4",
+    "babel-require": "^1.0.1",
+    "babel-plugin-module-alias": "^1.5.0",
     "babel-polyfill": "^6.9.1",
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-es2015-webpack": "^6.4.1",
@@ -20,6 +22,7 @@
     "css-loader": "^0.23.1",
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.9.0",
+    "nyc": "^7.0.0",
     "postcss-loader": "^0.9.1",
     "precss": "^1.4.0",
     "style-loader": "^0.13.1",
@@ -37,8 +40,15 @@
     "watch": "webpack --watch",
     "start": "webpack-dev-server --hot --inline",
     "server": "./node_modules/.bin/http-server build -e html -d false",
-    "test": "mocha  --compilers js:babel-core/register"
+    "test": "mocha --require test/register-babel.js --compilers js:babel-register test/*spec.js",
+    "watch:test": "npm t -- --watch",
+    "cover": "nyc npm t"
   },
-  "author": "",
-  "license": "ISC"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com:ndp/dizzidotz.git"
+  },
+  "author": "Andrew J. Peterson, NDP Software",
+  "license": "UNLICENSED",
+  "private": true
 }
