@@ -1,6 +1,9 @@
-const BehaviorSubject          = require('rxjs/Rx').BehaviorSubject;
-const assert                   = require('chai').assert;
-const mapBehaviorSubject = require('../js/lib/ndp-software/map-behavior-subject.js').mapBehaviorSubject
+import {assert} from 'chai'
+
+import {BehaviorSubject} from 'rxjs/BehaviorSubject'
+import 'rxjs/add/operator/skip'
+
+import {mapBehaviorSubject} from '../js/lib/ndp-software/map-behavior-subject.js'
 
 
 function modelWrapped() {
