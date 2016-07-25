@@ -65,24 +65,33 @@ function isFunction(x) {
   return typeof x === 'function'
 }
 
-export function newCmdBus$(state$) {
-  const cmdBus$  = new Subject(async)
-  const reducers = {}
+function newDispatcher() {
 
-  cmdBus$.addReducer = function(cmdName, reducer) {
-    precondition(cmdName, 'Reducer requires a command name')
-    precondition(isFunction(reducer), 'Reducer requires a projection function')
-    reducers[cmdName] = reducer
+  const dispatch = function(state, cmd) {
+    const fn = dispatch.reducers[cmd.name]
+    return fn ? fn(state, cmd) : state
   }
 
+  dispatch.reducers = {}
+  dispatch.addReducer = function(cmdName, reducer) {
+    precondition(cmdName, 'Reducer requires a command name')
+    precondition(isFunction(reducer), 'Reducer requires a projection function')
+    dispatch.reducers[cmdName] = reducer
+  }
+
+  return dispatch
+}
+
+export function newCmdBus$(state$) {
+  const cmdBus$  = new Subject(async)
+
+  cmdBus$.dispatch = newDispatcher()
+  cmdBus$.addReducer = cmdBus$.dispatch.addReducer
   cmdBus$.on = cmdBus$.addReducer // alias
 
   cmdBus$
       .map((cmd) => typeof cmd == 'string' ? {name: cmd} : cmd)
-      .withLatestFrom(state$, (cmd, state) => {
-                        const fn = reducers[cmd.name]
-                        return fn ? fn(state, cmd) : state
-                      })
+      .withLatestFrom(state$, (cmd, state) => cmdBus$.dispatch(state, cmd))
       .subscribe(state$)
 
   cmdBus$.subscribe(

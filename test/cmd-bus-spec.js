@@ -24,9 +24,9 @@ describe('CmdBus', function() {
     const state$ = new BehaviorSubject(0)
     const bus$   = newCmdBus$(state$)
 
-    assert.throws(()=> bus$.addReducer(), 'Listeners require a command name')
-    assert.throws(()=> bus$.addReducer('x'), 'Listeners require a projection function')
-    assert.throws(()=> bus$.addReducer('x', 'y'), 'Listeners require a projection function')
+    assert.throws(()=> bus$.addReducer(), 'Reducer requires a command name')
+    assert.throws(()=> bus$.addReducer('x'), 'Reducer requires a projection function')
+    assert.throws(()=> bus$.addReducer('x', 'y'), 'Reducer requires a projection function')
   })
 
   it('command mutates state', function(done) {
