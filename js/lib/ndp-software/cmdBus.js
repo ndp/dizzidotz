@@ -63,7 +63,7 @@ function precondition(x, msg) {
 }
 
 function isFunction(x) {
-  return typeof x === 'function';
+  return typeof x === 'function'
 }
 
 export function newCmdBus$(state$) {

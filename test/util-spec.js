@@ -1,18 +1,22 @@
-import {assert} from 'chai';
+/*eslint-env mocha */
+/*eslint no-unused-vars: ["error", { "varsIgnorePattern": "_" }]*/
+
+import {assert} from 'chai'
 import {linearScaleFns} from '../js/lib/ndp-software/util.js'
 
 describe('util.js: ', function() {
 
   describe('#linearScaleFns', function() {
+
     describe('with max', function() {
       it('scales on onwrap', function() {
-        const [scaleFn, unscaleFn] = linearScaleFns(100)
+        const [scaleFn, _] = linearScaleFns(100)
         assert.equal(0, scaleFn(0))
         assert.equal(100, scaleFn(1))
         assert.equal(50, scaleFn(0.5))
       })
       it('scales on wrap', function() {
-        const [scaleFn, unscaleFn] = linearScaleFns(100)
+        const [_, unscaleFn] = linearScaleFns(100)
         assert.equal(0, unscaleFn(0))
         assert.equal(1, unscaleFn(100))
         assert.equal(.5, unscaleFn(50))
@@ -30,15 +34,17 @@ describe('util.js: ', function() {
         assert.equal(1, unscaleFn(1000))
       })
     })
+
     describe('with min,max', function() {
+
       it('scales on onwrap', function() {
-        const [scaleFn, unscaleFn] = linearScaleFns(100, 200)
+        const [scaleFn, _] = linearScaleFns(100, 200)
         assert.equal(100, scaleFn(0))
         assert.equal(200, scaleFn(1))
         assert.equal(150, scaleFn(0.5))
       })
       it('scales on wrap', function() {
-        const [scaleFn, unscaleFn] = linearScaleFns(100, 200)
+        const [_, unscaleFn] = linearScaleFns(100, 200)
         assert.equal(0, unscaleFn(100))
         assert.equal(1, unscaleFn(200))
         assert.equal(.5, unscaleFn(150))
@@ -57,15 +63,16 @@ describe('util.js: ', function() {
         assert.equal(1, unscaleFn(1000))
       })
     })
+
     describe('with max, min (flipped)', function() {
       it('scales on onwrap', function() {
-        const [scaleFn, unscaleFn] = linearScaleFns(200, 100)
+        const [scaleFn, _] = linearScaleFns(200, 100)
         assert.equal(100, scaleFn(1))
         assert.equal(200, scaleFn(0))
         assert.equal(150, scaleFn(0.5))
       })
       it('scales on wrap', function() {
-        const [scaleFn, unscaleFn] = linearScaleFns(200, 100)
+        const [_, unscaleFn] = linearScaleFns(200, 100)
         assert.equal(1, unscaleFn(100))
         assert.equal(0, unscaleFn(200))
         assert.equal(.5, unscaleFn(150))
