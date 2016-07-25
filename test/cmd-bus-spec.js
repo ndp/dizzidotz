@@ -24,9 +24,9 @@ describe('CmdBus', function() {
     const state$ = new BehaviorSubject(0)
     const bus$   = newCmdBus$(state$)
 
-    assert.throws(()=> bus$.addListener(), 'Listeners require a command name')
-    assert.throws(()=> bus$.addListener('x'), 'Listeners require a projection function')
-    assert.throws(()=> bus$.addListener('x', 'y'), 'Listeners require a projection function')
+    assert.throws(()=> bus$.addReducer(), 'Listeners require a command name')
+    assert.throws(()=> bus$.addReducer('x'), 'Listeners require a projection function')
+    assert.throws(()=> bus$.addReducer('x', 'y'), 'Listeners require a projection function')
   })
 
   it('command mutates state', function(done) {
@@ -34,7 +34,7 @@ describe('CmdBus', function() {
     const state$ = new BehaviorSubject(0)
 
     const bus$ = newCmdBus$(state$)
-    bus$.addListener('increment', x => x + 1)
+    bus$.addReducer('increment', x => x + 1)
     bus$.next({name: 'increment'})
 
     state$.subscribe((state) => {
@@ -48,7 +48,7 @@ describe('CmdBus', function() {
     const state$ = new BehaviorSubject(0)
 
     const bus$ = newCmdBus$(state$)
-    bus$.addListener('increment', (x, c) => x + c.value)
+    bus$.addReducer('increment', (x, c) => x + c.value)
     bus$.next({name: 'increment', value: 100})
 
     state$.subscribe((state) => {
@@ -61,7 +61,7 @@ describe('CmdBus', function() {
     const state$ = new BehaviorSubject(0)
 
     const bus$ = newCmdBus$(state$)
-    bus$.addListener('increment', x => x + 1)
+    bus$.addReducer('increment', x => x + 1)
     bus$.next('increment')
 
     state$.subscribe((state) => {
@@ -96,7 +96,7 @@ describe('SubmodelCmd', function() {
     const state$ = new BehaviorSubject({a: 0, b: 0})
 
     const bus$ = newCmdBus$(state$)
-    bus$.addListener('increment', cmd)
+    bus$.addReducer('increment', cmd)
     bus$.next('increment')
 
     state$.subscribe((state) => {
@@ -113,7 +113,7 @@ describe('SubmodelCmd', function() {
     const state$ = new BehaviorSubject({a: 0, b: 0})
 
     const bus$ = newCmdBus$(state$)
-    bus$.addListener('increment', cmd)
+    bus$.addReducer('increment', cmd)
     bus$.next({name: 'increment', value: 10})
 
     state$.subscribe((state) => {
@@ -123,12 +123,28 @@ describe('SubmodelCmd', function() {
     })
   })
 
+  it('works from undefined state', function(done) {
+
+    const cmd = submodelCmd('a', (i) => `was ${i}`)
+
+    const state$ = new BehaviorSubject({})
+
+    const bus$ = newCmdBus$(state$)
+    bus$.addReducer('increment', cmd)
+    bus$.next('increment')
+
+    state$.subscribe((state) => {
+      assert.equal(state.a, 'was undefined')
+      done()
+    })
+  })
+
   it('does not change original state', function(done) {
     var originalState = {a: 0, b: 0}
     const state$      = new BehaviorSubject(originalState)
 
     const bus$ = newCmdBus$(state$)
-    bus$.addListener('increment', submodelCmd('b', i => i + 1))
+    bus$.addReducer('increment', submodelCmd('b', i => i + 1))
     bus$.next('increment')
 
     state$.subscribe(() => {
@@ -144,8 +160,8 @@ describe('SubmodelCmd', function() {
     const state$ = new BehaviorSubject({a: 0, b: 0, c: 1})
 
     const bus$ = newCmdBus$(state$)
-    bus$.addListener('incrementb', cmd('b'))
-    bus$.addListener('incrementc', cmd('c'))
+    bus$.addReducer('incrementb', cmd('b'))
+    bus$.addReducer('incrementc', cmd('c'))
     bus$.next('incrementb')
     bus$.next('incrementc')
 

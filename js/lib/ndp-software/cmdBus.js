@@ -11,7 +11,7 @@
 
  Commands are identified with strings.
 
- Register listeners with `addListener`. Provide the name
+ Register listeners with `addReducer`. Provide the name
  of the command and a function. Only one command per name.
  The listener itself should know how to project the
  state given the current state and the command, ie.
@@ -21,8 +21,8 @@
 
  The bus will listen for commands; each command generates
  a new state. If it finds a matching command, it calls that
- function to transform the state.
- If there is no matching listener, then the same state is
+ reducer function to transform the state.
+ If there is no matching function, then the same state is
  returned. Hint: use `distinct` to ignore insignificant "changes",
  including no-ops from missing listeners.
 
@@ -34,8 +34,8 @@
  const state$ = new Rx.BehaviorSubject(0)
 
  const bus$ = newCmdBus$(state$)
- bus$.addListener('increment', x => x + 1)
- bus$.addListener('decrement', x => x - 1)
+ bus$.addReducer('increment', x => x + 1)
+ bus$.addReducer('decrement', x => x - 1)
 
  bus$.next('increment')
  ...
@@ -54,7 +54,6 @@
 import {Subject} from 'rxjs/Subject'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/withLatestFrom'
-import {asap} from 'rxjs/scheduler/asap'
 import {async} from 'rxjs/scheduler/async'
 
 
@@ -67,29 +66,35 @@ function isFunction(x) {
 }
 
 export function newCmdBus$(state$) {
-  const cmdBus$   = new Subject(async)
-  const listeners = {}
+  const cmdBus$  = new Subject(async)
+  const reducers = {}
 
-  cmdBus$.addListener = function(cmdName, fn) {
-    precondition(cmdName, 'Listeners require a command name')
-    precondition(isFunction(fn), 'Listeners require a projection function')
-    listeners[cmdName] = fn
+  cmdBus$.addReducer = function(cmdName, reducer) {
+    precondition(cmdName, 'Reducer requires a command name')
+    precondition(isFunction(reducer), 'Reducer requires a projection function')
+    reducers[cmdName] = reducer
   }
 
-  cmdBus$.on = cmdBus$.addListener // alias
+  cmdBus$.on = cmdBus$.addReducer // alias
 
   cmdBus$
       .map((cmd) => typeof cmd == 'string' ? {name: cmd} : cmd)
       .withLatestFrom(state$, (cmd, state) => {
-                        const fn = listeners[cmd.name]
+                        const fn = reducers[cmd.name]
                         return fn ? fn(state, cmd) : state
                       })
       .subscribe(state$)
 
   cmdBus$.subscribe(
-      function(v) { console.log('cmdBus$next:', v)},
-      function(v) { console.log('cmdBus$error:', v)},
-      function(v) { console.log('cmdBus$complete:', v)}
+      function(v) {
+        console.log('cmdBus$next:', v)
+      },
+      function(v) {
+        console.log('cmdBus$error:', v)
+      },
+      function(v) {
+        console.log('cmdBus$complete:', v)
+      }
   )
 
   return cmdBus$
