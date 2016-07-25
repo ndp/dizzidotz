@@ -1,3 +1,5 @@
+/*eslint-env mocha */
+
 import {assert} from 'chai'
 
 import {BehaviorSubject} from 'rxjs/BehaviorSubject'
@@ -19,20 +21,20 @@ describe('MappedModel', function() {
 
   this.timeout(200)
 
-  it("filters initial value", function() {
+  it('filters initial value', function() {
     const [model$, wrapped$] = modelWrapped()
     assert.equal(100, model$.getValue())
     assert.equal(1000, wrapped$.getValue())
-  });
+  })
 
-  it("filters subsequent values", function() {
+  it('filters subsequent values', function() {
     const [model$, wrapped$] = modelWrapped()
     model$.next(90)
     assert.equal(90, model$.getValue())
     assert.equal(900, wrapped$.getValue())
-  });
+  })
 
-  it("filters subscribed values", function(done) {
+  it('filters subscribed values', function(done) {
     const [model$, wrapped$] = modelWrapped()
     let expected = 1000
     wrapped$.subscribe(function(x) {
@@ -44,9 +46,9 @@ describe('MappedModel', function() {
     model$.next(80)
     model$.next(70)
     model$.complete()
-  });
+  })
 
-  it("reacts to wrapped error", function(done) {
+  it('reacts to wrapped error', function(done) {
     const [model$, wrapped$] = modelWrapped()
     wrapped$.subscribe(() => null,
                       function(error) {
@@ -54,19 +56,19 @@ describe('MappedModel', function() {
                         done()
                       }, () => {})
     model$.error('whoops!')
-  });
+  })
 
 
-  it("reacts to wrapped change", function(done) {
+  it('reacts to wrapped change', function(done) {
     const [model$, wrapped$] = modelWrapped()
     model$.skip(1).subscribe(function(x) {
       assert.equal(x, 10)
     }, () => null, done)
     wrapped$.next(100)
     wrapped$.complete()
-  });
+  })
 
-  it("reacts to wrapped error", function(done) {
+  it('reacts to wrapped error', function(done) {
     const [model$, wrapped$] = modelWrapped()
     model$.skip(1).subscribe(() => null,
                             function(error) {
@@ -74,7 +76,7 @@ describe('MappedModel', function() {
                               done()
                             }, () => {})
     wrapped$.error('whoops!')
-  });
+  })
 
 
 })
