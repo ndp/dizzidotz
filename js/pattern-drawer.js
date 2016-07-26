@@ -79,7 +79,7 @@ patternsClicks$
     .map(pattern => {
            return {pattern, name: 'add pattern'}
          })
-    .subscribe(function(x) { editorCmdBus$.next(x)  })
+    .subscribe(editorCmdBus$)
 
 
 // INTENTIONS: DELETE

@@ -30,8 +30,8 @@ playState$.subscribe(x => {
 const playPauseClicks$ = Observable
     .fromEvent(playPauseEl, 'click')
     .do(e => e.preventDefault())
-playPauseClicks$.mapTo('toggle').subscribe(playStateBus$)
 
+playPauseClicks$.mapTo('toggle').subscribe(playStateBus$)
 
 Observable.fromEvent(document, 'keypress')
     .filter(e => e.keyCode == 32) // space

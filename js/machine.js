@@ -346,8 +346,3 @@ Observable
          })
     .subscribe(function(x) {editorCmdBus$.next(x)})
 
-
-const keyPress$ = Observable
-    .fromEvent(document, 'keypress')
-
-keyPress$.subscribe(labelLog('char'))
