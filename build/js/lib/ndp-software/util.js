@@ -1,6 +1,10 @@
 
-function precondition(x, msg) {
+export function precondition(x, msg) {
   if (!x) throw msg
+}
+
+export function isFunction(x) {
+  return typeof x === 'function'
 }
 
 export function Math_within(x, min, max) {
@@ -10,7 +14,7 @@ export function Math_within(x, min, max) {
 /*
  linearScaleFns: create functions that scale linearly
  from [0..1] to a given range. Range can be:
- * max
+ * max  (implicit 0 min)
  * min, max
  * max, min (where scaling is inverted)
  Returns two functions:
@@ -39,7 +43,7 @@ export function linearScaleFns(minOrMax, max) {
   return [scaleFn, unscaleFn]
 }
 
-
+/*global global, localStorage */
 export function localStorageKeys() {
   const keys = []
   if (typeof(localStorage) !== 'undefined') {
@@ -55,3 +59,19 @@ export function labelLog(label) {
     global.console.log(...[`${label}: `, ...msgs])
   }
 }
+
+export function subscribeLog(observable$, name) {
+  observable$.subscribe(
+      function(v) {
+        global.console.log(`${name}.next:`, v)
+      },
+      function(v) {
+        global.console.log(`${name}.error:`, v)
+      },
+      function(v) {
+        global.console.log(`${name}.complete:`, v)
+      }
+  )
+}
+
+
