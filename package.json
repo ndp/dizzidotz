@@ -44,7 +44,8 @@
     "server": "./node_modules/.bin/http-server build -e html -d false",
     "test": "mocha --require test/register-babel.js --compilers js:babel-register test/*spec.js",
     "watch:test": "npm t -- --watch",
-    "cover": "nyc npm t"
+    "cover": "nyc npm t",
+    "lint": "./node_modules/.bin/eslint js/*.js js/lib/ndp-software/*.js"
   },
   "repository": {
     "type": "git",

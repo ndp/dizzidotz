@@ -32,11 +32,3 @@ export function mapBehaviorSubject(subject$, wrapFn, unwrapFn) {
 }
 
 
-function scaleBehaviorSubject(subject$, minOrMax, max) {
-  const [unwrapFn, wrapFn] = linearScaleFns(minOrMax, max)
-  return mapBehaviorSubject(subject$,
-                            wrapFn,
-                            unwrapFn)
-}
-
-
