@@ -4,7 +4,7 @@ import {assert} from 'chai'
 
 import {BehaviorSubject} from 'rxjs/BehaviorSubject'
 
-import {newCmdBus$} from '../js/lib/ndp-software/cmdBus.js'
+import {newCmdBus$, newDispatcher, submodelHandler} from '../js/lib/ndp-software/cmdBus.js'
 
 describe('CmdBus', function() {
 
@@ -17,16 +17,6 @@ describe('CmdBus', function() {
 
     assert.equal(state$.getValue(), 'x')
     state$.subscribe(() => done())
-  })
-
-
-  it('register without a listener', function() {
-    const state$ = new BehaviorSubject(0)
-    const bus$   = newCmdBus$(state$)
-
-    assert.throws(()=> bus$.addReducer(), 'Reducer requires a command name')
-    assert.throws(()=> bus$.addReducer('x'), 'Reducer requires a projection function')
-    assert.throws(()=> bus$.addReducer('x', 'y'), 'Reducer requires a projection function')
   })
 
   it('command mutates state', function(done) {
@@ -71,27 +61,11 @@ describe('CmdBus', function() {
   })
 })
 
-function submodelCmd(property, fn) {
-  if (typeof fn != 'undefined') {
-    return function(state, ...props) {
-      const result     = Object.assign({}, state)
-      result[property] = fn(state[property], ...props)
-      return result
-    }
-  } else {
-    // If no property is provided, then we return a partially applied fn.
-    fn = property
-    return function(property) {
-      return submodelCmd(property, fn)
-    }
-  }
-}
 
-
-describe('SubmodelCmd', function() {
+describe('submodelHandler', function() {
 
   it('applies to submodel', function(done) {
-    const cmd = submodelCmd('b', i => i + 1)
+    const cmd = submodelHandler('b', i => i + 1)
 
     const state$ = new BehaviorSubject({a: 0, b: 0})
 
@@ -108,7 +82,7 @@ describe('SubmodelCmd', function() {
 
   it('provides command properties', function(done) {
 
-    const cmd = submodelCmd('b', (i, c) => i + c.value)
+    const cmd = submodelHandler('b', (i, c) => i + c.value)
 
     const state$ = new BehaviorSubject({a: 0, b: 0})
 
@@ -125,7 +99,7 @@ describe('SubmodelCmd', function() {
 
   it('works from undefined state', function(done) {
 
-    const cmd = submodelCmd('a', (i) => `was ${i}`)
+    const cmd = submodelHandler('a', (i) => `was ${i}`)
 
     const state$ = new BehaviorSubject({})
 
@@ -144,7 +118,7 @@ describe('SubmodelCmd', function() {
     const state$      = new BehaviorSubject(originalState)
 
     const bus$ = newCmdBus$(state$)
-    bus$.addReducer('increment', submodelCmd('b', i => i + 1))
+    bus$.addReducer('increment', submodelHandler('b', i => i + 1))
     bus$.next('increment')
 
     state$.subscribe(() => {
@@ -154,8 +128,8 @@ describe('SubmodelCmd', function() {
     })
   })
 
-  it('creates a partially appliable function (needed?)', function(done) {
-    const cmd = submodelCmd(i => i + 1)
+  it('creates a partially appliable function [Experimental]', function(done) {
+    const cmd = submodelHandler(i => i + 1)
 
     const state$ = new BehaviorSubject({a: 0, b: 0, c: 1})
 
@@ -173,4 +147,38 @@ describe('SubmodelCmd', function() {
     })
 
   })
+})
+
+
+describe('newDispatcher', function() {
+
+  it('provides a no-op', function() {
+    const dispatcher = newDispatcher()
+    assert.equal('foo', dispatcher('foo', {name: 'x'}))
+    assert.equal('bar', dispatcher('bar', {name: 'x'}))
+  })
+
+  it('add an event handler', function() {
+    const dispatcher = newDispatcher()
+    dispatcher.addEventHandler('addOne', (x) => x * 10)
+    assert.equal(50, dispatcher(5, {name: 'addOne'}))
+    assert.equal(5, dispatcher(5, {name: 'x'}))
+  })
+
+  it('add an event handler without the right data', function() {
+    const dispatcher = newDispatcher()
+
+    assert.throws(()=> dispatcher.addEventHandler(), 'requires a command name')
+    assert.throws(()=> dispatcher.addEventHandler('x'), 'requires a projection function')
+    assert.throws(()=> dispatcher.addEventHandler('x', 'y'), 'requires a projection function')
+  })
+
+  it('can provide object as starting pt', function() {
+    const dispatcher = newDispatcher({
+      addOne: (x) => x * 10
+    })
+    assert.equal(50, dispatcher(5, {name: 'addOne'}))
+    assert.equal(5, dispatcher(5, {name: 'x'}))
+  })
+
 })

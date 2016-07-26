@@ -65,28 +65,35 @@ function isFunction(x) {
   return typeof x === 'function'
 }
 
-function newDispatcher() {
+/*
+ The Dispatcher.
+ It is responsible for:
+ * managing registration of EventManagers (equivalent to the Observers)
+ * dispatching the event to all EventManagers
+ */
+export function newDispatcher(mapping) {
 
   const dispatch = function(state, cmd) {
-    const fn = dispatch.reducers[cmd.name]
+    const fn = dispatch.eventMgrs[cmd.name]
     return fn ? fn(state, cmd) : state
   }
 
-  dispatch.reducers = {}
-  dispatch.addReducer = function(cmdName, reducer) {
-    precondition(cmdName, 'Reducer requires a command name')
-    precondition(isFunction(reducer), 'Reducer requires a projection function')
-    dispatch.reducers[cmdName] = reducer
+  dispatch.eventMgrs = Object.assign({}, mapping)
+  dispatch.addEventHandler = function(eventName, handler) {
+    precondition(eventName, 'requires a command name')
+    precondition(isFunction(handler), 'requires a projection function')
+    dispatch.eventMgrs[eventName] = handler
   }
 
   return dispatch
 }
 
 export function newCmdBus$(state$) {
+
   const cmdBus$  = new Subject(async)
 
   cmdBus$.dispatch = newDispatcher()
-  cmdBus$.addReducer = cmdBus$.dispatch.addReducer
+  cmdBus$.addReducer = cmdBus$.dispatch.addEventHandler
   cmdBus$.on = cmdBus$.addReducer // alias
 
   cmdBus$
@@ -107,6 +114,38 @@ export function newCmdBus$(state$) {
   )
 
   return cmdBus$
+}
+
+/*
+Create a handler that only cares about a sub-model.
+
+Normal usage is:
+
+```
+  cmdBus$.on('incLikes', submodelHandler('likes', (state) => state + 1)
+```
+
+[Experimental] It can also be partially applied, with just the function, as in:
+
+```
+  inc = submodelHandler((state) => state + 1)
+  cmdBus$.on('incLikes', inc('likes')
+```
+ */
+export function submodelHandler(property, fn) {
+  if (typeof fn != 'undefined') {
+    return function(state, ...props) {
+      const result     = Object.assign({}, state)
+      result[property] = fn(state[property], ...props)
+      return result
+    }
+  } else {
+    // If no property is provided, then we return a partially applied fn.
+    fn = property
+    return function(property) {
+      return submodelHandler(property, fn)
+    }
+  }
 }
 
 
