@@ -88,11 +88,11 @@ export function newDispatcher(mapping) {
   return dispatch
 }
 
-export function newCmdBus$(state$) {
+export function newCmdBus$(state$, reducers) {
 
   const cmdBus$  = new Subject(async)
 
-  cmdBus$.dispatch = newDispatcher()
+  cmdBus$.dispatch = newDispatcher(reducers)
   cmdBus$.addReducer = cmdBus$.dispatch.addEventHandler
   cmdBus$.on = cmdBus$.addReducer // alias
 

@@ -59,6 +59,28 @@ describe('CmdBus', function() {
       done()
     })
   })
+
+  it('allows defining actions from object', function(done) {
+    const state$ = new BehaviorSubject(0)
+
+    const actions = {
+      plusOne: (x) => x + 1,
+      timesTen: (x) => x * 10
+    }
+
+    const bus$ = newCmdBus$(state$, actions)
+    bus$.next('plusOne')
+    bus$.next('timesTen')
+    bus$.next('plusOne')
+
+    state$.subscribe((state) => {
+      assert.equal(state, 11)
+      done()
+    })
+
+
+
+  })
 })
 
 
