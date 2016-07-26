@@ -182,7 +182,7 @@ describe('newDispatcher', function() {
 
   it('add an event handler', function() {
     const dispatcher = newDispatcher()
-    dispatcher.addEventHandler('addOne', (x) => x * 10)
+    dispatcher.addCmdHandler('addOne', (x) => x * 10)
     assert.equal(50, dispatcher(5, {name: 'addOne'}))
     assert.equal(5, dispatcher(5, {name: 'x'}))
   })
@@ -190,9 +190,9 @@ describe('newDispatcher', function() {
   it('add an event handler without the right data', function() {
     const dispatcher = newDispatcher()
 
-    assert.throws(()=> dispatcher.addEventHandler(), 'requires a command name')
-    assert.throws(()=> dispatcher.addEventHandler('x'), 'requires a projection function')
-    assert.throws(()=> dispatcher.addEventHandler('x', 'y'), 'requires a projection function')
+    assert.throws(()=> dispatcher.addCmdHandler(), 'requires a command name')
+    assert.throws(()=> dispatcher.addCmdHandler('x'), 'requires a projection function')
+    assert.throws(()=> dispatcher.addCmdHandler('x', 'y'), 'requires a projection function')
   })
 
   it('can provide object as starting pt', function() {

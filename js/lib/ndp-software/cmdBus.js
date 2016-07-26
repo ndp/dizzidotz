@@ -81,7 +81,7 @@ export function newCmdBus$(state$, dispatcher) {
   const cmdBus$  = new Subject(async)
 
   cmdBus$.dispatch = dispatcher || newDispatcher()
-  cmdBus$.addReducer = cmdBus$.dispatch.addEventHandler
+  cmdBus$.addReducer = cmdBus$.dispatch.addCmdHandler
   cmdBus$.on = cmdBus$.addReducer // alias
 
   cmdBus$
@@ -106,23 +106,23 @@ export function newCmdBus$(state$, dispatcher) {
 
 
 /*
- The Dispatcher.
- It is responsible for:
+ The Dispatcher is responsible for:
  * managing registration of EventManagers (equivalent to the Observers)
  * dispatching the event to all EventManagers
  */
 export function newDispatcher(mapping) {
 
-  const dispatch = function(state, cmd) {
-    const fn = dispatch.eventMgrs[cmd.name]
-    return fn ? fn(state, cmd) : state
+  const cmdHandlers = Object.assign({}, mapping)
+
+  const dispatch = function(state, cmdObject) {
+    const fn = cmdHandlers[cmdObject.name]
+    return fn ? fn(state, cmdObject) : state
   }
 
-  dispatch.eventMgrs = Object.assign({}, mapping)
-  dispatch.addEventHandler = function(eventName, handler) {
-    precondition(eventName, 'requires a command name')
+  dispatch.addCmdHandler = function(cmdName, handler) {
+    precondition(cmdName, 'requires a command name')
     precondition(isFunction(handler), 'requires a projection function')
-    dispatch.eventMgrs[eventName] = handler
+    cmdHandlers[cmdName] = handler
   }
 
   return dispatch
@@ -130,11 +130,17 @@ export function newDispatcher(mapping) {
 
 
 /*
-Create a handler that only cares about a sub-model.
+Create a handler that only cares about a sub-model, allowing separation
+of concerns around different parts of the model.
 
 Normal usage is:
 
 ```
+  const state = {
+    foos: [...]
+    likes: 0
+  }
+  ...
   cmdBus$.on('incLikes', submodelHandler('likes', (state) => state + 1)
 ```
 
