@@ -68,7 +68,7 @@ describe('CmdBus', function() {
       timesTen: (x) => x * 10
     }
 
-    const bus$ = newCmdBus$(state$, actions)
+    const bus$ = newCmdBus$(state$, newDispatcher(actions))
     bus$.next('plusOne')
     bus$.next('timesTen')
     bus$.next('plusOne')
