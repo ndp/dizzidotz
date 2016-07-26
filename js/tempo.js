@@ -1,3 +1,5 @@
+/*eslint-env browser */
+
 import {BehaviorSubject} from 'rxjs/BehaviorSubject'
 
 import 'rxjs/add/operator/mapTo'

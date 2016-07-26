@@ -1,5 +1,5 @@
 module.exports = {
-  'environment':   'mocha',
+  'environment':   'mocha, browser',
   'extends':       'eslint:recommended',
   'parserOptions': {
     'ecmaVersion':  6,
@@ -11,11 +11,13 @@ module.exports = {
   'plugins':       ['mocha'],
   'rules':         {
     // enable additional rules
-    'indent':          ['error', 2],
-    'linebreak-style': ['error', 'unix'],
-    'quotes':          ['error', 'single'],
-    'semi':            ['error', 'never'],
-    'prefer-const':    ['error'],
+    'indent':                ['off', 2],
+    'linebreak-style':       ['error', 'unix'],
+    'quotes':                ['error', 'single'],
+    'semi':                  ['error', 'never'],
+    'prefer-const':          ['error'],
+    'no-constant-condition': ['off'],
+    'no-unused-vars':        ['error', {'varsIgnorePattern': '^_'}],
 
     // disable rules from base configurations
     'no-console': 'off'

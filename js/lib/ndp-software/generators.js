@@ -1,6 +1,6 @@
 // Given a fn, returns an iterator that calls that function for each step
 // of an iteration.
-import "babel-polyfill"
+import 'babel-polyfill'
 
 export const iterateWith = function(fn) {
   return function *(x) {
@@ -20,11 +20,12 @@ export const counterIter = iterateWith(x => x + 1)
 // Given an iterator and a function, yields iterator value until
 /// function returns false.
 export const takeWhile = function* (it, fn) {
-  for (let x of it) {
-    if (fn(x))
-      yield x;
-    else
+  for (const x of it) {
+    if (fn(x)) {
+      yield x
+    } else {
       return
+    }
   }
 }
 
@@ -36,7 +37,7 @@ export const whileLessThan = function(it, max) {
 
 export const ownPropertiesIter = function(x) {
   return function *() {
-    for (let p in x) {
+    for (const p in x) {
       if (x.hasOwnProperty(p)) {
         yield p
       }

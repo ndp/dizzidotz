@@ -7,6 +7,7 @@ export const tonalities = createTonalities()
 export const currentTonality$ = new BehaviorSubject('blues')
 
 // VIEW
+/* global document */
 // Build scale control
 const scaleCurrentElem    = document.getElementById('scale-current')
 

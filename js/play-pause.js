@@ -1,3 +1,5 @@
+/*eslint-env browser */
+
 import {Observable} from 'rxjs/Observable'
 import {BehaviorSubject} from 'rxjs/BehaviorSubject'
 import 'rxjs/add/observable/fromEvent'
@@ -7,7 +9,7 @@ import 'rxjs/add/operator/filter'
 import {newCmdBus$} from './lib/ndp-software/cmdBus.js'
 
 // MODEL
-const STORE_KEY  = 'play-pause'
+const STORE_KEY         = 'play-pause'
 export const playState$ = new BehaviorSubject(localStorage[STORE_KEY] || 'playing')
 playState$
     .subscribe(x => localStorage[STORE_KEY] = x)
@@ -31,7 +33,7 @@ const playPauseClicks$ = Observable
 playPauseClicks$.mapTo('toggle').subscribe(playStateBus$)
 
 
-const playPauseKeypress$ = Observable.fromEvent(document, 'keypress')
+Observable.fromEvent(document, 'keypress')
     .filter(e => e.keyCode == 32) // space
     .mapTo('toggle')
     .subscribe(playStateBus$)

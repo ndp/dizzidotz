@@ -14,7 +14,7 @@ export function Math_within(x, min, max) {
 /*
  linearScaleFns: create functions that scale linearly
  from [0..1] to a given range. Range can be:
- * max
+ * max  (implicit 0 min)
  * min, max
  * max, min (where scaling is inverted)
  Returns two functions:
@@ -43,7 +43,7 @@ export function linearScaleFns(minOrMax, max) {
   return [scaleFn, unscaleFn]
 }
 
-
+/*global global, localStorage */
 export function localStorageKeys() {
   const keys = []
   if (typeof(localStorage) !== 'undefined') {

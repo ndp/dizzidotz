@@ -1,3 +1,4 @@
+/* global window */
 export const installSOErrorHandler = (window) =>
   window.onerror = m =>
-      window.location.href = `http://stackoverflow.com/search?q=[js] + ${m}`;
+      window.location.href = `http://stackoverflow.com/search?q=[js] + ${m}`

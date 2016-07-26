@@ -1,3 +1,4 @@
+/*global Tone */
 import {Subject} from 'rxjs/Subject'
 
 import {currentTonality$, tonalities} from './tonality.js'

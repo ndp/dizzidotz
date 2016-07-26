@@ -1,5 +1,4 @@
 /*eslint-env mocha */
-/*eslint no-unused-vars: ["error", { "varsIgnorePattern": "_" }]*/
 
 import {assert} from 'chai'
 import {linearScaleFns} from '../js/lib/ndp-software/util.js'

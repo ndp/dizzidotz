@@ -1,3 +1,5 @@
+/*eslint-env browser */
+
 import {BehaviorSubject} from 'rxjs/BehaviorSubject'
 
 import {newCmdBus$ } from './lib/ndp-software/cmdBus.js'
@@ -29,7 +31,7 @@ editorCmdBus$.on('add peg', (state, cmd) => {
 editorCmdBus$.on('clear', () => [])
 
 editorCmdBus$.on('add pattern', (state, cmd) => {
-  global.console.log('add pattern: ', cmd)
+  console.log('add pattern: ', cmd)
   const pattern                              = cmd.pattern
   if (!/^template.*/.exec(pattern.key)) {
     name$.next(pattern.name || 'My Dotz')

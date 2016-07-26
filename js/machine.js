@@ -1,3 +1,6 @@
+/*eslint-env browser */
+/*eslint no-unused-vars: ["error", { "argsIgnorePattern": "^_" }]*/
+/*global LZString, Velocity */
 import {Observable} from 'rxjs/Observable'
 import {Subject} from 'rxjs/Subject'
 
@@ -12,7 +15,7 @@ import 'rxjs/add/operator/scan'
 
 import {editorPegs$, editorCmdBus$} from './editor.js'
 import {patternStoreBus$} from './pattern-store.js'
-import {currentTonality$, tonalities} from './tonality.js'
+import {currentTonality$} from './tonality.js'
 import {playState$} from './play-pause.js'
 import {soundOut$} from './noise.js'
 import {msPerPeriod$} from './tempo.js'
@@ -61,15 +64,13 @@ radians$
                         }
                       })
                     })
-    .subscribe(x => null)
+    .subscribe(_ => null)
 
 
 // VIEW
-const drawerDepth = 115
 const editor      = document.getElementById('editor')
 const wheel       = document.getElementById('wheel')
 const pegsEl      = wheel.getElementsByClassName('pegs')[0]
-const body        = document.getElementsByTagName('body')[0]
 
 const saveButton = document.getElementById('save-button')
 
@@ -101,7 +102,7 @@ editorPegs$
                  const pegEls = pegsEl.getElementsByClassName('peg')
                  // Note: go backwards, because there appears to be a bug with el.remove() when going forward.
                  for (let i = pegEls.length - 1; i >= 0; i--) {
-                   let el   = pegEls[i]
+                   const el   = pegEls[i]
                    const id = el.getAttribute('id')
                    if (ids.indexOf(id) == -1) {
                      el.remove()
@@ -120,7 +121,7 @@ const normalizedToScreen = (normalized) => {
 const findOrCreatePeg = (pegModel) => {
   let peg = document.getElementById(pegModel.id)
   if (!peg) {
-    peg = document.createElementNS("http://www.w3.org/2000/svg", "circle")
+    peg = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
     peg.setAttribute('id', pegModel.id)
     peg.setAttribute('class', 'peg')
     pegsEl.appendChild(peg)
@@ -130,15 +131,16 @@ const findOrCreatePeg = (pegModel) => {
 
 const renderPeg = (pegModel, screen) => {
   const e = findOrCreatePeg(pegModel)
-  e.setAttribute("cx", screen.pt.x + NORMALIZED_RADIUS)
-  e.setAttribute("cy", screen.pt.y + NORMALIZED_RADIUS)
-  e.setAttribute("r", screen.size)
-  e.setAttribute("fill", screen.highlightcolor || screen.color || Color.note)
+  e.setAttribute('cx', screen.pt.x + NORMALIZED_RADIUS)
+  e.setAttribute('cy', screen.pt.y + NORMALIZED_RADIUS)
+  e.setAttribute('r', screen.size)
+  e.setAttribute('fill', screen.highlightcolor || screen.color || Color.note)
 }
 
 
 // INTERACTIONS
-const saveEditorAction$ = Observable
+// const saveEditorAction$ =
+Observable
     .fromEvent(saveButton, 'click')
     .do(e => e.preventDefault())
     .withLatestFrom(editorPegs$, (_, pegs) => {
@@ -185,7 +187,7 @@ editorMousedown$.subscribe((e) => {
       const peg    = {
         id:    'wip',
         angle: angle,
-        dist:  dist,
+        dist:  dist
       }
       const screen = {
         size:  calcSizeWhileGrowing(),
@@ -213,9 +215,7 @@ editorMouseup$
          })
     .subscribe(editorCmdBus$)
 
-editorMouseup$.subscribe((e) => {
-  startedPegAt = null
-})
+editorMouseup$.subscribe(() => startedPegAt = null)
 
 
 // Move the clock hand
@@ -227,14 +227,14 @@ radians$.subscribe((angle) => {
     y1: NORMALIZED_RADIUS + Math.sin(angle) * NORMALIZED_RADIUS,
     x2: NORMALIZED_RADIUS,
     y2: NORMALIZED_RADIUS
-  }, {duration: duration, easing: "linear", queue: false});
+  }, {duration: duration, easing: 'linear', queue: false})
 })
 
 
 activePegs$.subscribe((pegModel) => {
-  let e = document.getElementById(pegModel.id)
+  const e = document.getElementById(pegModel.id)
   if (e) {
-    e.setAttribute("fill", Color.playing)
+    e.setAttribute('fill', Color.playing)
     const highlightDuration = Math.min(200, pegModel.sound.duration * 1000)
     setTimeout(() => e.setAttribute('fill', Color.note), highlightDuration)
   }
@@ -267,7 +267,7 @@ scratch$
                  const peg    = {
                    id:    'scratch',
                    angle: angle,
-                   dist:  dist,
+                   dist:  dist
                  }
                  renderPeg(peg, screen)
                })
@@ -283,7 +283,7 @@ scratch$
 /// DELETE ALL
 Observable.fromEvent(document.getElementById('delete-all-btn'), 'click')
     .do(e => e.preventDefault())
-    .filter(() => window.confirm("really delete all your data? there’s no going back!"))
+    .filter(() => window.confirm('really delete all your data? there’s no going back!'))
     .mapTo('delete all')
     .subscribe(patternStoreBus$)
 
@@ -310,8 +310,7 @@ function compressedModel(pegs) {
   }
   // max length 2000
   const json       = JSON.stringify(model)
-  const compressed = LZString.compressToEncodedURIComponent(json)
-  return compressed
+  return LZString.compressToEncodedURIComponent(json)
 }
 
 Observable

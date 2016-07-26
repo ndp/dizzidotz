@@ -1,3 +1,5 @@
+/*eslint-env browser */
+
 import {Observable} from 'rxjs/Observable'
 
 import 'rxjs/add/operator/map'
@@ -9,7 +11,6 @@ import 'rxjs/add/operator/withLatestFrom'
 import { patternStore$ } from './pattern-store.js'
 import { patternStoreBus$ } from './pattern-store.js'
 import { editorCmdBus$ } from './editor.js'
-import { labelLog } from './lib/ndp-software/util.js'
 
 // VIEWS
 const DELETE_PATTERN_CLASS_NAME = 'delete-pattern'

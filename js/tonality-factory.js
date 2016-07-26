@@ -35,7 +35,7 @@ export function createTonalities() {
     const all = []
     ν.octaves.forEach((a) => {
       all.push(a)
-      for (let f of noteFns) {
+      for (const f of noteFns) {
         all.push(f(a))
       }
     })
@@ -65,6 +65,6 @@ export function createTonalities() {
   }
 
   const fns = {}
-  for (let t in ν) fns[t] = tonalityCalculator(t)
+  for (const t in ν) fns[t] = tonalityCalculator(t)
   return fns
 }

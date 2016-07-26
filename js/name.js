@@ -1,3 +1,5 @@
+/*eslint-env browser */
+
 import {Observable} from 'rxjs/Observable'
 import {BehaviorSubject} from 'rxjs/BehaviorSubject'
 
@@ -22,7 +24,7 @@ Observable
     .fromEvent(document.getElementById('pattern-name'), 'click')
     .do(e => e.preventDefault())
     .subscribe(function() {
-                 const newName = prompt("New name", name$.getValue())
+                 const newName = prompt('New name', name$.getValue())
                  if (newName != null) {
                    name$.next(newName)
                  }

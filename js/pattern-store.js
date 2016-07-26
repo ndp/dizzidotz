@@ -1,3 +1,5 @@
+/*eslint-env browser */
+
 import {BehaviorSubject} from 'rxjs/BehaviorSubject'
 
 import {newCmdBus$ } from './lib/ndp-software/cmdBus.js'
@@ -14,7 +16,7 @@ export const patternStore$ = new
                                    try {
                                      acc[x] = JSON.parse(item)
                                    } catch (x) {
-                                     global.console.log(`Unable to load or parse [${x}]: ${ item}`)
+                                     console.log(`Unable to load or parse [${x}]: ${ item}`)
                                    }
                                    return acc
                                  }, {}))
@@ -43,7 +45,7 @@ patternStoreBus$.on('delete', function(state, cmd) {
   return state
 })
 
-patternStoreBus$.on('delete all', function(state, cmd) {
+patternStoreBus$.on('delete all', function() {
 
   localStorageKeys().forEach(key => {
     if (!/pattern\-/.exec(key)) return
@@ -70,14 +72,14 @@ patternStoreBus$.on('create template', function(state, cmd) {
 
     patternStoreBus$.next({name: 'insert', pattern: template})
   }
-  return state;
+  return state
 })
 
-patternStoreBus$.on('create missing templates', function(state, cmd) {
-  for (let name of ownPropertiesIter(tonalities)()) {
+patternStoreBus$.on('create missing templates', function(state) {
+  for (const name of ownPropertiesIter(tonalities)()) {
     patternStoreBus$.next({name: 'create template', tonality: name})
   }
-  return state;
+  return state
 })
 
 setTimeout(() => patternStoreBus$.next('create missing templates'), 3000)
