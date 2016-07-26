@@ -60,7 +60,7 @@ describe('CmdBus', function() {
     })
   })
 
-  it('allows defining actions from object', function(done) {
+  it('allows defining with explicit dispatcher', function(done) {
     const state$ = new BehaviorSubject(0)
 
     const actions = {
@@ -68,7 +68,29 @@ describe('CmdBus', function() {
       timesTen: (x) => x * 10
     }
 
-    const bus$ = newCmdBus$(state$, newDispatcher(newObjectResolver(actions)))
+    const dispatcher = newDispatcher(newObjectResolver(actions))
+    const bus$ = newCmdBus$(state$, dispatcher)
+    bus$.next('plusOne')
+    bus$.next('timesTen')
+    bus$.next('plusOne')
+
+    state$.subscribe((state) => {
+      assert.equal(state, 11)
+      done()
+    })
+
+
+  })
+
+  it('allows defining with object', function(done) {
+    const state$ = new BehaviorSubject(0)
+
+    const actions = {
+      plusOne:  (x) => x + 1,
+      timesTen: (x) => x * 10
+    }
+
+    const bus$ = newCmdBus$(state$, actions)
     bus$.next('plusOne')
     bus$.next('timesTen')
     bus$.next('plusOne')

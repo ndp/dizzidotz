@@ -68,14 +68,31 @@ import 'rxjs/add/operator/withLatestFrom'
 import {async} from 'rxjs/scheduler/async'
 import {subscribeLog, precondition, isFunction} from './util.js'
 
-export function newCmdBus$(state$, dispatcher) {
+/*
+ Bus to dispatch and apply commands to the state stream.
+
+ state$ -- an Observable and Observer
+
+ dispatch -- One of the following:
+
+ * null or undefined -- returned cmdBus does no dispatching in the given
+ state. The caller can add command handlers calling `addReducer`.
+
+ * object -- a map of command names to handling functions
+
+ * a dispatcher function -- a function that will handle the commands. The signature
+ is `(state, cmd) => state`. The name of the command is available as `name` property.
+
+ */
+
+export function newCmdBus$(state$, dispatch) {
 
   const cmdBus$ = new Subject(async)
 
-  if (dispatcher) {
-    cmdBus$.dispatch = dispatcher
+  if (dispatch && isFunction(dispatch)) {
+    cmdBus$.dispatch = dispatch
   } else {
-    const resolver     = newObjectResolver()
+    const resolver     = newObjectResolver(dispatch)
     cmdBus$.dispatch   = newDispatcher(resolver)
     cmdBus$.addReducer = resolver.addCmdHandler
     cmdBus$.on         = cmdBus$.addReducer // alias
