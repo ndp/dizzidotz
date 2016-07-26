@@ -66,15 +66,7 @@ import {Subject} from 'rxjs/Subject'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/withLatestFrom'
 import {async} from 'rxjs/scheduler/async'
-
-
-function precondition(x, msg) {
-  if (!x) throw msg
-}
-
-function isFunction(x) {
-  return typeof x === 'function'
-}
+import {subscribeLog, precondition, isFunction} from './util.js'
 
 export function newCmdBus$(state$, dispatcher) {
 
@@ -94,29 +86,23 @@ export function newCmdBus$(state$, dispatcher) {
       .withLatestFrom(state$, (cmd, state) => cmdBus$.dispatch(state, cmd))
       .subscribe(state$)
 
-  cmdBus$.subscribe(
-      function(v) {
-        console.log('cmdBus$next:', v)
-      },
-      function(v) {
-        console.log('cmdBus$error:', v)
-      },
-      function(v) {
-        console.log('cmdBus$complete:', v)
-      }
-  )
-
   return cmdBus$
 }
 
+export function logCmdBus(cmdBus$) {
+  subscribeLog(cmdBus$, 'cmdBus$')
+}
+
 /*
-  Uses an object to map commands to handler functions.
+ Uses an object to map commands to handler functions. What is an
+ object anyway?
 
-  Returns a function with the signature:
+ Returns a function that can be used by a dispatcher,  with
+ the signature:
 
-  ```
-    (String) => Fn(State, CmdObject)
-  ```
+ ```
+ (String) => Fn(State, CmdObject)
+ ```
  */
 export function newObjectResolver(mapping) {
 
@@ -142,6 +128,8 @@ export function newObjectResolver(mapping) {
  * dispatching the event to all EventManagers
  */
 export function newDispatcher(resolver) {
+  precondition(resolver, 'resolver is required for a dispatcher')
+  precondition(isFunction(resolver), 'resolver must be a function')
 
   const dispatch         = function(state, cmdObject) {
     const fn = resolver(cmdObject.name)
