@@ -4,7 +4,7 @@ import {assert} from 'chai'
 
 import {BehaviorSubject} from 'rxjs/BehaviorSubject'
 
-import {newCmdBus$, newDispatcher, submodelHandler} from '../js/lib/ndp-software/cmdBus.js'
+import {newCmdBus$, newObjectResolver, newDispatcher, submodelHandler} from '../js/lib/ndp-software/cmdBus.js'
 
 describe('CmdBus', function() {
 
@@ -64,11 +64,11 @@ describe('CmdBus', function() {
     const state$ = new BehaviorSubject(0)
 
     const actions = {
-      plusOne: (x) => x + 1,
+      plusOne:  (x) => x + 1,
       timesTen: (x) => x * 10
     }
 
-    const bus$ = newCmdBus$(state$, newDispatcher(actions))
+    const bus$ = newCmdBus$(state$, newDispatcher(newObjectResolver(actions)))
     bus$.next('plusOne')
     bus$.next('timesTen')
     bus$.next('plusOne')
@@ -77,7 +77,6 @@ describe('CmdBus', function() {
       assert.equal(state, 11)
       done()
     })
-
 
 
   })
@@ -175,32 +174,48 @@ describe('submodelHandler', function() {
 describe('newDispatcher', function() {
 
   it('provides a no-op', function() {
-    const dispatcher = newDispatcher()
+    const dispatcher = newDispatcher(newObjectResolver())
     assert.equal('foo', dispatcher('foo', {name: 'x'}))
     assert.equal('bar', dispatcher('bar', {name: 'x'}))
   })
 
   it('add an event handler', function() {
-    const dispatcher = newDispatcher()
+    const dispatcher = newDispatcher(newObjectResolver())
     dispatcher.addCmdHandler('addOne', (x) => x * 10)
     assert.equal(50, dispatcher(5, {name: 'addOne'}))
     assert.equal(5, dispatcher(5, {name: 'x'}))
   })
 
-  it('add an event handler without the right data', function() {
-    const dispatcher = newDispatcher()
+})
 
-    assert.throws(()=> dispatcher.addCmdHandler(), 'requires a command name')
-    assert.throws(()=> dispatcher.addCmdHandler('x'), 'requires a projection function')
-    assert.throws(()=> dispatcher.addCmdHandler('x', 'y'), 'requires a projection function')
+describe('newObjectResolver', function() {
+
+  it('returns null for unassigned', function() {
+    const resolver = newObjectResolver()
+    assert.equal(null, resolver('foo'))
+  })
+
+  it('add an event handler', function() {
+    const resolver = newObjectResolver()
+    const handler = (x) => x * 10
+    resolver.addCmdHandler('addOne', handler)
+    assert.equal(handler, resolver('addOne'))
+  })
+
+  it('add an event handler without the right data', function() {
+    const resolver = newObjectResolver()
+
+    assert.throws(()=> resolver.addCmdHandler(), 'requires a command name')
+    assert.throws(()=> resolver.addCmdHandler('x'), 'requires a projection function')
+    assert.throws(()=> resolver.addCmdHandler('x', 'y'), 'requires a projection function')
   })
 
   it('can provide object as starting pt', function() {
-    const dispatcher = newDispatcher({
-      addOne: (x) => x * 10
+    const handler = (x) => x * 10
+    const resolver = newObjectResolver({
+      addOne: handler
     })
-    assert.equal(50, dispatcher(5, {name: 'addOne'}))
-    assert.equal(5, dispatcher(5, {name: 'x'}))
+    assert.equal(handler, resolver('addOne'))
   })
 
 })

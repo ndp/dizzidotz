@@ -78,11 +78,16 @@ function isFunction(x) {
 
 export function newCmdBus$(state$, dispatcher) {
 
-  const cmdBus$  = new Subject(async)
+  const cmdBus$ = new Subject(async)
 
-  cmdBus$.dispatch = dispatcher || newDispatcher()
-  cmdBus$.addReducer = cmdBus$.dispatch.addCmdHandler
-  cmdBus$.on = cmdBus$.addReducer // alias
+  if (dispatcher) {
+    cmdBus$.dispatch = dispatcher
+  } else {
+    const resolver     = newObjectResolver()
+    cmdBus$.dispatch   = newDispatcher(resolver)
+    cmdBus$.addReducer = resolver.addCmdHandler
+    cmdBus$.on         = cmdBus$.addReducer // alias
+  }
 
   cmdBus$
       .map((cmd) => typeof cmd == 'string' ? {name: cmd} : cmd)
@@ -104,52 +109,70 @@ export function newCmdBus$(state$, dispatcher) {
   return cmdBus$
 }
 
+/*
+  Uses an object to map commands to handler functions.
+
+  Returns a function with the signature:
+
+  ```
+    (String) => Fn(State, CmdObject)
+  ```
+ */
+export function newObjectResolver(mapping) {
+
+  const cmdHandlers = Object.assign({}, mapping)
+
+  const resolver = function(name) {
+    return cmdHandlers[name]
+  }
+
+  resolver.addCmdHandler = function(cmdName, handler) {
+    precondition(cmdName, 'requires a command name')
+    precondition(isFunction(handler), 'requires a projection function')
+    cmdHandlers[cmdName] = handler
+  }
+
+  return resolver
+}
+
 
 /*
  The Dispatcher is responsible for:
  * managing registration of EventManagers (equivalent to the Observers)
  * dispatching the event to all EventManagers
  */
-export function newDispatcher(mapping) {
+export function newDispatcher(resolver) {
 
-  const cmdHandlers = Object.assign({}, mapping)
-
-  const dispatch = function(state, cmdObject) {
-    const fn = cmdHandlers[cmdObject.name]
+  const dispatch         = function(state, cmdObject) {
+    const fn = resolver(cmdObject.name)
     return fn ? fn(state, cmdObject) : state
   }
-
-  dispatch.addCmdHandler = function(cmdName, handler) {
-    precondition(cmdName, 'requires a command name')
-    precondition(isFunction(handler), 'requires a projection function')
-    cmdHandlers[cmdName] = handler
-  }
-
+  dispatch.addCmdHandler = resolver.addCmdHandler
   return dispatch
 }
 
 
 /*
-Create a handler that only cares about a sub-model, allowing separation
-of concerns around different parts of the model.
+ Create a handler that only cares about a sub-model, allowing separation
+ of concerns around different parts of the model.
 
-Normal usage is:
+ Normal usage is:
 
-```
-  const state = {
-    foos: [...]
-    likes: 0
-  }
-  ...
-  cmdBus$.on('incLikes', submodelHandler('likes', (state) => state + 1)
-```
+ ```
+ const state = {
+ foos: [...]
+ likes: 0
+ }
+ ...
+ cmdBus$.on('incLikes', submodelHandler('likes', (state) => state + 1)
+ ```
 
-[Experimental] It can also be partially applied, with just the function, as in:
+ [Experimental] It can also be partially applied, with just the function, as in:
 
-```
-  inc = submodelHandler((state) => state + 1)
-  cmdBus$.on('incLikes', inc('likes')
-```
+ ```
+ inc = submodelHandler((state) => state + 1)
+ cmdBus$.on('incLikes', inc('likes')
+ ```
  */
 export function submodelHandler(property, fn) {
   if (typeof fn != 'undefined') {
