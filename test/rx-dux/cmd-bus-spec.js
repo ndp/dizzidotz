@@ -26,7 +26,7 @@ describe('CmdBus', function() {
     const state$ = new BehaviorSubject(0)
 
     const bus$ = newCmdBus$(state$)
-    bus$.addReducer('increment', x => x + 1)
+    bus$.addHandler('increment', x => x + 1)
     bus$.next({name: 'increment'})
 
     state$.subscribe((state) => {
@@ -40,7 +40,7 @@ describe('CmdBus', function() {
     const state$ = new BehaviorSubject(0)
 
     const bus$ = newCmdBus$(state$)
-    bus$.addReducer('increment', (x, c) => x + c.value)
+    bus$.addHandler('increment', (x, c) => x + c.value)
     bus$.next({name: 'increment', value: 100})
 
     state$.subscribe((state) => {
@@ -53,7 +53,7 @@ describe('CmdBus', function() {
     const state$ = new BehaviorSubject(0)
 
     const bus$ = newCmdBus$(state$)
-    bus$.addReducer('increment', x => x + 1)
+    bus$.addHandler('increment', x => x + 1)
     bus$.next('increment')
 
     state$.subscribe((state) => {

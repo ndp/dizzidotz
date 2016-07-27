@@ -14,7 +14,7 @@ import {newDispatcher} from './dispatcher.js'
  dispatch -- One of the following:
 
  * null or undefined -- returned cmdBus does no dispatching in the given
- state. The caller can add command handlers calling `addReducer`.
+ state. The caller can add command handlers calling `addHandler`.
 
  * object -- a map of command names to handling functions
 
@@ -32,8 +32,8 @@ export function newCmdBus$(state$, dispatch) {
   } else {
     const resolver     = newObjectResolver(dispatch)
     cmdBus$.dispatch   = newDispatcher(resolver)
-    cmdBus$.addReducer = resolver.addCmdHandler
-    cmdBus$.on         = cmdBus$.addReducer // alias
+    cmdBus$.addHandler = resolver.addCmdHandler
+    cmdBus$.on         = cmdBus$.addHandler // alias
   }
 
   cmdBus$
