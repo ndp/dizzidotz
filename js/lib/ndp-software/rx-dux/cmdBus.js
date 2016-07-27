@@ -1,5 +1,6 @@
 import {Subject} from 'rxjs/Subject'
 import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/filter'
 import 'rxjs/add/operator/withLatestFrom'
 import {async} from 'rxjs/scheduler/async'
 import {subscribeLog, isFunction} from '../util.js'
@@ -39,6 +40,7 @@ export function newCmdBus$(state$, dispatch) {
   cmdBus$
       .map((cmd) => typeof cmd == 'string' ? {name: cmd} : cmd)
       .withLatestFrom(state$, (cmd, state) => cmdBus$.dispatch(state, cmd))
+      .filter(x => x !== undefined)
       .subscribe(state$)
 
   return cmdBus$

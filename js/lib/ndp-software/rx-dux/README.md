@@ -28,13 +28,32 @@ bus$.next('increment')
 Rx.Observer.fromEvent(e, 'click').mapTo('decrement').subscribe(bus$)
 ```
 
-#### 1. Use `newCmdBus$`
+#### 1. Write Command Handlers
+
+A command handler is a simple function:
+
+```
+(state, commandObject) => new state
+```
+
+The function should take the current state (consider it immutable)
+and return a new state based on the effect of the command. This simple
+contract makes it quite easy to unit test the business logic.
+
+The `commandObject` always has a *name* property that was used to 
+identify it (you will see below). It may have any number of additional
+attributes provided during the command triggering.
+
+This function can return `undefined` to indicate no state change, in 
+which case the state will not be modified.
+
+#### 2. Create a Bus
  
 Use `newCmdBus$` to create a new bus, providing a current state 
 observer. The state must be a `Subject` -- or at least both an 
 `Observer` and `Observable`. An `Rx.BehaviorSubject` works well.
 
-#### 2. Register Command Handlers
+#### 3. Register Command Handlers
  
 The command bus provides a method to add mappings for command 
 handlers, using `addHandler(name, fn)`. 
@@ -44,24 +63,15 @@ in Redux). It's a String, and you are free to use constants if
 that floats your boat. The name triggers the given handler function (the 
 "reducer" in Redux parlance). 
 
-The second parameter is the command *handler*. It is responsible for
-producing a new state from the current state. The handler should know
-how to project the state given the current state and a command object, ie.
-
-```
-(state, cmdObject) => new state
-```
-
-The command object has a *name* property that was used to identify it,
-and may have other attributes provided by the initial command 
-triggering.
-
 A generic '*' handler may be added to catch unassigned commands. It still
 must conform to the contract of returning a new state.
 
-#### 3. Trigger Commands on the Command Bus
+The second parameter is the command *handler*. It is responsible for
+producing a new state from the current state. 
 
-The bus is an observer of command objects, and if a handler is
+#### 4. Trigger Commands on the Command Bus
+
+The bus is an observer of commands, and if a handler is
 available, it is called. Each command generates a new state.
 
 Commands can be passed as simple strings:
@@ -79,16 +89,11 @@ or as objects with a `name` property:
 Using the object form, any additional data can be provided to the 
 command function.
 
-If there is no matching function, then the same state is
-returned. Hint: use `distinct` to ignore insignificant "changes",
-including no-ops from missing listeners.
+If there is no matching function, the no new state is triggered.
 
 
-## Recipes
-
-### Feeding with User Events
-
-The bus can also be fed from other streams, as in:
+This is *pushy* style, and it's much more common to feed the command
+bus from an existing stream, such as:
 
 ```
 Rx.Observable
@@ -96,6 +101,9 @@ Rx.Observable
   .mapTo('increment')
   .subscribe(bus$)
 ```
+
+
+## Recipes
 
 ### Using an Object for dispatching
 
