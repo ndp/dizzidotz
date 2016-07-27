@@ -14,16 +14,16 @@ import { precondition, isFunction } from '../util.js'
 
 export function newObjectResolver(mapping) {
 
-  const cmdHandlers = Object.assign({}, mapping)
+  const handlers = Object.assign({}, mapping)
 
   const resolver = function(name) {
-    return cmdHandlers[name]
+    return handlers[name] || handlers['*']
   }
 
   resolver.addHandler = function(cmdName, handler) {
     precondition(cmdName, 'requires a command name')
     precondition(isFunction(handler), 'requires a projection function')
-    cmdHandlers[cmdName] = handler
+    handlers[cmdName] = handler
   }
 
   return resolver

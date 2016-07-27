@@ -56,6 +56,9 @@ The command object has a *name* property that was used to identify it,
 and may have other attributes provided by the initial command 
 triggering.
 
+A generic '*' handler may be added to catch unassigned commands. It still
+must conform to the contract of returning a new state.
+
 #### 3. Trigger Commands on the Command Bus
 
 The bus is an observer of command objects, and if a handler is
