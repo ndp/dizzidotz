@@ -28,7 +28,7 @@ export function newCmdBus$(state$, dispatch) {
 
   const cmdBus$ = new Subject(async)
 
-  if (dispatch && isFunction(dispatch)) {
+  if (isFunction(dispatch)) {
     cmdBus$.dispatch = dispatch
   } else {
     const resolver     = newObjectResolver(dispatch)
