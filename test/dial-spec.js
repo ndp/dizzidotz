@@ -1,13 +1,14 @@
-function Dial(context, settings) {
+/* eslint-env mocha */
+/* global document */
 
-}
-
+import {assert} from 'chai'
+import {newDial} from '../js/dial.js'
 
 describe('Dial', function() {
 
-  it('can be called', function() {
-    //const context = document.createElement('div')
-    Dial(context)
+  xit('can be called', function() {
+    const context = document.createElement('div')
+    assert.equal(newDial(context))
   })
 
 })
