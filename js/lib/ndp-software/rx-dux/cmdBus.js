@@ -32,7 +32,7 @@ export function newCmdBus$(state$, dispatch) {
   } else {
     const resolver     = newObjectResolver(dispatch)
     cmdBus$.dispatch   = newDispatcher(resolver)
-    cmdBus$.addHandler = resolver.addCmdHandler
+    cmdBus$.addHandler = resolver.addHandler
     cmdBus$.on         = cmdBus$.addHandler // alias
   }
 

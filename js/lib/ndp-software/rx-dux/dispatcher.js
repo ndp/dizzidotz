@@ -14,7 +14,7 @@ export function newDispatcher(resolver) {
     const fn = resolver(cmdObject.name)
     return fn ? fn(state, cmdObject) : state
   }
-  dispatch.addCmdHandler = resolver.addCmdHandler // OK if `resolver.addCmdHandler` is undefined
+  dispatch.addHandler = resolver.addHandler // OK if `resolver.addHandler` is undefined
   return dispatch
 }
 

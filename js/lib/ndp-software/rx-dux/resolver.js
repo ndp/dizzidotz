@@ -20,7 +20,7 @@ export function newObjectResolver(mapping) {
     return cmdHandlers[name]
   }
 
-  resolver.addCmdHandler = function(cmdName, handler) {
+  resolver.addHandler = function(cmdName, handler) {
     precondition(cmdName, 'requires a command name')
     precondition(isFunction(handler), 'requires a projection function')
     cmdHandlers[cmdName] = handler

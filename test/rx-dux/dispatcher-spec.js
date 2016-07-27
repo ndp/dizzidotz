@@ -15,7 +15,7 @@ describe('newDispatcher', function() {
 
   it('add an event handler', function() {
     const dispatcher = newDispatcher(newObjectResolver())
-    dispatcher.addCmdHandler('addOne', (x) => x * 10)
+    dispatcher.addHandler('addOne', (x) => x * 10)
     assert.equal(50, dispatcher(5, {name: 'addOne'}))
     assert.equal(5, dispatcher(5, {name: 'x'}))
   })
