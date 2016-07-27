@@ -1,6 +1,7 @@
 import {polarToCartesian} from './trig.js'
 
-function svgArc(x, y, radius, startAngle, endAngle) {
+/* An arc */
+export function svgArc(x, y, radius, startAngle, endAngle) {
   const start = polarToCartesian(x, y, radius, endAngle)
   const end   = polarToCartesian(x, y, radius, startAngle)
 
@@ -14,6 +15,8 @@ function svgArc(x, y, radius, startAngle, endAngle) {
   ].join(' ')
 }
 
+
+/* Partial donut */
 export function svgClippedArc(x, y,
                        innerRadius, outerRadius,
                        startAngle, endAngle) {

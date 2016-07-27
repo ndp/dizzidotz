@@ -16,12 +16,6 @@ const dir_build = path.resolve(__dirname, 'build');
 module.exports = {
   entry:     {
     js:  [
-      //'./js/lib/ndp-software/util.js',
-      //'./js/lib/ndp-software/trig.js',
-      //'./js/lib/ndp-software/svg.js',
-      //'./js/lib/ndp-software/cmdBus.js',
-      //'./js/lib/ndp-software/map-behavior-subject.js',
-      //'./js/lib/ndp-software/generators.js',
       './js/play-pause.js',
       './js/tonality-factory.js',
       './js/tonality.js',
