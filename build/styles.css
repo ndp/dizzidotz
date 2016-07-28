@@ -130,7 +130,7 @@ body {
   fill: lightgray;
 }
 
-.dial .hover {
+.dial .preview {
   fill: lightgray;
 }
 
@@ -142,12 +142,11 @@ body {
   fill: orange;
 }
 
-.dial:hover .hover {
+.dial:hover .preview {
   fill: yellow;
 }
 
 .dial text {
-  stroke: orange;
   stroke: darkorange;
   color: darkorange;
   font: 13px monospace;

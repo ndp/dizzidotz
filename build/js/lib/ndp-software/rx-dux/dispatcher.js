@@ -12,9 +12,9 @@ export function newDispatcher(resolver) {
 
   const dispatch         = function(state, cmdObject) {
     const fn = resolver(cmdObject.name)
-    return fn ? fn(state, cmdObject) : state
+    return fn ? fn(state, cmdObject) : undefined
   }
-  dispatch.addCmdHandler = resolver.addCmdHandler
+  dispatch.addHandler = resolver.addHandler // OK if `resolver.addHandler` is undefined
   return dispatch
 }
 
