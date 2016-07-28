@@ -13,17 +13,17 @@ import {animationFrame} from 'rxjs/scheduler/AnimationFrameScheduler'
 import {svgClippedArc} from './lib/ndp-software/svg.js'
 import {ptToVector, normalizeRadians} from './lib/ndp-software/trig.js'
 
+const MAX_DEGREE = 355
+
+function arc(startAngle, value) {
+  return svgClippedArc(50, 50, 25, 45, startAngle, value)
+}
+
 export function newDial(dom, model$) {
 
-  // VIEW
-  model$.subscribe(function(x) {
-    const startAngle   = 0
-    const value        = x * 350 + startAngle
-    const tempoReading = dom.querySelector('.reading')
-    tempoReading
-        .setAttribute('d', svgClippedArc(50, 50, 30, 45, startAngle, value))
-  })
-
+  function eventToPt(e) {
+    return {x: e.layerX/dom.clientWidth - 0.5, y: e.layerY / dom.clientHeight - 0.5}
+  }
 
   function pt2rads(pt) {
     let rads = ptToVector(pt)[0]
@@ -33,15 +33,24 @@ export function newDial(dom, model$) {
     return rads
   }
 
+  // VIEW
+  model$.subscribe(function(x) {
+    const value        = x * MAX_DEGREE
+    const tempoReading = dom.querySelector('.reading')
+    tempoReading
+        .setAttribute('d', arc(0, value))
+  })
+
+  const hoverElem = dom.querySelector('.preview')
+
+
   // INTENT
   const click$ = Observable
       .fromEvent(dom, 'click')
       .do(e => e.preventDefault())
 
   click$
-      .map(e => {
-             return {x: e.layerX - 50, y: e.layerY - 50}
-           })
+      .map(eventToPt)
       .map(pt2rads)
       .map(r=>r * 0.5 / Math.PI)    // normalize [0..1]
       .subscribe(model$)
@@ -59,30 +68,22 @@ export function newDial(dom, model$) {
       .fromEvent(dom, 'mousemove')
       .throttleTime(100, animationFrame)
 
+  const mouseOut$ = Observable.fromEvent(dom, 'mouseout').debounceTime(800)
   const stop$ = mouseMove$
       .debounceTime(2000)
       .merge(click$)
-      .merge(Observable.fromEvent(dom, 'mouseout'))
+      .merge(mouseOut$)
 
-  stop$
-      .subscribe(function() {
-                   dom.querySelector('.hover')
-                       .setAttribute('d', '')
-                 })
+  stop$.subscribe(() => hoverElem.setAttribute('d', ''))
 
   const preview$ = mouseMove$
       .filter(() => pauser$.last())
-      .map(e => {
-             return {x: e.layerX - 50, y: e.layerY - 50}
-           })
+      .map(eventToPt)
       .map(pt2rads)
       .map(r=>r * 0.5 / Math.PI)  // normalize [0..1]
 
   preview$
-      .subscribe(function(x) {
-                   dom.querySelector('.hover')
-                       .setAttribute('d', svgClippedArc(50, 50, 30, 45, 0, x * 350))
-                 })
+      .subscribe((x) => hoverElem.setAttribute('d', arc(0, x * MAX_DEGREE)) )
 
   return preview$
 }
