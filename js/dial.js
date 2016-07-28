@@ -22,15 +22,15 @@ function arc(startAngle, value) {
 export function newDial(dom, model$) {
 
   function eventToPt(e) {
-    return {x: e.layerX/dom.clientWidth - 0.5, y: e.layerY / dom.clientHeight - 0.5}
+    return {x: e.layerX / dom.clientWidth - 0.5, y: e.layerY / dom.clientHeight - 0.5}
   }
 
-  function pt2rads(pt) {
+  function ptToNormalizedValue(pt) {
     let rads = ptToVector(pt)[0]
     rads     = rads + Math.PI / 2
     rads     = normalizeRadians(rads)
     rads     = rads < 0 ? rads + 2 * Math.PI : rads
-    return rads
+    return rads * 0.5 / Math.PI // normalize [0..1]
   }
 
   // VIEW
@@ -41,7 +41,7 @@ export function newDial(dom, model$) {
         .setAttribute('d', arc(0, value))
   })
 
-  const hoverElem = dom.querySelector('.preview')
+  const previewElem = dom.querySelector('.preview')
 
 
   // INTENT
@@ -49,10 +49,15 @@ export function newDial(dom, model$) {
       .fromEvent(dom, 'click')
       .do(e => e.preventDefault())
 
+  const mouseMove$ = Observable
+      .fromEvent(dom, 'mousemove')
+      .throttleTime(100, animationFrame)
+
+  const mouseOut$ = Observable.fromEvent(dom, 'mouseout').debounceTime(800)
+
   click$
       .map(eventToPt)
-      .map(pt2rads)
-      .map(r=>r * 0.5 / Math.PI)    // normalize [0..1]
+      .map(ptToNormalizedValue)
       .subscribe(model$)
 
 
@@ -64,26 +69,21 @@ export function newDial(dom, model$) {
                 .startWith(true)
                 .distinctUntilChanged()
 
-  const mouseMove$ = Observable
-      .fromEvent(dom, 'mousemove')
-      .throttleTime(100, animationFrame)
 
-  const mouseOut$ = Observable.fromEvent(dom, 'mouseout').debounceTime(800)
-  const stop$ = mouseMove$
+  const stopPreview$ = mouseMove$
       .debounceTime(2000)
       .merge(click$)
       .merge(mouseOut$)
 
-  stop$.subscribe(() => hoverElem.setAttribute('d', ''))
+  stopPreview$.subscribe(() => previewElem.setAttribute('d', ''))
 
   const preview$ = mouseMove$
       .filter(() => pauser$.last())
       .map(eventToPt)
-      .map(pt2rads)
-      .map(r=>r * 0.5 / Math.PI)  // normalize [0..1]
+      .map(ptToNormalizedValue)
 
   preview$
-      .subscribe((x) => hoverElem.setAttribute('d', arc(0, x * MAX_DEGREE)) )
+      .subscribe((x) => previewElem.setAttribute('d', arc(0, x * MAX_DEGREE)))
 
   return preview$
 }
