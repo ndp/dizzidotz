@@ -2,7 +2,10 @@
   "presets": "es2015",
   "plugins": [
     ["module-alias", [
-      { "src": "./node_modules/rxjs-es/", "expose": "rxjs" }
+      {
+      "src": "./node_modules/rxjs-es/",
+      "expose": "xxrxjs"
+      }
     ]]
   ]
 }
