@@ -1,17 +1,26 @@
+import {BehaviorSubject} from 'rxjs/BehaviorSubject'
 import {Observable} from 'rxjs/Observable'
 import 'rxjs/add/observable/fromEvent'
+import 'rxjs/add/operator/debounceTime'
 import 'rxjs/add/operator/delay'
+import 'rxjs/add/operator/distinctUntilChanged'
+import 'rxjs/add/operator/last'
 import 'rxjs/add/operator/mapTo'
 import 'rxjs/add/operator/merge'
-import 'rxjs/add/operator/last'
+import 'rxjs/add/operator/mergeMap'
 import 'rxjs/add/operator/startWith'
-import 'rxjs/add/operator/distinctUntilChanged'
+import 'rxjs/add/operator/takeUntil'
 import 'rxjs/add/operator/throttleTime'
-import 'rxjs/add/operator/debounceTime'
-import {animationFrame} from 'rxjs/scheduler/AnimationFrameScheduler'
+import {AnimationFrameScheduler} from 'rxjs/scheduler/AnimationFrameScheduler'
 
 import {svgClippedArc} from './lib/ndp-software/svg.js'
 import {ptToVector, normalizeRadians} from './lib/ndp-software/trig.js'
+
+import {newCmdBus$, logCmdBus} from './lib/ndp-software/rx-dux/cmdBus.js'
+
+
+//import {run} from '@cycle/rxjs-run'
+//import {makeDOMDriver, svg} from '@cycle/dom'
 
 const MAX_DEGREE = 355
 
