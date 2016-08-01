@@ -75,3 +75,9 @@ export function subscribeLog(observable$, name) {
 }
 
 
+// ms/rev => human readable
+export function humanizeTempo(x) {
+  const speed = x < 5000 ? Math.round(60000 / x) : x < 10000 ? Math.round(x / 100) / 10 : Math.round(x / 1000)
+  return `${speed}${x < 5000 ? 'rpm' : 's'}`
+}
+
