@@ -341,10 +341,14 @@ body.slow .slow-fade-in-stage-3 {
 #drawer li {
   position: relative;
   display: block;
-  margin: 5px;
+  margin: 0;
   padding: 0;
-  float: left;
   z-index: 0;
+}
+
+#drawer li.focus {
+  z-index:1000;
+  background-color: red;
 }
 
 @keyframes wiggle {

@@ -15,10 +15,32 @@ import { editorCmdBus$ } from './editor.js'
 // VIEWS
 const DELETE_PATTERN_CLASS_NAME = 'delete-pattern'
 
-const patternListElem = document.getElementsByTagName('ol')[0]
+import {BehaviorSubject} from 'rxjs/BehaviorSubject'
+import {newDeck} from './deck.js'
+
+const renderPattern = function(pattern, cntr) {
+  cntr.innerHTML = pattern.svg
+}
+
+const patternListCtx$ = new BehaviorSubject({
+  domCntr:    document.getElementById('drawer'),
+  renderItem: renderPattern
+})
+
+const event$ = newDeck(patternListCtx$, patternStore$)
+
+event$
+    .do(x => console.log('received event: ', x))
+    .filter(x => x.name == 'load')
+    .withLatestFrom(patternStore$, (e, patterns) => patterns[e.key])
+    .map(pattern => {
+           return {pattern, name: 'add pattern'}
+         })
+    .subscribe(editorCmdBus$)
+
 
 const renderPatterns = (patterns) => {
-  patternListElem.innerHTML = ''
+  document.getElementById('#drawer').innerHTML = ''
 
   patterns.forEach((pattern) => {
     const link         = document.createElement('A')
@@ -26,7 +48,7 @@ const renderPatterns = (patterns) => {
     link.style.height  = '100px'
     link.style.width   = '100px'
     link.style.display = 'block'
-    if (pattern.svg)    link.innerHTML     = pattern.svg
+    if (pattern.svg)    link.innerHTML = pattern.svg
 
     const li = document.createElement('LI')
     li.setAttribute('data-key', pattern.key)
@@ -54,19 +76,19 @@ const renderPatterns = (patterns) => {
     }
     li.appendChild(link)
 
-    patternListElem.appendChild(li)
+    document.getElementById('#drawer').appendChild(li)
   })
 }
 
 patternStore$
     .map(hash => Object.values(hash))
     .map((x) => x.sort((a, b) => b.timestamp - a.timestamp))
-    .subscribe(renderPatterns)
+//.subscribe(renderPatterns)
 
 
 // INTENTIONS
 const patternsClicks$ = Observable
-    .fromEvent(patternListElem, 'click')
+    .fromEvent(document.getElementById('#drawer'), 'click')
     .do(e => e.preventDefault())
 
 // INTENTIONS: LOAD
