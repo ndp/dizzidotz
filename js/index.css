@@ -65,15 +65,30 @@ body {
 
 .slow-fade-in {
   opacity: 0;
+  animation: fade-in 1s linear 0s forwards;
+}
+
+body.slow .slow-fade-in {
+  opacity: 0;
   animation: fade-in 1s linear 5s forwards;
 }
 
 .slow-fade-in-stage-2 {
   opacity: 0;
+  animation: fade-in 1s linear 0s forwards;
+}
+
+body.slow .slow-fade-in-stage-2 {
+  opacity: 0;
   animation: fade-in 1s linear 7s forwards;
 }
 
 .slow-fade-in-stage-3 {
+  opacity: 0;
+  animation: fade-in 1s linear 0s forwards;
+}
+
+body.slow .slow-fade-in-stage-3 {
   opacity: 0;
   animation: fade-in 1s linear 10s forwards;
 }
