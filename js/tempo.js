@@ -50,14 +50,10 @@ const keyDown$ = Observable.fromEvent(document, 'keydown')
 //keyDown$.subscribe((x) => console.log(x))
 
 keyDown$
-    .filter(e => e.key == 'ArrowUp')
-    .map(e => e.shiftKey ? 'incXL' : 'inc')
+    .filter(e => e.key.match(/^Arrow(Up|Down)/i))
+    .do(e => e.preventDefault())
+    .map(e => `${e.key.match(/Down/i) ? 'dec' : 'inc'}${e.shiftKey? 'XL' : ''}`)
     .subscribe(msPerPeriodCmd$)
 
-keyDown$
-    .filter(e => e.key == 'ArrowDown')
-    .map(e => e.shiftKey ? 'decXL' : 'dec')
-    .subscribe(msPerPeriodCmd$)
-
-logCmdBus//(msPerPeriodCmd$)
+//logCmdBus//(msPerPeriodCmd$)
 
