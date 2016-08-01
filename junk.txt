@@ -52,3 +52,34 @@ input[type="radio"]:checked + label span {
   -moz-transition: background-color 0.4s linear;
   transition: background-color 0.4s linear;
 }
+
+
+
+
+
+
+  // EXAMPLE OF MOUSE ENTER
+  const mouseEnter$ = Observable.fromEvent(dom, 'mouseenter')
+  mouseEnter$.subscribe((x) => console.log('ENTER: ', x))
+
+
+  // EXAMPLE OF DRAGGING
+  const mouseDown$ = Observable.fromEvent(dom, 'mousedown')
+  const mousemove$ = Observable.fromEvent(document, 'mousemove')
+  const mouseup$   = Observable.fromEvent(document, 'mouseup')
+  const mousedrag$ = mouseDown$
+      .mergeMap(function(md) {
+                  var startX = md.offsetX
+                  var startY = md.offsetY
+                  return mousemove$
+                      .map(function(mm) {
+                             mm.preventDefault()
+                             return {
+                               x: mm.offsetX - startX,
+                               y: mm.offsetX - startY
+                             }
+                           })
+                      .takeUntil(mouseup$)
+                })
+  mousedrag$.subscribe((x) => console.log('DRAG: ', x))
+

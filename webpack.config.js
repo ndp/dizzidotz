@@ -37,7 +37,7 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'rxjs': 'rxjs-es'
+      'xxrxjs': 'rxjs-es'
     }
   },
   devServer: {
