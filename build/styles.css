@@ -11,7 +11,6 @@ body {
   background-size: cover;
 }
 
-
 #logo {
   position: absolute;
   -webkit-animation-delay: 1s;
@@ -62,11 +61,10 @@ body {
   }
 }
 
-
 #logo text:last-child {
   position: absolute;
-  -webkit-transform: rotate(-180deg) translate(0,-25px);
-          transform: rotate(-180deg) translate(0,-25px);
+  -webkit-transform: rotate(-180deg) translate(0, -25px);
+          transform: rotate(-180deg) translate(0, -25px);
   -webkit-animation-delay: 3.5s;
           animation-delay: 3.5s;
   -webkit-animation-name: rotate-ccw;
@@ -84,7 +82,6 @@ body {
   fill: black;
   font: 900 x-large ImpactLabelReversed, monospace;
 }
-
 
 #drawer, #save-button, #tempo-dial {
   position: absolute;
@@ -191,10 +188,10 @@ body.slow .slow-fade-in-stage-3 {
   background-color: rgba(255, 255, 255, .25);
 }
 
-
 #pattern-name {
   position: absolute;
 }
+
 #pattern-name .bg {
   fill: pink;
 }
@@ -203,30 +200,32 @@ body.slow .slow-fade-in-stage-3 {
   fill: lightpink;
 }
 
-
 #pattern-name textPath {
   stroke: 1;
   color: white;
   font: x-small courier;
   font-weight: 400;
 }
+
 #pattern-name #scale-current {
   font: xx-small courier;
 }
+
 #pattern-name image {
   display: none;
 }
+
 #pattern-name:hover image {
   fill: white;
   display: block;
 }
 
-
 @media (orientation: landscape) {
 
   body {
-    min-width: 134vh;
+    min-width: 130vh;
   }
+
   #pattern-name {
     left: 3vh;
     top: 81vh;
@@ -235,16 +234,17 @@ body.slow .slow-fade-in-stage-3 {
   }
 
   #logo {
-    top:0vh;
-    left:0vh;
+    top: 0vh;
+    left: 0vh;
     width: 19vh;
     height: 19vh;
   }
 
   #editor {
-    width: 100vh;
-    height: 100vh;
-    top: 0;
+    position: absolute;
+    width: 98vh;
+    height: 98vh;
+    margin-top: 0;
     margin-left: 2vh;
   }
 
@@ -290,9 +290,8 @@ body.slow .slow-fade-in-stage-3 {
     right: 0;
     top: 0;
     height: 100%;
-    min-width: 19vh;
+    min-width: 14vh;
     width: auto;
-    border-left-width: 0px;
     left: 117vh;
   }
 
@@ -306,6 +305,7 @@ body.slow .slow-fade-in-stage-3 {
   body {
     /*min-height: 137vh;*/
   }
+
   #editor {
     width: 98vw;
     height: 98vw;
@@ -321,8 +321,8 @@ body.slow .slow-fade-in-stage-3 {
   }
 
   #logo {
-    top:5vw;
-    left:5vw;
+    top: 5vw;
+    left: 5vw;
     width: 19vw;
     height: 19vw;
   }
@@ -364,7 +364,6 @@ body.slow .slow-fade-in-stage-3 {
     width: 9vw;
   }
 
-
   #drawer {
     top: 116vw;
     height: auto;
@@ -375,15 +374,6 @@ body.slow .slow-fade-in-stage-3 {
   #drawer:empty {
     width: 0;
   }
-}
-
-#drawer li {
-  position: relative;
-  display: block;
-  margin: 5px;
-  padding: 0;
-  float: left;
-  z-index: 0;
 }
 
 @-webkit-keyframes wiggle {
@@ -417,51 +407,109 @@ body.slow .slow-fade-in-stage-3 {
 }
 
 @-webkit-keyframes fade-in {
-  from {opacity: 0}
-  to {opacity: 1.0}
+  from {
+    opacity: 0
+  }
+  to {
+    opacity: 1.0
+  }
 }
 
 @keyframes fade-in {
-  from {opacity: 0}
-  to {opacity: 1.0}
+  from {
+    opacity: 0
+  }
+  to {
+    opacity: 1.0
+  }
 }
 
 @-webkit-keyframes rotate-ccw {
-  from { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
-  to { -webkit-transform: rotate(0deg); transform: rotate(0deg); }
+  from {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+  to {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
 }
 
 @keyframes rotate-ccw {
-  from { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
-  to { -webkit-transform: rotate(0deg); transform: rotate(0deg); }
+  from {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+  to {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
 }
 
 @-webkit-keyframes rotate-ccw-9oclock {
-  from { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
-  to { -webkit-transform: rotate(0deg); transform: rotate(0deg); }
+  from {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+  to {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
 }
 
 @keyframes rotate-ccw-9oclock {
-  from { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
-  to { -webkit-transform: rotate(0deg); transform: rotate(0deg); }
+  from {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+  to {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
 }
 
 @-webkit-keyframes rotate-cw-9-oclock {
-  from { -webkit-transform: rotate(-90deg); transform: rotate(-90deg); }
-  to { -webkit-transform: rotate(270deg); transform: rotate(270deg); }
+  from {
+    -webkit-transform: rotate(-90deg);
+            transform: rotate(-90deg);
+  }
+  to {
+    -webkit-transform: rotate(270deg);
+            transform: rotate(270deg);
+  }
 }
 
 @keyframes rotate-cw-9-oclock {
-  from { -webkit-transform: rotate(-90deg); transform: rotate(-90deg); }
-  to { -webkit-transform: rotate(270deg); transform: rotate(270deg); }
+  from {
+    -webkit-transform: rotate(-90deg);
+            transform: rotate(-90deg);
+  }
+  to {
+    -webkit-transform: rotate(270deg);
+            transform: rotate(270deg);
+  }
 }
+
 @-webkit-keyframes rotate-cw {
-  from { -webkit-transform: rotate(0deg); transform: rotate(0deg); }
-  to { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
+  from {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
 }
+
 @keyframes rotate-cw {
-  from { -webkit-transform: rotate(0deg); transform: rotate(0deg); }
-  to { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
+  from {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
 }
 
 #drawer li a.pattern {
@@ -522,7 +570,6 @@ body.slow .slow-fade-in-stage-3 {
   display: block;
 }
 
-
 .button .bg {
   fill: lightgray;
 }
@@ -553,8 +600,6 @@ body.slow .slow-fade-in-stage-3 {
   stroke: deepskyblue;
 }
 
-
-
 #play-pause {
   position: absolute;
   cursor: pointer;
@@ -567,7 +612,6 @@ body.slow .slow-fade-in-stage-3 {
 #play-pause.paused .pause {
   display: none;
 }
-
 
 .wheel .bg {
   fill: url(#rgrad-purple);
@@ -611,5 +655,51 @@ body.slow .slow-fade-in-stage-3 {
   fill: url(#rgrad-b-and-w);
 }
 
+ul.deck {
+  width: 10vw;
+  height: 86vh;
+  margin: 0;
+  padding: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  overflow: visible;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+}
 
+ul.deck li {
+  position: relative;
+  display: block;
+  margin: 0;
+  padding: 0;
+  z-index: 0;
+  -webkit-transition-property: all;
+  transition-property: all;
+  -webkit-transition-duration: .5s;
+          transition-duration: .5s;
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 .5vh;
+          flex: 1 1 .5vh;
+  height: 0.5vh;
+}
+
+ul.deck li.focus {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 10vh;
+          flex: 1 1 10vh;
+  height: 10vh;
+}
+
+ul.deck li div {
+  height: 100px;
+  width: 100px;
+}
 /*# sourceMappingURL=styles.css.map*/
