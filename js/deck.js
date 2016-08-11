@@ -8,7 +8,6 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject'
 import {Subject} from 'rxjs/Subject'
 
 
-
 export function newDeck(drawingCtx$, model$) {
 
   // MODEL
@@ -20,6 +19,41 @@ export function newDeck(drawingCtx$, model$) {
   const event$ = new Subject()
 
   // VIEW
+  function findOrCreateListEl(domCntr) {
+    let listEl = domCntr.getElementsByClassName('deck')[0]
+    if (!listEl) {
+      listEl               = document.createElement('UL')
+      listEl.className     = 'deck'
+      domCntr.appendChild(listEl)
+    }
+    return listEl
+  }
+
+  function findOrCreateListItem(model, numItems, listEl) {
+    let itemCntrEl = null,
+        itemEl     = document.querySelector(`[data-key='${model.key}']`)
+    if (!itemEl) {
+      itemEl = document.createElement('LI')
+      itemEl.setAttribute('data-key', model.key)
+      listEl.appendChild(itemEl)
+
+      itemCntrEl        = document.createElement('DIV')
+      itemEl.appendChild(itemCntrEl)
+    } else {
+      itemCntrEl = itemEl.children[0]
+    }
+
+    if (model.focused) {
+      itemEl.className    = 'focus'
+      //itemEl.style.height = 'auto'
+    } else {
+      itemEl.className    = ''
+      //itemEl.style.height = `${80.0 / numItems}%`
+    }
+
+    return itemCntrEl
+  }
+
   state$
       .combineLatest(drawingCtx$, function(state, drawingCtx) {
                        return {state, drawingCtx}
@@ -27,32 +61,17 @@ export function newDeck(drawingCtx$, model$) {
       .subscribe(function({state, drawingCtx}) {
                    //console.log('state', state)
                    //console.log('drawingCtx', drawingCtx)
-                   drawingCtx.domCntr.innerHTML = ''
-                   const listEl                 = document.createElement('UL')
-                   listEl.className             = 'deck'
-                   listEl.style.height          = '100%'
-                   listEl.style.width           = '100%'
-                   listEl.style.display         = 'block'
-                   const list                   = Object.values(state.model).sort((a, b) => b.timestamp - a.timestamp)
-                   //console.log('list', list)
-                   list.forEach(m => {
-                     const itemEl = document.createElement('LI')
-                     itemEl.setAttribute('data-key', m.key)
-                     if (state.focus == m || state.focus == m.key) {
-                       itemEl.className = 'focus'
-                     } else {
-                       itemEl.style.height = `${80.0 / list.length}%`
-                     }
-                     listEl.appendChild(itemEl)
+                   if (state.model.length == 0) {
+                     drawingCtx.domCntr.innerHTML = ''
+                   }
+                   var listEl = findOrCreateListEl(drawingCtx.domCntr)
 
-                     const itemCntrEl        = document.createElement('DIV')
-                     itemCntrEl.style.height = '100px'
-                     itemCntrEl.style.width  = '100px'
-                     itemEl.appendChild(itemCntrEl)
-
-                     drawingCtx.renderItem(m, itemCntrEl)
+                   const list = Object.values(state.model).sort((a, b) => b.timestamp - a.timestamp)
+                   list.forEach(model => {
+                     const m        = Object.assign({}, model, {focused: state.focus == model || state.focus == model.key})
+                     var itemCntrEl = findOrCreateListItem(m, list.length, listEl)
+                     drawingCtx.renderItem(model, itemCntrEl)
                    })
-                   drawingCtx.domCntr.appendChild(listEl)
                  })
 
   event$
