@@ -535,13 +535,9 @@ li a.pattern {
 }
 
 ul.deck {
-  width: 14vw;
-  height: 88vh;
-  margin: 0 2vw;
   padding: 0;
   display: flex;
   overflow: visible;
-  flex-direction: column;
   flex-wrap: nowrap;
   justify-content: flex-start;
 }
@@ -554,29 +550,15 @@ ul.deck li {
   z-index: 0;
   transition-property: all;
   transition-duration: .5s;
-  flex: 1 1 .5vh;
-  height: 0.5vh;
-}
-
-ul.deck li.focus {
-  flex: 1 1 10vh;
-  margin-top: 10vh;
-  height: 10vh;
 }
 
 ul.deck li div {
-  height: 10vh;
-  width: 10vh;
   opacity: 0.5;
 }
 
 ul.deck li svg.name {
   display: none;
-  width: 13vh;
-  height: 13vh;
   position: absolute;
-  top: -1.5vh;
-  left: -1.5vh;
   font: 42px monospace;
   transform-origin: 50% 50%;
   z-index: -10;
@@ -596,6 +578,73 @@ ul.deck:hover li.focus svg.name {
 ul.deck li.focus div,
 ul.deck:hover li:not(.focus):hover div {
   opacity: 1;
+}
+
+
+@media (orientation: landscape) {
+
+  ul.deck {
+    width: 14vh;
+    height: 88vh;
+    margin: 0 2vh;
+    flex-direction: column;
+  }
+
+  ul.deck li {
+    flex: 1 1 .5vh;
+    height: 0.5vh;
+  }
+
+  ul.deck li.focus {
+    flex: 1 1 10vh;
+    margin-top: 10vh;
+    height: 10vh;
+  }
+
+  ul.deck li div {
+    height: 10vh;
+    width: 10vh;
+  }
+
+  ul.deck li svg.name {
+    width: 13vh;
+    height: 13vh;
+    top: -1.5vh;
+    left: -1.5vh;
+  }
+}
+
+@media (orientation: portrait) {
+
+  ul.deck {
+    height: 14vw;
+    width: 88vw;
+    margin: 2vw 0;
+    flex-direction: row;
+  }
+
+  ul.deck li {
+    flex: 1 1 .5vw;
+    width: 0.5vw;
+  }
+
+  ul.deck li.focus {
+    flex: 1 1 10vw;
+    margin-left: 10vw;
+    width: 10vw;
+  }
+
+  ul.deck li div {
+    height: 10vw;
+    width: 10vw;
+  }
+
+  ul.deck li svg.name {
+    width: 13vw;
+    height: 13vw;
+    top: -1.5vw;
+    left: -1.5vw;
+  }
 }
 
 
