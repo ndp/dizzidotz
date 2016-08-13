@@ -52,19 +52,24 @@ export function newDeck(drawingCtx$, model$) {
   }
 
   function appendNameSpan(name, cntrEl) {
-    const nameEl     = document.createElement('span')
-    nameEl.className = 'name'
-    nameEl.innerHTML = `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" class='name' viewBox="0 0 300 300" enable-background="new 0 0 300 300" stroke-widt="0">
+    const nameEl     = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+    nameEl.setAttributeNS('xmlns', 'xlink', 'http://www.w3.org/1999/xlink')
+    nameEl.setAttribute('version', '1.1')
+    nameEl.setAttribute('x', '0px')
+    nameEl.setAttribute('y', '0px')
+    nameEl.setAttribute('class', 'name')
+    nameEl.setAttribute('viewBox', '0 0 300 300')
+    nameEl.setAttribute('enable-background', 'new 0 0 300 300')
+    nameEl.innerHTML = `
     <defs>
         <path id="name-circle-path" d="M 150, 150 m -120, 0 a 120,120 0 0,1 240,0 a 120,120 0 0,1 -240,0 "/>
     </defs>
     <g>
         <use xlink:href="#name-circle-path" fill="none"/>
-        <text fill="#fff" >
+        <text>
             <textPath xlink:href="#name-circle-path">${name}</textPath>
         </text>
-    </g>
-</svg>`
+    </g>`
     cntrEl.appendChild(nameEl)
   }
 

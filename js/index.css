@@ -567,41 +567,31 @@ ul.deck li div {
 }
 
 ul.deck li svg.name {
-  width: 10vh;
-  height: 10vh;
-}
-
-ul.deck li span.name {
-  z-index: -10;
   display: none;
+  width: 13vh;
+  height: 13vh;
   position: absolute;
-  top: -1.5vw;
-  left: -1.5vw;
-  width: 10vw;
-  height: 10vw;
+  top: -1.5vh;
+  left: -1.5vh;
   font: 42px monospace;
+  transform-origin: 50% 50%;
+  z-index: -10;
+  fill: #444;
 }
 
-ul.deck li:hover .name {
+ul.deck li.focus svg.name,
+ul.deck li:hover svg.name {
   display: block;
 }
 
+ul.deck:hover li.focus svg.name {
+  fill: white;
+  animation: rotate-ccw 3s infinite linear;
+}
+
+ul.deck li.focus div,
 ul.deck:hover li:not(.focus):hover div {
-  transform: rotate(-180deg) translate(2px, 3px);
   opacity: 1;
 }
 
-ul.deck li.focus div {
-  opacity: 1;
-}
-
-ul.deck li.focus span.name {
-  display: block;
-  animation-name: rotate-ccw;
-  animation-duration: 30s;
-  animation-duration: 3s;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
-
-}
 
