@@ -7,7 +7,8 @@ html, body, svg {
 
 body {
   background-color: black;
-  background: url(../html/img/bg/wood20.jpg);
+  background-color: #333333;
+  /*background: url(../html/img/bg/wood20.jpg);*/
   background-size: cover;
 }
 
