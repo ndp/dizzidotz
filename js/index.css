@@ -11,6 +11,10 @@ body {
   background-size: cover;
 }
 
+* {
+  user-select: none;
+}
+
 #logo {
   position: absolute;
   animation-delay: 1s;
