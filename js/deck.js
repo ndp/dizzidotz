@@ -22,8 +22,8 @@ export function newDeck(drawingCtx$, model$) {
   function findOrCreateListEl(domCntr) {
     let listEl = domCntr.getElementsByClassName('deck')[0]
     if (!listEl) {
-      listEl               = document.createElement('UL')
-      listEl.className     = 'deck'
+      listEl           = document.createElement('UL')
+      listEl.className = 'deck'
       domCntr.appendChild(listEl)
     }
     return listEl
@@ -37,22 +37,37 @@ export function newDeck(drawingCtx$, model$) {
       itemEl.setAttribute('data-key', model.key)
       listEl.appendChild(itemEl)
 
-      itemCntrEl        = document.createElement('DIV')
+
+      itemCntrEl = document.createElement('DIV')
       itemEl.appendChild(itemCntrEl)
+
+      appendNameSpan(model.name, itemEl)
+
     } else {
       itemCntrEl = itemEl.children[0]
     }
 
-    if (model.focused) {
-      itemEl.className    = 'focus'
-      //itemEl.style.height = 'auto'
-    } else {
-      itemEl.className    = ''
-      //itemEl.style.height = `${80.0 / numItems}%`
-    }
-
+    itemEl.className = model.focused ? 'focus' : ''
     return itemCntrEl
   }
+
+  function appendNameSpan(name, cntrEl) {
+    const nameEl     = document.createElement('span')
+    nameEl.className = 'name'
+    nameEl.innerHTML = `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" class='name' viewBox="0 0 300 300" enable-background="new 0 0 300 300" stroke-widt="0">
+    <defs>
+        <path id="name-circle-path" d="M 150, 150 m -120, 0 a 120,120 0 0,1 240,0 a 120,120 0 0,1 -240,0 "/>
+    </defs>
+    <g>
+        <use xlink:href="#name-circle-path" fill="none"/>
+        <text fill="#fff" >
+            <textPath xlink:href="#name-circle-path">${name}</textPath>
+        </text>
+    </g>
+</svg>`
+    cntrEl.appendChild(nameEl)
+  }
+
 
   state$
       .combineLatest(drawingCtx$, function(state, drawingCtx) {
