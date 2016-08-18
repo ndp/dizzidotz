@@ -512,7 +512,7 @@ body.slow .slow-fade-in-stage-3 {
   }
 }
 
-#drawer li a.pattern {
+li a.pattern {
   z-index: 10;
   cursor: -webkit-zoom-in;
   cursor: zoom-in;
@@ -547,28 +547,24 @@ body.slow .slow-fade-in-stage-3 {
   opacity: 1.0;
 }
 
-#drawer li .name {
-  z-index: -10;
-  display: none;
-  position: absolute;
-  top: -12%;
-  left: -12%;
-  width: 124%;
-  height: 124%;
-  font: xx-large monospace;
-  -webkit-animation-name: rotate-ccw;
-          animation-name: rotate-ccw;
-  -webkit-animation-duration: 30s;
-          animation-duration: 30s;
-  -webkit-animation-iteration-count: infinite;
-          animation-iteration-count: infinite;
-  -webkit-animation-timing-function: linear;
-          animation-timing-function: linear;
-}
+/*#drawer li span.name {*/
+/*z-index: -10;*/
+/*display: none;*/
+/*position: absolute;*/
+/*top: -12%;*/
+/*left: -12%;*/
+/*width: 124%;*/
+/*height: 124%;*/
+/*font: xx-large monospace;*/
+/*animation-name: rotate-ccw;*/
+/*animation-duration: 30s;*/
+/*animation-iteration-count: infinite;*/
+/*animation-timing-function: linear;*/
+/*}*/
 
-#drawer li:hover .name {
-  display: block;
-}
+/*#drawer li:hover .name {*/
+/*display: block;*/
+/*}*/
 
 .button .bg {
   fill: lightgray;
@@ -656,18 +652,11 @@ body.slow .slow-fade-in-stage-3 {
 }
 
 ul.deck {
-  width: 10vw;
-  height: 86vh;
-  margin: 0;
   padding: 0;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   overflow: visible;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
   -ms-flex-wrap: nowrap;
       flex-wrap: nowrap;
   -webkit-box-pack: start;
@@ -685,21 +674,117 @@ ul.deck li {
   transition-property: all;
   -webkit-transition-duration: .5s;
           transition-duration: .5s;
-  -webkit-box-flex: 1;
-      -ms-flex: 1 1 .5vh;
-          flex: 1 1 .5vh;
-  height: 0.5vh;
-}
-
-ul.deck li.focus {
-  -webkit-box-flex: 1;
-      -ms-flex: 1 1 10vh;
-          flex: 1 1 10vh;
-  height: 10vh;
 }
 
 ul.deck li div {
-  height: 100px;
-  width: 100px;
+  opacity: 0.5;
 }
+
+ul.deck li svg.name {
+  display: none;
+  position: absolute;
+  font: 42px monospace;
+  -webkit-transform-origin: 50% 50%;
+          transform-origin: 50% 50%;
+  z-index: -10;
+  fill: #444;
+}
+
+ul.deck li.focus svg.name, ul.deck li:hover svg.name {
+  display: block;
+}
+
+ul.deck:hover li.focus svg.name {
+  fill: white;
+  -webkit-animation: rotate-ccw 3s infinite linear;
+          animation: rotate-ccw 3s infinite linear;
+}
+
+ul.deck li.focus div, ul.deck:hover li:not(.focus):hover div {
+  opacity: 1;
+}
+
+
+@media (orientation: landscape) {
+
+  ul.deck {
+    width: 14vh;
+    height: 88vh;
+    margin: 0 2vh;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+  }
+
+  ul.deck li {
+    -webkit-box-flex: 1;
+        -ms-flex: 1 1 .5vh;
+            flex: 1 1 .5vh;
+    height: 0.5vh;
+  }
+
+  ul.deck li.focus {
+    -webkit-box-flex: 1;
+        -ms-flex: 1 1 10vh;
+            flex: 1 1 10vh;
+    margin-top: 10vh;
+    height: 10vh;
+  }
+
+  ul.deck li div {
+    height: 10vh;
+    width: 10vh;
+  }
+
+  ul.deck li svg.name {
+    width: 13vh;
+    height: 13vh;
+    top: -1.5vh;
+    left: -1.5vh;
+  }
+}
+
+@media (orientation: portrait) {
+
+  ul.deck {
+    height: 14vw;
+    width: 88vw;
+    margin: 2vw 0;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+  }
+
+  ul.deck li {
+    -webkit-box-flex: 1;
+        -ms-flex: 1 1 .5vw;
+            flex: 1 1 .5vw;
+    width: 0.5vw;
+  }
+
+  ul.deck li.focus {
+    -webkit-box-flex: 1;
+        -ms-flex: 1 1 10vw;
+            flex: 1 1 10vw;
+    margin-left: 10vw;
+    width: 10vw;
+  }
+
+  ul.deck li div {
+    height: 10vw;
+    width: 10vw;
+  }
+
+  ul.deck li svg.name {
+    width: 13vw;
+    height: 13vw;
+    top: -1.5vw;
+    left: -1.5vw;
+  }
+}
+
+
+
 /*# sourceMappingURL=styles.css.map*/

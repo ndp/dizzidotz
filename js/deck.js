@@ -29,13 +29,13 @@ export function newDeck(drawingCtx$, model$) {
     return listEl
   }
 
-  function findOrCreateListItem(model, numItems, listEl) {
+  function findOrCreateListItem(model, listEl, precedingItemEl) {
     let itemCntrEl = null,
         itemEl     = document.querySelector(`[data-key='${model.key}']`)
     if (!itemEl) {
       itemEl = document.createElement('LI')
       itemEl.setAttribute('data-key', model.key)
-      listEl.appendChild(itemEl)
+      listEl.insertBefore(itemEl, precedingItemEl)
 
 
       itemCntrEl = document.createElement('DIV')
@@ -86,11 +86,13 @@ export function newDeck(drawingCtx$, model$) {
                    }
                    var listEl = findOrCreateListEl(drawingCtx.domCntr)
 
-                   const list = Object.values(state.model).sort((a, b) => b.timestamp - a.timestamp)
+                   const list          = Object.values(state.model).sort((a, b) => b.timestamp - a.timestamp)
+                   let precedingItemEl = null
                    list.forEach(model => {
-                     const m        = Object.assign({}, model, {focused: state.focus == model || state.focus == model.key})
-                     var itemCntrEl = findOrCreateListItem(m, list.length, listEl)
+                     const m          = Object.assign({}, model, {focused: state.focus == model || state.focus == model.key})
+                     const itemCntrEl = findOrCreateListItem(m, listEl, precedingItemEl ? precedingItemEl.parentNode : null)
                      drawingCtx.renderItem(model, itemCntrEl)
+                     precedingItemEl  = itemCntrEl
                    })
                  })
 
