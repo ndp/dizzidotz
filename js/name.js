@@ -23,9 +23,6 @@ name$.subscribe(function(name) {
 Observable
     .fromEvent(document.getElementById('pattern-name'), 'click')
     .do(e => e.preventDefault())
-    .subscribe(function() {
-                 const newName = prompt('New name', name$.getValue())
-                 if (newName != null) {
-                   name$.next(newName)
-                 }
-               })
+    .map(() =>  prompt('New name', name$.getValue()))
+    .filter(x => x !== null)
+    .subscribe(name$)
