@@ -1,9 +1,9 @@
-# Command Bus
+# Rx-dux Command Bus
 
-Provides a dispatcher/command pattern built on top of RxJS streams.
-The *bus* receives and executes *command objects* that uses a 
-BehaviorSubject to transform from one immutable state to another.
-See the "store" within the Redux framework for a similar
+This library provides a dispatcher/command pattern built on top of 
+RxJS streams. The *bus* receives and executes *command objects* that 
+uses a  BehaviorSubject to transform from one immutable state to 
+another. See the "store" within the Redux framework for a similar
 pattern.
 
 ## Usage
@@ -83,7 +83,7 @@ Commands can be passed as simple strings:
 or as objects with a `name` property:
 
 ```javascript
-  bus$.next({ name: 'add', value: 1, other: 'abcdef', ... })
+  bus$.next({ name: 'add', value: 1, other_data: 'abcdef', ... })
 ```
 
 Using the object form, any additional data can be provided to the 
@@ -91,9 +91,8 @@ command function.
 
 If there is no matching function, the no new state is triggered.
 
-
-This is *pushy* style, and it's much more common to feed the command
-bus from an existing stream, such as:
+This is *push* style, and therefore no "responsive". It's more common 
+to feed the command bus in response to an existing stream, such as:
 
 ```
 Rx.Observable
@@ -136,7 +135,7 @@ Using this technique, the command bus can be object-oriented, where
 each command is handled by a method of an object.
 
 
-### Submodels
+### Sub-models
 
 The easiest technique to provide modularity is to
 use separate command buses for different parts of the app.
