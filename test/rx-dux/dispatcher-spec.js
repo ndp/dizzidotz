@@ -1,6 +1,7 @@
 /*eslint-env mocha */
 
 import {assert} from 'chai'
+import simple from 'simple-mock'
 
 import {newObjectResolver} from '../../js/lib/ndp-software/ottomann/resolver.js'
 import {newDispatcher} from '../../js/lib/ndp-software/ottomann/dispatcher.js'
@@ -20,5 +21,17 @@ describe('newDispatcher', function() {
     assert.equal(undefined, dispatch(5, {name: 'x'}))
   })
 
+  it('provides command object in `this` context', function() {
+    const dispatch = newDispatcher(newObjectResolver())
+    const handler  = simple.spy(function() {})
+    dispatch.addHandler('addOne', handler)
+    dispatch(5, {name: 'addOne', detail: 42})
+    assert.equal(handler.lastCall.context.name, 'addOne')
+    assert.equal(handler.lastCall.context.detail, 42)
+  })
+
+  afterEach(function() {
+    simple.restore()
+  })
 })
 
