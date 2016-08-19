@@ -31,7 +31,6 @@ editorCmdBus$.on('add peg', (state, cmd) => {
 editorCmdBus$.on('clear', () => [])
 
 editorCmdBus$.on('add pattern', (state, cmd) => {
-  console.log('add pattern: ', cmd)
   const pattern                              = cmd.pattern
   if (!/^template.*/.exec(pattern.key)) {
     name$.next(pattern.name || 'My Dotz')
