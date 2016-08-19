@@ -1,4 +1,4 @@
-# Rx-dux Command Bus
+# Otto: RxJS Command Bus
 
 This library provides a dispatcher/command pattern built on top of 
 RxJS streams. The *bus* receives and executes *command objects* that 
@@ -166,3 +166,8 @@ cmdBus$.on('incLikes', submodelCmd('likes', (state) => state + 1)
 inc = submodelCmd((state) => state + 1)
 cmdBus$.on('incLikes', inc('likes')
 ```
+
+
+## References
+
+* [Otto Mann](https://en.wikipedia.org/wiki/Otto_Mann)

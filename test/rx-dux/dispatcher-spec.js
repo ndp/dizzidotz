@@ -2,8 +2,8 @@
 
 import {assert} from 'chai'
 
-import {newObjectResolver} from '../../js/lib/ndp-software/rx-dux/resolver.js'
-import {newDispatcher} from '../../js/lib/ndp-software/rx-dux/dispatcher.js'
+import {newObjectResolver} from '../../js/lib/ndp-software/otto/resolver.js'
+import {newDispatcher} from '../../js/lib/ndp-software/otto/dispatcher.js'
 
 describe('newDispatcher', function() {
 

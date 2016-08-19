@@ -2,7 +2,7 @@
 
 import {assert} from 'chai'
 
-import {newObjectResolver} from '../../js/lib/ndp-software/rx-dux/resolver.js'
+import {newObjectResolver} from '../../js/lib/ndp-software/otto/resolver.js'
 
 
 describe('newObjectResolver', function() {

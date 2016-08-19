@@ -3,7 +3,6 @@
 import {Observable} from 'rxjs/Observable'
 import 'rxjs/add/observable/combineLatest'
 import 'rxjs/add/operator/combineLatest'
-//import {newCmdBus$, logCmdBus} from './lib/ndp-software/rx-dux/cmdBus.js'
 import {BehaviorSubject} from 'rxjs/BehaviorSubject'
 import {Subject} from 'rxjs/Subject'
 
