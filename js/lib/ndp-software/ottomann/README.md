@@ -1,4 +1,4 @@
-# Otto: RxJS Command Bus
+# Ottoman: RxJS Command Bus
 
 This library provides a dispatcher/command pattern built on top of 
 RxJS streams. The *bus* receives and executes *command objects* that 

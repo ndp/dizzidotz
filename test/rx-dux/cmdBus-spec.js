@@ -4,9 +4,9 @@ import {assert} from 'chai'
 
 import {BehaviorSubject} from 'rxjs/BehaviorSubject'
 
-import {newCmdBus$} from '../../js/lib/ndp-software/otto/cmdBus.js'
-import {newDispatcher} from '../../js/lib/ndp-software/otto/dispatcher.js'
-import {newObjectResolver} from '../../js/lib/ndp-software/otto/resolver.js'
+import {newCmdBus$} from '../../js/lib/ndp-software/ottomann/cmdBus.js'
+import {newDispatcher} from '../../js/lib/ndp-software/ottomann/dispatcher.js'
+import {newObjectResolver} from '../../js/lib/ndp-software/ottomann/resolver.js'
 
 describe('CmdBus', function() {
 
