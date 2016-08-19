@@ -1,10 +1,10 @@
-# Ottoman: RxJS Command Bus
+# Ottomann: RxJS Command Bus
 
+<img style='float:right;width: 300px;' src='http://images.cb2.com/is/image/CB2/KnittedPoufGraphiteS12?$web_zoom_furn_colormap$' />
 This library provides a dispatcher/command pattern built on top of 
 RxJS streams. The *bus* receives and executes *command objects* that 
-uses a  BehaviorSubject to transform from one immutable state to 
-another. See the "store" within the Redux framework for a similar
-pattern.
+transform from one immutable state to another. See the "store" 
+within the Redux framework for a similar pattern.
 
 ## Usage
 
@@ -28,48 +28,60 @@ bus$.next('increment')
 Rx.Observer.fromEvent(e, 'click').mapTo('decrement').subscribe(bus$)
 ```
 
-#### 1. Write Command Handlers
+
+### Steps
+
+#### 1. Represent state in a stream
+
+Use an RxJS `BehaviorSubject` to represent the model or state. 
+
+#### 2. Write Command Handlers
 
 A command handler is a simple function:
 
 ```
-(state, commandObject) => new state
+(previous-state) => new-state
 ```
 
-The function should take the current state (consider it immutable)
-and return a new state based on the effect of the command. This simple
+The function receives the current state (considered immutable)
+and returns the new state based on the effect of the command. This simple
 contract makes it quite easy to unit test the business logic.
 
-The `commandObject` always has a *name* property that was used to 
-identify it (you will see below). It may have any number of additional
-attributes provided during the command triggering.
+The command handler is called within a context. The function can access
+`this.name` to determine the name of the command. The triggering of
+a command may add any number of additional attributes as needed.
 
-This function can return `undefined` to indicate no state change, in 
+The function normally returns the next state. This function can 
+also return `undefined` to indicate no state change, in 
 which case the state will not be modified.
 
-#### 2. Create a Bus
+#### 3. Create a Bus
  
 Use `newCmdBus$` to create a new bus, providing a current state 
 observer. The state must be a `Subject` -- or at least both an 
 `Observer` and `Observable`. An `Rx.BehaviorSubject` works well.
 
-#### 3. Register Command Handlers
+#### 4. Register Command Handlers
  
 The command bus provides a method to add mappings for command 
-handlers, using `addHandler(name, fn)`. 
+handlers, using `addHandler(name, handlerFn)`. 
 
-The first paramater is the *name* of the command (called the "type
-in Redux). It's a String, and you are free to use constants if
-that floats your boat. The name triggers the given handler function (the 
-"reducer" in Redux parlance). 
-
-A generic '*' handler may be added to catch unassigned commands. It still
-must conform to the contract of returning a new state.
+The first paramater is the *name* of the command, which is a String, 
+and you are free to use constants if that floats your boat. 
 
 The second parameter is the command *handler*. It is responsible for
 producing a new state from the current state. 
 
-#### 4. Trigger Commands on the Command Bus
+The name appears on the command bus, it triggers the given handler function.
+ 
+In Redux paralance, the name of the command is called its "type". The
+handler is a Redux "reducer" function.
+
+A generic '*' handler name may be added to catch unassigned commands. It still
+must conform to the contract of returning a new state.
+
+
+#### 5. Trigger Commands on the Bus
 
 The bus is an observer of commands, and if a handler is
 available, it is called. Each command generates a new state.
@@ -87,11 +99,13 @@ or as objects with a `name` property:
 ```
 
 Using the object form, any additional data can be provided to the 
-command function.
+command function. This will appear in the context (`this`) of the
+handler.
 
-If there is no matching function, the no new state is triggered.
+If there is no matching function, the no new state is triggered, 
+and the command is ignored.
 
-This is *push* style, and therefore no "responsive". It's more common 
+This is *push* style, and therefore not "responsive". It's more common 
 to feed the command bus in response to an existing stream, such as:
 
 ```
@@ -132,7 +146,8 @@ const bus$ = newCmdBus$(state$, {
 The dispatching strategy can be overriden by passing your
 own dispatcher. See `newDispatcher` for the standard implementation.
 Using this technique, the command bus can be object-oriented, where
-each command is handled by a method of an object.
+each command is handled by a method of an object. Or it could be
+implemented using a switch statement, as is common to Redux.
 
 
 ### Sub-models
@@ -157,16 +172,22 @@ const state = {
   likes: 0
 }
 ...
-cmdBus$.on('incLikes', submodelCmd('likes', (state) => state + 1)
+cmdBus$.addHandler('incLikes', submodelCmd('likes', (state) => state + 1))
 ```
 
 [Experimental] It can also be partially applied, with just the function, as in:
 
 ```
 inc = submodelCmd((state) => state + 1)
-cmdBus$.on('incLikes', inc('likes')
+cmdBus$.addHandler('incLikes', inc('likes')
 ```
 
+
+## TODOs
+
+* pull into its own repo
+* combineReducer from Redux
+* decide `addHandler` vs. `on`
 
 ## References
 
