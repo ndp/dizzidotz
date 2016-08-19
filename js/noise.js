@@ -14,7 +14,7 @@ soundOut$.subscribe((sound) => {
 })
 
 
-export const newSoundData = (normalized) => {
+export const newSoundData = normalized => {
   const tonality  = normalized.tonality || currentTonality$.getValue()
   const frequency = tonalities[tonality](normalized.mag)
   return {

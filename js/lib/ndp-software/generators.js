@@ -31,7 +31,7 @@ export const takeWhile = function* (it, fn) {
 
 // Calls iterator until number is less than the max value provided.
 export const whileLessThan = function(it, max) {
-  return takeWhile(it, (x) => x < max)
+  return takeWhile(it, x => x < max)
 }
 
 

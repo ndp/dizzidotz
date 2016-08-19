@@ -10,7 +10,7 @@ import { tonalities } from './tonality.js'
 // hashmap of key => stored value
 export const patternStore$ = new
     BehaviorSubject(localStorageKeys()
-                        .filter((x) => /^(pattern|template).*/.exec(x))
+                        .filter(x => /^(pattern|template).*/.exec(x))
                         .reduce((acc, x) => {
                                   const item = localStorage.getItem(x)
                                   try {
