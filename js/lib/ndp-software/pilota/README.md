@@ -1,17 +1,15 @@
-# Ottomann: RxJS Command Bus
+# Pilota: RxJS Command Bus
 
-<img style='float:right;width: 300px;' src='http://images.cb2.com/is/image/CB2/KnittedPoufGraphiteS12?$web_zoom_furn_colormap$' />
-This library provides a dispatcher/command pattern built on top of 
-RxJS streams. The *bus* receives and executes *command objects* that 
+<img style='float:right;width: 300px;' src='http://interviewmg.ru/wp-content/uploads/2012/03/amelia-earhart-big.jpg' />
+The Pilota library provides a command dispatcher for use with RxJS 
+streams. The **bus** receives and executes **command objects** that 
 transform from one immutable state to another. See the "store" 
 within the Redux framework for a similar pattern.
 
-## Usage
+## Example
 
-### Example
-
-If the state were a simple integer, this code would
-increment and decrement it:
+This shows a set of commands that increment and decrement a simple
+ integer state:
 
 ```javascript
 const state$ = new Rx.BehaviorSubject(0)
@@ -28,8 +26,7 @@ bus$.next('increment')
 Rx.Observer.fromEvent(e, 'click').mapTo('decrement').subscribe(bus$)
 ```
 
-
-### Steps
+## Usage Steps
 
 #### 1. Represent state in a stream
 
@@ -66,10 +63,10 @@ observer. The state must be a `Subject` -- or at least both an
 The command bus provides a method to add mappings for command 
 handlers, using `addHandler(name, handlerFn)`. 
 
-The first paramater is the *name* of the command, which is a String, 
+The first paramater is the **name** of the command, which is a String, 
 and you are free to use constants if that floats your boat. 
 
-The second parameter is the command *handler*. It is responsible for
+The second parameter is the command **handler**. It is responsible for
 producing a new state from the current state. 
 
 The name appears on the command bus, it triggers the given handler function.
@@ -105,7 +102,7 @@ handler.
 If there is no matching function, the no new state is triggered, 
 and the command is ignored.
 
-This is *push* style, and therefore not "responsive". It's more common 
+This is **push** style, and therefore not "responsive". It's more common 
 to feed the command bus in response to an existing stream, such as:
 
 ```
@@ -191,4 +188,3 @@ cmdBus$.addHandler('incLikes', inc('likes')
 
 ## References
 
-* [Otto Mann](https://en.wikipedia.org/wiki/Otto_Mann)

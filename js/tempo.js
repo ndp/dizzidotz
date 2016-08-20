@@ -10,7 +10,7 @@ import {linearScaleFns, humanizeTempo} from './lib/ndp-software/util.js'
 import {mapBehaviorSubject} from './lib/ndp-software/map-behavior-subject.js'
 import {newDial} from './dial.js'
 
-import {newCmdBus$, logCmdBus} from './lib/ndp-software/ottomann/cmdBus.js'
+import {newCmdBus$, logCmdBus} from './lib/ndp-software/pilota/cmdBus.js'
 
 
 // MODEL

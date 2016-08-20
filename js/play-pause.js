@@ -6,7 +6,7 @@ import 'rxjs/add/observable/fromEvent'
 import 'rxjs/add/operator/do'
 import 'rxjs/add/operator/mapTo'
 import 'rxjs/add/operator/filter'
-import {newCmdBus$} from './lib/ndp-software/ottomann/cmdBus.js'
+import {newCmdBus$} from './lib/ndp-software/pilota/cmdBus.js'
 
 // MODEL
 const STORE_KEY         = 'play-pause'
