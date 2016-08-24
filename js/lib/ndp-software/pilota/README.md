@@ -1,6 +1,7 @@
 # Pilota: RxJS Command Bus
 
-<img style='float:right;width: 300px;' src='http://interviewmg.ru/wp-content/uploads/2012/03/amelia-earhart-big.jpg' />
+<img src="http://interviewmg.ru/wp-content/uploads/2012/03/amelia-earhart-big.jpg" alt="Image of Amerlia Earhart" width="300" float="right">
+
 The Pilota library provides a command dispatcher for use with RxJS streams. The **bus** receives and executes **command objects** that transform from one immutable state to another. See the "store" within the Redux framework for a similar pattern.
 
 ## Example
@@ -55,14 +56,14 @@ bus$.next('increment')
 
 The command bus provides a method to map specific command names to given handler function:
 
-```
+```javascript
 bus$.addHandler(name, handlerFn)
 ```
 
 A command handler itself is a simple function with this signature:
 
-```
-fn(previous-state, cmdObject) => new-state
+```javascript
+fn(previous-state, cmdObject) # => new-state
 ```
 
 The command handler function receives the current state (considered immutable) and returns the new state based on the effect of the command. This simple contract makes it quite easy to unit test the business logic. 
@@ -83,7 +84,7 @@ If there is no matching function, and no wildcard was registered, then no new st
 
 The examples are **push** style, and therefore not "reactive". It's more common to feed the command bus in response to an existing stream, such as:
 
-```
+```javascript
 Rx.Observable
   .fromEvent(elem, 'click')
   .mapTo('increment')
