@@ -188,6 +188,8 @@ The dispatching strategy can be overriden by passing your own dispatcher. See `n
 * pull into its own repo
 * combineReducer from Redux
 * decide `addHandler` vs. `on`
+* `addHandlers`
+* asynchronous pattern
 
 ## References
 
