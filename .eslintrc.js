@@ -11,7 +11,7 @@ module.exports = {
   'plugins':       ['mocha'],
   'rules':         {
     // enable additional rules
-    'indent':                ['error', 2],
+    'indent':                [2, 2],
     'linebreak-style':       ['error', 'unix'],
     'quotes':                ['error', 'single'],
     'semi':                  ['error', 'never'],
