@@ -10,6 +10,9 @@ I saw a real one of these at the Exploritorium. Or at least I think I did. I rem
 around in a circle, and you could place pegs in them. Then a bar went around and range a bell. 
 So you could then make some music-like noise. This is kinda like one of those.
 
+<a href="#" id="status-image-popup" name="status-images" class="open-popup" title="Latest push build on default branch: ">
+            <img src="https://travis-ci.org/ndp/dizzidotz.svg" alt="build:">
+          </a>
 
 ### Thoughts
 
