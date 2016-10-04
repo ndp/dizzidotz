@@ -1,7 +1,7 @@
 /*eslint-env mocha */
 
 import {assert} from 'chai'
-import {linearScaleFns} from '../js/lib/ndp-software/util.js'
+import {linearScaleFns, ptInRect, ptInInscribedCircle} from '../js/lib/ndp-software/util.js'
 
 describe('util.js: ', function() {
 
@@ -92,4 +92,84 @@ describe('util.js: ', function() {
     })
   })
 
+
+  describe('#ptInRect', function() {
+
+    it('returns true for pt clearly within', function() {
+      const rect = {top: 10, bottom: 20, left: 30, right: 40},
+            pt   = {x: 35, y: 15}
+      assert.equal(ptInRect(pt, rect), true)
+    })
+
+    it('returns false for pt outside on the x-axis', function() {
+      const rect = {top: 10, bottom: 20, left: 30, right: 40},
+            pt   = {x: 15, y: 15}
+      assert.equal(ptInRect(pt, rect), false)
+    })
+
+    it('returns false for pt outside on the y-axis', function() {
+      const rect = {top: 10, bottom: 20, left: 30, right: 40},
+            pt   = {x: 35, y: 45}
+      assert.equal(ptInRect(pt, rect), false)
+    })
+
+    it('returns false for pt clearly outside', function() {
+      const rect = {top: 10, bottom: 20, left: 30, right: 40},
+            pt   = {x: 0, y: 0}
+      assert.equal(ptInRect(pt, rect), false)
+    })
+
+    it('returns false for pt on the left side', function() {
+      const rect = {top: 10, bottom: 20, left: 30, right: 40},
+            pt   = {x: 350, y: 15}
+      assert.equal(ptInRect(pt, rect), false)
+    })
+
+    it('returns false for pt on the right side', function() {
+      const rect = {top: 10, bottom: 20, left: 30, right: 40},
+            pt   = {x: 40, y: 15}
+      assert.equal(ptInRect(pt, rect), false)
+    })
+
+    it('returns false for pt on the top side', function() {
+      const rect = {top: 10, bottom: 20, left: 30, right: 40},
+            pt   = {x: 35, y: 10}
+      assert.equal(ptInRect(pt, rect), false)
+    })
+
+    it('returns false for pt on the bottom side', function() {
+      const rect = {top: 10, bottom: 20, left: 30, right: 40},
+            pt   = {x: 35, y: 20}
+      assert.equal(ptInRect(pt, rect), false)
+    })
+
+  })
+
+  describe('#ptInInscribedCircle', function() {
+
+    it('returns true for point at vertex', function() {
+      const rect = {top: 10, bottom: 20, left: 30, right: 40},
+            pt   = {x: 35, y: 15}
+      assert.equal(ptInInscribedCircle(pt, rect), true)
+    })
+
+    it('returns true for point on edge', function() {
+      const rect = {top: 10, bottom: 20, left: 30, right: 40},
+            pt   = {x: 35, y: 10.0001}
+      assert.equal(ptInInscribedCircle(pt, rect), true)
+    })
+
+    it('returns false for point in corner-- outside circle but inside of rect', function() {
+      const rect = {top: 10, bottom: 20, left: 30, right: 40},
+            pt   = {x: 31, y: 11}
+      assert.equal(ptInInscribedCircle(pt, rect), false)
+    })
+
+    it('returns false for point outside rectangle', function() {
+      const rect = {top: 10, bottom: 20, left: 30, right: 40},
+            pt   = {x: 0, y: 0}
+      assert.equal(ptInInscribedCircle(pt, rect), false)
+    })
+
+  })
 })
