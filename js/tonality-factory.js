@@ -28,23 +28,26 @@ export function createTonalities() {
     return [...generators.whileLessThan(generators.counterIter(lo), hi)]
   }
 
-
-// Give a name to the scale, and provide any number of
-// functions to generate the notes above the tonic.
-  const buildTonality = (...noteFns) => {
+  function generateNotes(octaves, ...noteFns) {
     const all = []
-    ν.octaves.forEach((a) => {
-      all.push(a)
-      for (const f of noteFns) {
-        all.push(f(a))
+    octaves.forEach(note => {
+      all.push(note)
+      for (const fn of noteFns) {
+        all.push(fn(note))
       }
     })
     return all
   }
 
+
   const ν            = {
-    octaves:    buildOctaves(110, 4000) // [110, 220, 440, 880, 1760, 3520]
+    octaves: buildOctaves(110, 4000) // [110, 220, 440, 880, 1760, 3520]
   }
+
+  // Give a name to the scale, and provide any number of
+  // functions to generate the notes above the tonic.
+  const buildTonality = generateNotes.bind(null, ν.octaves)
+
   ν['fifths']        = buildTonality(perfectFifthAbove)
   ν['perfect']       = buildTonality(perfectFourthAbove, perfectFifthAbove)
   ν['majorTriad']    = buildTonality(majorThirdAbove, perfectFifthAbove)
@@ -55,7 +58,7 @@ export function createTonalities() {
                                      perfectFourthAbove, flatFiveAbove, perfectFifthAbove, minorSixthAbove,
                                      majorSixthAbove, minorSeventhAbove, majorSeventhAbove)
 
-  ν['continuous']     =  buildRange(100, 4000)
+  ν['continuous'] = buildRange(100, 4000)
 
   const tonalityCalculator = function(tonalityName) {
     return function(x) {
