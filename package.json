@@ -48,7 +48,7 @@
     "start": "webpack-dev-server --hot --inline",
     "server": "./node_modules/.bin/http-server build -e html -d false",
     "test": "mocha --require test/register-babel.js --compilers js:babel-register 'test/**/*spec.js'",
-    "watch:test": "npm t -- --watch",
+    "test:watch": "npm t -- --watch",
     "cover": "nyc npm t",
     "lint": "./node_modules/.bin/eslint '**/*.js'"
   },
