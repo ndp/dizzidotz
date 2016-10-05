@@ -7,6 +7,7 @@ html, body, svg {
 
 body {
   background-color: black;
+  background-color: #333333;
   background: url(b1b3d69b26fb6c81e8bd06ec161f1ad5.jpg);
   background-size: cover;
 }
@@ -413,6 +414,30 @@ body.slow .slow-fade-in-stage-3 {
   }
 }
 
+@-webkit-keyframes pulsating {
+  0% {
+    opacity: 1
+  }
+  50% {
+    opacity: 0.8
+  }
+  100% {
+    opacity: 1
+  }
+}
+
+@keyframes pulsating {
+  0% {
+    opacity: 1
+  }
+  50% {
+    opacity: 0.8
+  }
+  100% {
+    opacity: 1
+  }
+}
+
 @-webkit-keyframes fade-in {
   from {
     opacity: 0
@@ -552,6 +577,37 @@ li a.pattern {
   cursor: -webkit-zoom-out;
   cursor: zoom-out;
   opacity: 1.0;
+}
+
+.drop-target {
+  -webkit-animation-name: pulsating;
+          animation-name: pulsating;
+  -webkit-animation-duration: 0.5s;
+          animation-duration: 0.5s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+          animation-timing-function: linear;
+}
+
+.drop-target .bg {
+  fill: red !important;
+  /*animation-duration: .1s;*/
+}
+
+.drop-target .btn {
+  stroke: white !important;
+  /*animation-duration: .1s;*/
+}
+
+#editor.drop-target {
+
+}
+#editor.drop-target .bg {
+  fill: lightgray !important;
+}
+#editor.drop-target circle {
+  fill: lightgray !important;
 }
 
 /*#drawer li span.name {*/
