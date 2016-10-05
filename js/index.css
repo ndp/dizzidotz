@@ -354,6 +354,18 @@ body.slow .slow-fade-in-stage-3 {
   }
 }
 
+@keyframes pulsating {
+  0% {
+    opacity: 1
+  }
+  50% {
+    opacity: 0.8
+  }
+  100% {
+    opacity: 1
+  }
+}
+
 @keyframes fade-in {
   from {
     opacity: 0
@@ -429,6 +441,33 @@ li a.pattern {
 #drawer li a.delete-pattern:hover {
   cursor: zoom-out;
   opacity: 1.0;
+}
+
+.drop-target {
+  animation-name: pulsating;
+  animation-duration: 0.5s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+.drop-target .bg {
+  fill: red !important;
+  /*animation-duration: .1s;*/
+}
+
+.drop-target .btn {
+  stroke: white !important;
+  /*animation-duration: .1s;*/
+}
+
+#editor.drop-target {
+
+}
+#editor.drop-target .bg {
+  fill: lightgray !important;
+}
+#editor.drop-target circle {
+  fill: lightgray !important;
 }
 
 /*#drawer li span.name {*/

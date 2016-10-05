@@ -6,22 +6,32 @@ import 'rxjs/add/observable/from'
 import 'rxjs/add/observable/range'
 import 'rxjs/add/operator/combineLatest'
 import 'rxjs/add/operator/mergeMap'
+import 'rxjs/add/operator/bufferCount'
 import 'rxjs/add/operator/concat'
 import 'rxjs/add/operator/startWith'
-import {BehaviorSubject} from 'rxjs/BehaviorSubject'
-import {Subject} from 'rxjs/Subject'
+import 'rxjs/add/operator/share'
+import 'rxjs/add/operator/buffer'
+import { BehaviorSubject } from 'rxjs/BehaviorSubject'
+import { Subject } from 'rxjs/Subject'
 
-import {labelLog} from './lib/ndp-software/util.js'
+import { ptInRect, ptInInscribedCircle } from './lib/ndp-software/util.js'
 import { patternStoreBus$ } from './pattern-store.js'
+
+import {
+  makeDraggable,
+  ACTION_DRAG_START,
+  ACTION_DRAG_MOVE,
+  ACTION_DRAG_END
+} from './draggable'
 
 export function newDeck(drawingCtx$, model$) {
 
   // MODEL
   const focus$ = new BehaviorSubject(null)
   const state$ = focus$
-      .combineLatest(model$, function(focus, model) {
-                       return {focus, model}
-                     })
+    .combineLatest(model$, function(focus, model) {
+                     return {focus, model}
+                   })
   const event$ = new Subject()
 
   // VIEW
@@ -81,161 +91,78 @@ export function newDeck(drawingCtx$, model$) {
 
 
   state$
-      .combineLatest(drawingCtx$, function(state, drawingCtx) {
-                       return {state, drawingCtx}
-                     })
-      .subscribe(function({state, drawingCtx}) {
-                   //console.log('state', state)
-                   //console.log('drawingCtx', drawingCtx)
-                   if (state.model.length == 0) {
-                     drawingCtx.domCntr.innerHTML = ''
-                   }
-                   var listEl = findOrCreateListEl(drawingCtx.domCntr)
-
-                   const list          = Object.values(state.model).sort((a, b) => b.timestamp - a.timestamp)
-                   let precedingItemEl = null
-                   list.forEach(model => {
-                     const m          = Object.assign({}, model, {focused: state.focus == model || state.focus == model.key})
-                     const itemCntrEl = findOrCreateListItem(m, listEl, precedingItemEl ? precedingItemEl.parentNode : null)
-                     drawingCtx.renderItem(model, itemCntrEl)
-                     precedingItemEl  = itemCntrEl
+    .combineLatest(drawingCtx$, function(state, drawingCtx) {
+                     return {state, drawingCtx}
                    })
+    .subscribe(function({state, drawingCtx}) {
+                 //console.log('state', state)
+                 //console.log('drawingCtx', drawingCtx)
+                 if (state.model.length == 0) {
+                   drawingCtx.domCntr.innerHTML = ''
+                 }
+                 var listEl = findOrCreateListEl(drawingCtx.domCntr)
+
+                 const list          = Object.values(state.model).sort((a, b) => b.timestamp - a.timestamp)
+                 let precedingItemEl = null
+                 list.forEach(model => {
+                   const m          = Object.assign({}, model, {focused: state.focus == model || state.focus == model.key})
+                   const itemCntrEl = findOrCreateListItem(m, listEl, precedingItemEl ? precedingItemEl.parentNode : null)
+                   drawingCtx.renderItem(model, itemCntrEl)
+                   precedingItemEl  = itemCntrEl
                  })
+               })
 
   event$
-      .filter(e => e.name == 'focus')
-      .subscribe(function(e) {
-                   focus$.next(e.key)
-                 })
+    .filter(e => e.name == 'focus')
+    .subscribe(function(e) {
+                 focus$.next(e.key)
+               })
 
   // INTENT
   const itemClick$ = Observable
-      .fromEvent(drawingCtx$.getValue().domCntr, 'click')
-      .do(e => e.preventDefault())
-      .map(e => e.target)
-      .map(el => el.closest('[data-key]'))
-      .filter(key => key)
-
-  // swipe => focus
-
-
-  // click on focused => send event select
-  itemClick$
-      .filter(x => x.className.match('focus'))
-      .map(x => x.getAttribute('data-key'))
-      .map(function(key) {
-             return {name: 'load', key}
-           })
-      .subscribe(event$)
+    .fromEvent(drawingCtx$.getValue().domCntr, 'click')
+    //.do(e => e.preventDefault())
+    .map(e => e.target.closest('[data-key]'))
+    .filter(key => key)
+    .share()
 
   // click on unfocused => focus
   itemClick$
-      .filter(x => !x.className.match('focus'))
-      .map(x => x.getAttribute('data-key'))
-      .subscribe(x => focus$.next(x))
+    .filter(el => !el.classList.contains('focus'))
+    .map(x => x.getAttribute('data-key'))
+    .subscribe(x => focus$.next(x))
 
 
-  /**
-   *
-   * @param draggableCntr -- element in which to watch for drags
-   * @param mapDraggable -- given an element that the mouse is over, return an element that
-   *                        is draggable. Return `null` if not draggable.
-   * @param isDropable -- given an element that the mouse is over, provide the element
-   *                        that could be dropped on. false means drop will do nothing
-   * @param createDraggableOutlineElement -- create an element that is explicitly sized and can
-   *                be used to represent the outline of the object as it is dragged
-   * @returns {Observable} of commands reflecting the drag in process
-   */
-  const ACTION_START = 'start', ACTION_DRAG = 'drag', ACTION_END = 'end'
-
-  function makeDraggable({draggableCntr,
-      mapDraggable, isDropable,
-      createDraggableOutlineElement}) {
-
-
-    const mouseup$   = Observable.fromEvent(document, 'mouseup')
-    const mousemove$ = Observable.fromEvent(document, 'mousemove')
-    const mousedown$ = Observable.fromEvent(draggableCntr, 'mousedown')
-
-    const mapDropable = function(el) {
-      while (el) {
-        //console.log('considering...', el)
-        if (isDropable(el)) return el
-        el = el.parentElement || el.parentNode
-      }
-      return null
-    }
-
-
-    return mousedown$
-        .filter(e => !!mapDraggable(e.target))
-        .do(e => e.preventDefault())
-        .do(e => e.stopPropagation())
-        .mergeMap(function(e) {
-                    const el      = mapDraggable(e.target)
-                    const start   = {x: e.clientX, y: e.clientY}
-                    const outline = createDraggableOutlineElement(el)
-                    const body    = document.getElementsByTagName('BODY')[0]
-                    body.insertBefore(outline, body.firstChild)
-
-                    function moveOutlineTo(offset) {
-                      outline.style.transform = `translate(${offset.x}px, ${offset.y}px)`
-                    }
-
-                    function findDest(mme) {
-                      //console.log('mme', mme)
-                      outline.style.display = 'none'
-                      const overEl          = document.elementFromPoint(mme.clientX, mme.clientY)
-                      outline.style.display = 'block'
-                      if (overEl == outline) console.log('*********')
-                      return mapDropable(overEl)
-                    }
-
-
-                    const dragAction$ = mousemove$
-                        .map((mme) => {
-                               return {
-                                 name:   ACTION_DRAG,
-                                 dest:   findDest(mme),
-                                 offset: {x: mme.clientX - start.x, y: mme.clientY - start.y},
-                                         el
-                               }
-                             })
-                        .do(action => moveOutlineTo(action.offset))
-                        .distinctUntilChanged(function(a, b) {
-                                                return a === b ||
-                                                    (a !== null && b !== null && a.offset == b.offset)
-                                              })
-
-
-                    const finishAction$ = Observable
-                        .from([{name: ACTION_END}])
-                        .do(() => outline.parentNode.removeChild(outline))
-
-                    const action$ = dragAction$
-                        .takeUntil(mouseup$)
-                        .concat(finishAction$)
-                        .withLatestFrom(dragAction$, (action, dragAction)=> {
-                                          if (action.name !== ACTION_END) return action
-                                          return Object.assign({}, dragAction, action)
-                                        })
-                        .startWith({name: ACTION_START, el: el})
-                    return action$
-                  })
-
-
+  function deleteAllButton() {
+    return document.getElementById('delete-all-btn')
   }
 
+  const editorEl = () => document.getElementById('editor')
+
   const drag$ = makeDraggable({
+
     draggableCntr: drawingCtx$.getValue().domCntr,
+
     mapDraggable(target) {
       const dots = target.closest('[data-key]')
       return (dots && dots.className.match('focus')) ? dots : null
     },
-    isDropable(el) {
-      return el.id === 'delete-all-btn'
+
+    mapDropTarget(pos, draggedEl) {
+      const key = draggedEl.getAttribute('data-key')
+      if (!key.match(/^template/)) {
+        const el     = deleteAllButton()
+        const bounds = el.getBoundingClientRect()
+        if (ptInRect(pos, bounds)) return el
+      }
+
+      const editor = editorEl()
+      if (ptInInscribedCircle(pos, editor.getBoundingClientRect())) return editor
+
+      return null
     },
-    createDraggableOutlineElement(el) {
+
+    createOutlineEl(el) {
       const rect             = el.children[0].children[0].getClientRects()[0]
       const outline          = document.createElement('DIV')
       outline.style.position = 'fixed'
@@ -245,28 +172,85 @@ export function newDeck(drawingCtx$, model$) {
       outline.style.height   = `${rect.height}px`
       outline.appendChild(el.children[0].children[0].cloneNode(true))
       return outline
-    },
+    }
   })
 
-  drag$.subscribe(labelLog('A'))
 
+  // Draw 'delete all' button as a drop target.
   drag$
-      .filter(action => action.name == ACTION_DRAG)
-    //.do(action => console.log(action.el.getAttribute('data-key')))
-      .subscribe(function(action) {
-                   action.el.style.display = action.dest ? 'none' : 'block'
-                 })
+    .filter(action => action.name == ACTION_DRAG_START)
+    .subscribe(() => deleteAllButton().classList.add('drop-target'))
 
+  // Remove 'delete all' drop as drop target.
   drag$
-      .filter(action => action.name == ACTION_END)
-      .filter(action => action.dest !== null)
-      .map(function(action) {
-             return {
-               name: 'delete',
-               key:  action.el.getAttribute('data-key')
-             }
-           })
-      .subscribe(patternStoreBus$)
+    .filter(action => action.name == ACTION_DRAG_END)
+    .subscribe(() => deleteAllButton().classList.remove('drop-target'))
+
+  // Highlight hovered 'delete all' button
+  drag$
+    .filter(action => action.name == ACTION_DRAG_MOVE)
+    .subscribe(function(action) {
+                 if (action.dest == deleteAllButton()) {
+                   action.outline.style.transition   = 'opacity 0.4'
+                   action.outline.style.opacity      = 0.3
+                   action.outline.style['transform'] = 'scale(.5,.5)'
+                 } else {
+                   action.outline.style.opacity      = 1
+                   action.outline.style['transform'] = ''
+                 }
+
+               })
+
+  // Drag over 'delete all' button previews deleting pattern.
+  drag$
+    .filter(action => action.name == ACTION_DRAG_MOVE)
+    .subscribe(function(action) {
+                 action.el.style.display = (action.dest == deleteAllButton()) ? 'none' : 'block'
+               })
+
+  // Trigger the actual delete.
+  drag$
+    .filter(action => action.name == ACTION_DRAG_END)
+    .filter(action => action.dest == deleteAllButton())
+    .map(function(action) {
+           return {
+             name: 'delete',
+             key:  action.el.getAttribute('data-key')
+           }
+         })
+    .subscribe(patternStoreBus$)
+
+  // Provide drag feedback over the editor
+  drag$.filter(action => action.name == ACTION_DRAG_MOVE)
+    .subscribe(function(action) {
+                 editorEl().classList.toggle('drop-target', editorEl() == action.dest)
+               })
+
+  drag$.filter(action => action.name == ACTION_DRAG_END)
+    .subscribe(() =>  editorEl().classList.remove('drop-target'))
+
+  // Trigger the load of the pattern
+  drag$
+    .filter(action => action.name == ACTION_DRAG_END)
+    .filter(action => action.dest == editorEl())
+    .map(action => {
+           return {
+             name: 'load',
+             key:  action.el.getAttribute('data-key')
+           }
+         })
+    .subscribe(event$)
+
+  // Detect simple click
+  drag$
+    .filter(action => action.name == ACTION_DRAG_END)
+    .filter(action => action.ms < 400)
+    .filter(action => (Math.abs(action.offset.x) + Math.abs(action.offset.y)) < 5)
+    .map(action => action.el)
+    .map(el => el.getAttribute('data-key'))
+    .map(key => ({name: 'load', key}))
+    .subscribe(event$)
+
 
   return event$
 }

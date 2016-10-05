@@ -1,3 +1,4 @@
+/*eslint-env browser */
 import {Observable} from 'rxjs/Observable'
 import 'rxjs/add/observable/combineLatest'
 import 'rxjs/add/observable/from'
@@ -6,8 +7,6 @@ import 'rxjs/add/operator/mergeMap'
 import 'rxjs/add/operator/concat'
 import 'rxjs/add/operator/startWith'
 import 'rxjs/add/operator/share'
-
-import { labelLog } from './lib/ndp-software/util.js'
 
 
 /**
@@ -33,25 +32,22 @@ export function makeDraggable({
   createOutlineEl}) {
 
 
-  const mouseup$   = Observable.fromEvent(document, 'mouseup')
-    .do(labelLog('mouseUp'))
-  const mousemove$ = Observable.fromEvent(document, 'mousemove')
-  //.do(labelLog('mouseMove'))
-  const mousedown$ = Observable.fromEvent(draggableCntr, 'mousedown')
-    .do(labelLog('mouseDown'))
-
+  const mouseup$   = Observable.fromEvent(document, 'mouseup'),
+        mousemove$ = Observable.fromEvent(document, 'mousemove'),
+        mousedown$ = Observable.fromEvent(draggableCntr, 'mousedown')
 
   return mousedown$
     .filter(e => !!mapDraggable(e.target))
     //.do(e => e.preventDefault())
     //.do(e => e.stopPropagation())
     .mergeMap(function(e) {
-                const el              = mapDraggable(e.target)
-                const start           = {x: e.clientX, y: e.clientY}
-                const outline         = createOutlineEl(el)
-                const originalTopLeft = {x: el.getClientRects()[0].left, y: el.getClientRects()[0].top}
-                console.log('CREATING OUTLINE')
-                const body            = document.getElementsByTagName('BODY')[0]
+                const el              = mapDraggable(e.target),
+                      start           = {x: e.clientX, y: e.clientY},
+                      startMs         = (new Date()).getTime(),
+                      outline         = createOutlineEl(el),
+                      originalTopLeft = {x: el.getClientRects()[0].left, y: el.getClientRects()[0].top},
+                      body            = document.getElementsByTagName('BODY')[0]
+
                 //body.insertBefore(outline, body.firstChild)
                 body.appendChild(outline)
 
@@ -69,6 +65,7 @@ export function makeDraggable({
                              x: mme.clientX,
                              y: mme.clientY
                            }, el),
+                           ms:     (new Date()).getTime() - startMs,
                            offset: {x: mme.clientX - start.x, y: mme.clientY - start.y},
                                    el,
                                    outline
@@ -84,8 +81,6 @@ export function makeDraggable({
                 const finishAction$ = Observable
                   .from([{name: ACTION_DRAG_END}])
                   .do(() => outline.parentNode.removeChild(outline))
-                  .do(() => console.log('DELETING OUTLINE')
-                )
 
                 const action$ = dragAction$
                   .takeUntil(mouseup$)
@@ -98,6 +93,5 @@ export function makeDraggable({
                 return action$
               })
     .share()
-
 
 }
