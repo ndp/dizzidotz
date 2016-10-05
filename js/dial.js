@@ -16,7 +16,7 @@ import {AnimationFrameScheduler} from 'rxjs/scheduler/AnimationFrameScheduler'
 import {svgClippedArc} from './lib/ndp-software/svg.js'
 import {ptToVector, normalizeRadians} from './lib/ndp-software/trig.js'
 
-import {newCmdBus$, logCmdBus} from './lib/ndp-software/rx-dux/cmdBus.js'
+import {newCmdBus$, logCmdBus} from './lib/ndp-software/pilota/cmdBus.js'
 
 
 //import {run} from '@cycle/rxjs-run'

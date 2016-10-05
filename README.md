@@ -14,21 +14,26 @@ So you could then make some music-like noise. This is kinda like one of those.
             <img src="https://travis-ci.org/ndp/dizzidotz.svg" alt="build:">
           </a>
 
-### Thoughts
+### Thoughts and Mission
 
 A few themes are driving this project:
 
   * to explore RxJS and _naked functional reactive programming_ (FRP without a framework). I'm evolving the codebase organically, but rework the design as I figure out how to make it more reactive. I am using *cycle.js* as an inspiration, but adding pieces as I run across them to see if I end up at a different place.
   * improve my knowledge of specific technologies: SVG, HTML5 MIDI  sound, in-browser ES6, browser DOM api, CSS animations, Heroku pipelines.
+
+### Development Logistics
+  
+See `package.json` for the most important script actions.
   
 ### Test Suite
 
-  * `mocha`
-  * add peg: verify sound and highlight
-  * restore old pegs: verify sound and highlight
-  * save pegs
-  * restore newly saved pegs: verify sound and highlight
-  * scratch
+  * `npm run test`
+  * manual suite:
+    * add peg: verify sound and highlight
+    * restore old pegs: verify sound and highlight
+    * save pegs
+    * restore newly saved pegs: verify sound and highlight
+    * scratch
   
 ### Development
 
@@ -37,6 +42,7 @@ A few themes are driving this project:
 
 ### Source Code Style Guide & Glossary
 
+  * Use `eslint` and editconfig
   * **El**: Suffix added to variables denoting an HTML **element**.
   * **$**: Suffix added to variables denoting a stream. Can be read as "stream."
   * **Iter**: Iterator.

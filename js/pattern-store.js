@@ -2,7 +2,7 @@
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject'
 
-import { newCmdBus$ } from './lib/ndp-software/rx-dux/cmdBus.js'
+import { newCmdBus$ } from './lib/ndp-software/pilota/cmdBus.js'
 import { localStorageKeys } from './lib/ndp-software/util.js'
 import { ownPropertiesIter } from './lib/ndp-software/generators.js'
 import { tonalities } from './tonality.js'
@@ -10,7 +10,7 @@ import { tonalities } from './tonality.js'
 // hashmap of key => stored value
 export const patternStore$ = new
     BehaviorSubject(localStorageKeys()
-                        .filter((x) => /^(pattern|template).*/.exec(x))
+                        .filter(x => /^(pattern|template).*/.exec(x))
                         .reduce((acc, x) => {
                                   const item = localStorage.getItem(x)
                                   try {

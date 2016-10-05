@@ -4,9 +4,9 @@ import {assert} from 'chai'
 
 import {BehaviorSubject} from 'rxjs/BehaviorSubject'
 
-import {newCmdBus$} from '../../js/lib/ndp-software/rx-dux/cmdBus.js'
-import {newDispatcher} from '../../js/lib/ndp-software/rx-dux/dispatcher.js'
-import {newObjectResolver} from '../../js/lib/ndp-software/rx-dux/resolver.js'
+import {newCmdBus$} from '../../js/lib/ndp-software/pilota/cmdBus.js'
+import {newDispatcher} from '../../js/lib/ndp-software/pilota/dispatcher.js'
+import {newObjectResolver} from '../../js/lib/ndp-software/pilota/resolver.js'
 
 describe('CmdBus', function() {
 

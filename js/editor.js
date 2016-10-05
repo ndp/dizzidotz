@@ -2,7 +2,7 @@
 
 import {BehaviorSubject} from 'rxjs/BehaviorSubject'
 
-import {newCmdBus$ } from './lib/ndp-software/rx-dux/cmdBus.js'
+import {newCmdBus$ } from './lib/ndp-software/pilota/cmdBus.js'
 
 import {currentTonality$} from './tonality.js'
 import {msPerPeriod$} from './tempo.js'
@@ -31,7 +31,6 @@ editorCmdBus$.on('add peg', (state, cmd) => {
 editorCmdBus$.on('clear', () => [])
 
 editorCmdBus$.on('add pattern', (state, cmd) => {
-  console.log('add pattern: ', cmd)
   const pattern                              = cmd.pattern
   if (!/^template.*/.exec(pattern.key)) {
     name$.next(pattern.name || 'My Dotz')

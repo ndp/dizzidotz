@@ -4,8 +4,8 @@ import {assert} from 'chai'
 
 import {BehaviorSubject} from 'rxjs/BehaviorSubject'
 
-import {newCmdBus$} from '../../js/lib/ndp-software/rx-dux/cmdBus.js'
-import {submodelCmd} from '../../js/lib/ndp-software/rx-dux/submodelCmd.js'
+import {newCmdBus$} from '../../js/lib/ndp-software/pilota/cmdBus.js'
+import {submodelCmd} from '../../js/lib/ndp-software/pilota/submodelCmd.js'
 
 
 describe('submodelCmd', function() {

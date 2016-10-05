@@ -6,7 +6,7 @@ import 'rxjs/add/observable/fromEvent'
 import 'rxjs/add/operator/do'
 import 'rxjs/add/operator/mapTo'
 import 'rxjs/add/operator/filter'
-import {newCmdBus$} from './lib/ndp-software/rx-dux/cmdBus.js'
+import {newCmdBus$} from './lib/ndp-software/pilota/cmdBus.js'
 
 // MODEL
 const STORE_KEY         = 'play-pause'
@@ -27,11 +27,10 @@ playState$.subscribe(x => {
 
 
 // INTENT
-const playPauseClicks$ = Observable
-    .fromEvent(playPauseEl, 'click')
+Observable.fromEvent(playPauseEl, 'click')
     .do(e => e.preventDefault())
-
-playPauseClicks$.mapTo('toggle').subscribe(playStateBus$)
+    .mapTo('toggle')
+    .subscribe(playStateBus$)
 
 Observable.fromEvent(document, 'keypress')
     .filter(e => e.keyCode == 32) // space
