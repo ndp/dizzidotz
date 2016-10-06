@@ -2,7 +2,7 @@
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject'
 
-import { newCmdBus$ } from './lib/ndp-software/pilota/cmdBus.js'
+import { newCmdBus$ } from 'pilota'
 import { localStorageKeys } from './lib/ndp-software/util.js'
 import { ownPropertiesIter } from './lib/ndp-software/generators.js'
 import { tonalities } from './tonality.js'

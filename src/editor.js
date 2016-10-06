@@ -2,7 +2,7 @@
 
 import {BehaviorSubject} from 'rxjs/BehaviorSubject'
 
-import {newCmdBus$ } from './lib/ndp-software/pilota/cmdBus.js'
+import {newCmdBus$ } from 'pilota'
 
 import {currentTonality$} from './tonality.js'
 import {msPerPeriod$} from './tempo.js'

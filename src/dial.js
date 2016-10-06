@@ -1,22 +1,12 @@
 import {BehaviorSubject} from 'rxjs/BehaviorSubject'
-import {Observable} from 'rxjs/Observable'
+import { Observable, Observer } from 'rxjs'
 import 'rxjs/add/observable/fromEvent'
-import 'rxjs/add/operator/debounceTime'
-import 'rxjs/add/operator/delay'
-import 'rxjs/add/operator/distinctUntilChanged'
-import 'rxjs/add/operator/last'
-import 'rxjs/add/operator/mapTo'
-import 'rxjs/add/operator/merge'
-import 'rxjs/add/operator/mergeMap'
-import 'rxjs/add/operator/startWith'
-import 'rxjs/add/operator/takeUntil'
-import 'rxjs/add/operator/throttleTime'
 import {AnimationFrameScheduler} from 'rxjs/scheduler/AnimationFrameScheduler'
 
 import {svgClippedArc} from './lib/ndp-software/svg.js'
 import {ptToVector, normalizeRadians} from './lib/ndp-software/trig.js'
 
-import {newCmdBus$, logCmdBus} from './lib/ndp-software/pilota/cmdBus.js'
+import {newCmdBus$, logCmdBus} from 'pilota'
 
 
 //import {run} from '@cycle/rxjs-run'
