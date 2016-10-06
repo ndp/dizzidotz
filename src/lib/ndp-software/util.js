@@ -81,20 +81,6 @@ export function labelLog(label) {
   }
 }
 
-export function subscribeLog(observable$, name) {
-  observable$.subscribe(
-    function(v) {
-      global.console.log(`${name}.next:`, v)
-    },
-    function(v) {
-      global.console.log(`${name}.error:`, v)
-    },
-    function(v) {
-      global.console.log(`${name}.complete:`, v)
-    }
-  )
-}
-
 
 // ms/rev => human readable
 export function humanizeTempo(x) {
