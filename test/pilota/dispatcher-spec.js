@@ -3,8 +3,8 @@
 import {assert} from 'chai'
 import simple from 'simple-mock'
 
-import {newObjectResolver} from '../../js/lib/ndp-software/pilota/resolver.js'
-import {newDispatcher} from '../../js/lib/ndp-software/pilota/dispatcher.js'
+import {newObjectResolver} from '../../src/lib/ndp-software/pilota/resolver.js'
+import {newDispatcher} from '../../src/lib/ndp-software/pilota/dispatcher.js'
 
 describe('newDispatcher', function() {
 

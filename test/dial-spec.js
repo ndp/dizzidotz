@@ -2,7 +2,7 @@
 /* global document */
 
 import {assert} from 'chai'
-import {newDial} from '../js/dial.js'
+import {newDial} from '../src/dial.js'
 
 describe('Dial', function() {
 
