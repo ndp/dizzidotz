@@ -37,11 +37,11 @@ export function makeDraggable({
         mousedown$ = Observable.fromEvent(draggableCntr, 'mousedown')
 
   return mousedown$
-    .filter(e => !!mapDraggable(e.target))
+    .filter(e => !!mapDraggable(e.target, e))
     //.do(e => e.preventDefault())
     //.do(e => e.stopPropagation())
     .mergeMap(function(e) {
-                const el              = mapDraggable(e.target),
+                const el              = mapDraggable(e.target, e),
                       start           = {x: e.clientX, y: e.clientY},
                       startMs         = (new Date()).getTime(),
                       outline         = createOutlineEl(el),
