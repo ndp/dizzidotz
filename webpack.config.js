@@ -24,7 +24,6 @@ module.exports = {
       './src/tempo.js',
       './src/editor.js',
       './src/pattern-store.js',
-      './src/pattern-drawer.js',
       './src/name.js',
       './src/machine.js',
       'babel-polyfill'
