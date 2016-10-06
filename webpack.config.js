@@ -9,33 +9,33 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 
-const dir_js    = path.resolve(__dirname, 'js');
+const dir_src   = path.resolve(__dirname, 'src');
 const dir_html  = path.resolve(__dirname, 'html');
 const dir_build = path.resolve(__dirname, 'build');
 
 module.exports = {
   entry:     {
     js:  [
-      './js/play-pause.js',
-      './js/tonality-factory.js',
-      './js/tonality.js',
-      './js/noise.js',
-      './js/dial.js',
-      './js/tempo.js',
-      './js/editor.js',
-      './js/pattern-store.js',
-      './js/pattern-drawer.js',
-      './js/name.js',
-      './js/machine.js',
+      './src/play-pause.js',
+      './src/tonality-factory.js',
+      './src/tonality.js',
+      './src/noise.js',
+      './src/dial.js',
+      './src/tempo.js',
+      './src/editor.js',
+      './src/pattern-store.js',
+      './src/pattern-drawer.js',
+      './src/name.js',
+      './src/machine.js',
       'babel-polyfill'
     ],
-    css: './js/index.css'
+    css: './src/index.css'
   },
   output:    {
     path:     dir_build,
     filename: 'bundle.js'
   },
-  resolve: {
+  resolve:   {
     alias: {
       'xxrxjs': 'rxjs-es'
     }
@@ -46,10 +46,10 @@ module.exports = {
   module:    {
     loaders: [
       {
-        test: /\.js?$/,
+        test:    /\.js?$/,
         exclude: /(node_modules(?!\/rxjs))/,
-        loader: 'babel',
-        query: {
+        loader:  'babel',
+        query:   {
           presets: ['es2015-webpack']
         }
       },
@@ -68,7 +68,11 @@ module.exports = {
       {from: dir_html} // to: output.path
     ]),
     new CopyWebpackPlugin([
-      {from: './js/lib/', to: './js/lib/', ignore: './js/lib/ndp-software'} // to: output.path
+      {
+        from:   './src/lib/',
+        to:     './js/lib/',
+        ignore: './src/lib/ndp-software'
+      } // to: output.path
     ]),
     new ExtractTextPlugin("styles.css"),
     new webpack.NoErrorsPlugin()  // Avoid publishing files when compilation fails

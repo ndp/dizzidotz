@@ -2,7 +2,7 @@
 
 import {assert} from 'chai'
 
-import {newObjectResolver} from '../../js/lib/ndp-software/pilota/resolver.js'
+import {newObjectResolver} from '../../src/lib/ndp-software/pilota/resolver.js'
 
 
 describe('newObjectResolver', function() {
