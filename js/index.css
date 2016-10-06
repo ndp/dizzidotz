@@ -145,7 +145,7 @@ body.slow .slow-fade-in-stage-3 {
 }
 
 #drawer {
-  overflow: auto;
+  overflow: visible;
   transition-duration: 1s;
   transition-property: all;
   margin: 0;
@@ -257,7 +257,7 @@ body.slow .slow-fade-in-stage-3 {
     top: 0;
     height: 100%;
     min-width: 14vh;
-    width: auto;
+    width: 9vh;
     left: 117vh;
   }
 
@@ -332,7 +332,7 @@ body.slow .slow-fade-in-stage-3 {
 
   #drawer {
     top: 116vw;
-    height: auto;
+    height: 14vw;
     width: 100%;
     border-top-width: 0px;
   }
@@ -657,7 +657,7 @@ ul.deck:hover li:not(.focus):hover div {
 @media (orientation: portrait) {
 
   ul.deck {
-    height: 14vw;
+    height: 10vw;
     width: 88vw;
     margin: 2vw 0;
     flex-direction: row;
