@@ -1,6 +1,6 @@
 /*eslint-env browser */
 
-import {Observable} from 'rxjs/Observable'
+//import {Observable} from 'rxjs/Observable'
 import 'rxjs/add/observable/combineLatest'
 import 'rxjs/add/observable/from'
 import 'rxjs/add/observable/range'
@@ -45,7 +45,9 @@ export function newDeck(drawingCtx$, model$) {
   function findOrCreateListItem(model, listEl, precedingItemEl) {
     let itemCntrEl = null,
         itemEl     = document.querySelector(`[data-key='${model.key}']`)
-    if (!itemEl) {
+    if (itemEl) {
+      itemCntrEl = itemEl.children[0]
+    } else {
       itemEl = document.createElement('LI')
       itemEl.setAttribute('data-key', model.key)
       listEl.insertBefore(itemEl, precedingItemEl)
@@ -54,9 +56,6 @@ export function newDeck(drawingCtx$, model$) {
       itemEl.appendChild(itemCntrEl)
 
       appendNameSpan(model.name, itemEl)
-
-    } else {
-      itemCntrEl = itemEl.children[0]
     }
 
     itemEl.className = model.focused ? 'focus' : ''

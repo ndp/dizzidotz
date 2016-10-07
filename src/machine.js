@@ -13,17 +13,16 @@ import 'rxjs/add/operator/filter'
 import 'rxjs/add/operator/scan'
 
 
+import {labelLog} from './lib/ndp-software/util.js'
+import * as trig from './lib/ndp-software/trig.js'
+
 import {editorPegs$, editorCmdBus$} from './editor.js'
 import {patternStoreBus$} from './pattern-store.js'
 import {currentTonality$} from './tonality.js'
 import {playState$} from './play-pause.js'
-import {soundOut$} from './noise.js'
+import {soundOut$, newSoundData} from './noise.js'
 import {msPerPeriod$} from './tempo.js'
-import {labelLog} from './lib/ndp-software/util.js'
-import {normalizeRadians} from './lib/ndp-software/trig.js'
-import * as trig from './lib/ndp-software/trig.js'
 import {name$} from './name.js'
-import {newSoundData} from './noise.js'
 
 // MODEL
 const NORMALIZED_RADIUS = 600 // main editor is 1200 virtual pizels
@@ -50,7 +49,7 @@ const normalizeEvent = (e, size) =>
 
 playState$.subscribe(labelLog('playing state'))
 const ticker$        = Observable.interval(MS_PER_TICK).delay(6000).filter(() => playState$.getValue() == 'playing')
-const radians$       = ticker$.scan((last) => normalizeRadians(last + radiansPerTick()))
+const radians$       = ticker$.scan((last) => trig.normalizeRadians(last + radiansPerTick()))
 
 // activePegs$ is a stream of the "active" or highlighted peg.
 const activePegs$ = new Subject()
@@ -222,6 +221,7 @@ editorMouseup$.subscribe(() => startedPegAt = null)
 radians$.subscribe((angle) => {
   const hand     = document.getElementById('hand')
   const duration = MS_PER_TICK * .75 // smaller than interval so we don't drop behind
+  /* eslint-disable new-cap */
   Velocity(hand, {
     x1: NORMALIZED_RADIUS + Math.cos(angle) * NORMALIZED_RADIUS,
     y1: NORMALIZED_RADIUS + Math.sin(angle) * NORMALIZED_RADIUS,

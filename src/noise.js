@@ -1,6 +1,5 @@
 /*global Tone */
 import {Subject} from 'rxjs/Subject'
-
 import {currentTonality$, tonalities} from './tonality.js'
 
 const synth = new Tone.PolySynth(10, Tone.SimpleSynth).toMaster()

@@ -1,5 +1,5 @@
 import * as generators from './lib/ndp-software/generators.js'
-import {Math_within} from './lib/ndp-software/util.js'
+import {pin} from './lib/ndp-software/util.js'
 
 export function createTonalities() {
 // equal tempered scale
@@ -63,7 +63,7 @@ export function createTonalities() {
   const tonalityCalculator = function(tonalityName) {
     return function(x) {
       const s = ν[tonalityName]
-      return s[Math.floor(Math_within(x, 0, 1) * s.length)]
+      return s[Math.floor(pin(x, 0, 1) * s.length)]
     }
   }
 

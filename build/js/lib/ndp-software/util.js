@@ -6,28 +6,29 @@ export function isFunction(x) {
   return typeof x === 'function'
 }
 
-export function Math_within(x, min, max) {
+export function pin(x, min, max) {
   return Math.min(max, Math.max(min, x))
 }
 
 export function ptInRect(pt, rect) {
   return pt.x > rect.left
-    && pt.x < rect.right
-    && pt.y > rect.top
-    && pt.y < rect.bottom
+         && pt.x < rect.right
+         && pt.y > rect.top
+         && pt.y < rect.bottom
 }
 
 export function ptInInscribedCircle(pt, rect) {
-  if (!ptInRect(pt, rect)) {
-    return false
-  } else {
-    const center = {
+  if (ptInRect(pt, rect)) {
+    const center             =
+          {
             x: (rect.right - rect.left) / 2 + rect.left,
             y: (rect.bottom - rect.top) / 2 + rect.top
           },
           distanceFromCenter = Math.sqrt(Math.pow(center.x - pt.x, 2) + Math.pow(center.y - pt.y, 2)),
-          radius = Math.min(rect.right - rect.left, rect.bottom - rect.top) / 2
+          radius             = Math.min(rect.right - rect.left, rect.bottom - rect.top) / 2
     return distanceFromCenter <= radius
+  } else {
+    return false
   }
 }
 
@@ -59,8 +60,8 @@ export function linearScaleFns(minOrMax, max) {
 
   const range = max - min
 
-  const unscaleFn = (x) => Math_within(flipFn((x - min) / range), 0, 1)
-  const scaleFn   = (x) => Math_within((flipFn(x) * range) + min, min, max)
+  const unscaleFn = (x) => pin(flipFn((x - min) / range), 0, 1)
+  const scaleFn   = (x) => pin((flipFn(x) * range) + min, min, max)
   return [scaleFn, unscaleFn]
 }
 
@@ -79,20 +80,6 @@ export function labelLog(label) {
   return function(...msgs) {
     global.console.log(...[`${label}: `, ...msgs])
   }
-}
-
-export function subscribeLog(observable$, name) {
-  observable$.subscribe(
-    function(v) {
-      global.console.log(`${name}.next:`, v)
-    },
-    function(v) {
-      global.console.log(`${name}.error:`, v)
-    },
-    function(v) {
-      global.console.log(`${name}.complete:`, v)
-    }
-  )
 }
 
 

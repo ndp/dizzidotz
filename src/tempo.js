@@ -10,7 +10,7 @@ import {linearScaleFns, humanizeTempo} from './lib/ndp-software/util.js'
 import {mapBehaviorSubject} from './lib/ndp-software/map-behavior-subject.js'
 import {newDial} from './dial.js'
 
-import {newCmdBus$, logCmdBus} from 'pilota'
+import {newCmdBus$} from 'pilota'
 
 
 // MODEL
@@ -33,7 +33,7 @@ const textElem = () => dial.querySelector('text')
 
 // Show the value or the "preview" value inside the text element.
 preview$
-    .withLatestFrom(msPerPeriod$, (preview, state) =>  preview > 0 ? unwrapFn(preview) : state)
+    .withLatestFrom(msPerPeriod$, (preview, state) => preview > 0 ? unwrapFn(preview) : state)
     .merge(msPerPeriod$)
     .map(humanizeTempo)
     .subscribe((x)  => textElem().textContent = x)

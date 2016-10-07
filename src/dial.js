@@ -1,5 +1,5 @@
 import {BehaviorSubject} from 'rxjs/BehaviorSubject'
-import { Observable, Observer } from 'rxjs'
+import { Observable } from 'rxjs'
 import 'rxjs/add/observable/fromEvent'
 import {AnimationFrameScheduler} from 'rxjs/scheduler/AnimationFrameScheduler'
 

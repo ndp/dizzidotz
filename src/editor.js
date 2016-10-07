@@ -32,10 +32,10 @@ editorCmdBus$.on('clear', () => [])
 
 editorCmdBus$.on('add pattern', (state, cmd) => {
   const pattern                              = cmd.pattern
-  if (!/^template.*/.exec(pattern.key)) {
-    name$.next(pattern.name || 'My Dotz')
-  } else {
+  if (/^template.*/.exec(pattern.key)) {
     name$.next('My Dotz')
+  } else {
+    name$.next(pattern.name || 'My Dotz')
   }
   currentTonality$.next(pattern.tonality)
   msPerPeriod$.next(pattern.periodMs)
