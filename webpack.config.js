@@ -50,7 +50,7 @@ module.exports = {
         exclude: /(node_modules(?!\/rxjs))/,
         loader:  'babel',
         query:   {
-          presets: ['es2015-webpack']
+          presets: ['es2015']
         }
       },
       {
