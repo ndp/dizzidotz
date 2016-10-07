@@ -23,6 +23,7 @@ export const vectorToPt = (angle, dist) => {
   }
 }
 
+/* eslint-disable max-params */
 export function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
   const angleInRadians = (angleInDegrees - 90) * Math.PI / 180
   return {
