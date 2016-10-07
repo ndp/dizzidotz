@@ -52,7 +52,7 @@
     "test": "mocha --require test/register-babel.js --compilers js:babel-register 'test/**/*spec.js'",
     "test:watch": "npm t -- --watch",
     "cover": "nyc npm t",
-    "lint": "./node_modules/.bin/eslint '**/*.js'"
+    "lint": "./node_modules/.bin/eslint src/*.js src/lib/ndp-software/*"
   },
   "repository": {
     "type": "git",

@@ -10,16 +10,23 @@ module.exports = {
   },
   'plugins':       ['mocha'],
   'rules':         {
-    // enable additional rules
-    'indent':                [2, 2],
+    'camelcase':             ['error'],
+    'complexity':            ['error', 11],
+    'indent':                [0, 2],
     'linebreak-style':       ['error', 'unix'],
+    'max-params':            ['error', 3],
+    'new-cap':               [2],
+    'no-confusing-arrow':    [0],
+    'no-console':            [1],
+    'no-constant-condition': ['off'],
+    'no-duplicate-imports':  ['error'],
+    'no-negated-condition':  ['error'],
+    'no-useless-rename':     ['error'],
+    'no-unused-vars':        ['error', {'varsIgnorePattern': '^_'}],
+    'prefer-const':          ['error'],
+    'prefer-rest-params':    ['error'],
+    'prefer-spread':         ['error'],
     'quotes':                ['error', 'single'],
     'semi':                  ['error', 'never'],
-    'prefer-const':          ['error'],
-    'no-constant-condition': ['off'],
-    'no-unused-vars':        ['error', {'varsIgnorePattern': '^_'}],
-
-    // disable rules from base configurations
-    'no-console': 'off'
   }
 }

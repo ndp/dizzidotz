@@ -82,7 +82,7 @@ export function makeDraggable({
                   .from([{name: ACTION_DRAG_END}])
                   .do(() => outline.parentNode.removeChild(outline))
 
-                const action$ = dragAction$
+                return dragAction$
                   .takeUntil(mouseup$)
                   .concat(finishAction$)
                   .withLatestFrom(dragAction$, (action, dragAction)=> {
@@ -90,7 +90,6 @@ export function makeDraggable({
                                     return Object.assign({}, dragAction, action)
                                   })
                   .startWith({name: ACTION_DRAG_START, el: el})
-                return action$
               })
     .share()
 

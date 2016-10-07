@@ -1,16 +1,6 @@
 /*eslint-env browser */
-import {Observable} from 'rxjs/Observable'
-import 'rxjs/add/operator/map'
-import 'rxjs/add/operator/do'
-import 'rxjs/add/operator/filter'
-import 'rxjs/add/operator/withLatestFrom'
-
 import { patternStore$ } from './pattern-store.js'
-import { patternStoreBus$ } from './pattern-store.js'
 import { editorCmdBus$ } from './editor.js'
-
-// VIEWS
-const DELETE_PATTERN_CLASS_NAME = 'delete-pattern'
 
 import {BehaviorSubject} from 'rxjs/BehaviorSubject'
 import {newDeck} from './deck.js'
