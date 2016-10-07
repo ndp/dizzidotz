@@ -1,13 +1,5 @@
 {
   "presets": "es2015",
   "ignore": ["node_modules"],
-  "plugins": [
-    ["module-alias", [
-      {
-      "src": "./node_modules/rxjs-es/",
-      "expose": "xxrxjs"
-      }
-    ]]
-  ],
   "sourceMaps": true
 }
