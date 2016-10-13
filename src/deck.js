@@ -1,6 +1,5 @@
 /*eslint-env browser */
 
-//import {Observable} from 'rxjs/Observable'
 import 'rxjs/add/observable/combineLatest'
 import 'rxjs/add/observable/from'
 import 'rxjs/add/observable/range'
@@ -23,13 +22,13 @@ import {
   ACTION_DRAG_END
 } from './draggable'
 
+//  returns events
 export function newDeck(drawingCtx$, model$) {
 
   // MODEL
   const focus$ = new BehaviorSubject(null)
-  const state$ = focus$
-    .combineLatest(model$, (focus, model)  => ({focus, model}))
-  const event$ = new Subject()
+  const state$ = focus$.combineLatest(model$, (focus, model)  => ({focus, model}))
+  const event$ = new Subject() // events we are returning, with 'load', 'delete', 'focus'
 
   // VIEW
   function findOrCreateListEl(domCntr) {
@@ -104,12 +103,11 @@ export function newDeck(drawingCtx$, model$) {
 
   event$
     .filter(e => e.name == 'focus')
-    .subscribe(function(e) {
-                 focus$.next(e.key)
-               })
+    .map(e => e.key)
+    .subscribe(focus$)
 
 
-  function deleteAllButton() {
+  function deleteAllButtonEl() {
     return document.getElementById('delete-all-btn')
   }
 
@@ -120,21 +118,20 @@ export function newDeck(drawingCtx$, model$) {
     draggableCntr: drawingCtx$.getValue().domCntr,
 
     mapDraggable(target, e) {
-      const div = target.closest('[data-key]').children[0]
-      if (!div) return null
-
-      const rect = div.getClientRects()[0]
-
-      // Make sure it's actually on the pattern
-      if (!ptInInscribedCircle({x: e.clientX, y: e.clientY}, rect))
-        return null
-      return target.closest('[data-key]')
+      const lis = [...drawingCtx$.getValue().domCntr.getElementsByTagName('li')].reverse()
+      for (let li of lis) {
+        const rect = li.children[0].getClientRects()[0]
+        if (ptInInscribedCircle({x: e.clientX, y: e.clientY}, rect)) {
+          return li
+        }
+      }
+      return null
     },
 
     mapDropTarget(pos, draggedEl) {
       const key = draggedEl.getAttribute('data-key')
       if (!key.match(/^template/)) {
-        const el     = deleteAllButton()
+        const el     = deleteAllButtonEl()
         const bounds = el.getBoundingClientRect()
         if (ptInRect(pos, bounds)) return el
       }
@@ -162,18 +159,18 @@ export function newDeck(drawingCtx$, model$) {
   // Draw 'delete all' button as a drop target.
   drag$
     .filter(action => action.name == ACTION_DRAG_START)
-    .subscribe(() => deleteAllButton().classList.add('drop-target'))
+    .subscribe(() => deleteAllButtonEl().classList.add('drop-target'))
 
   // Remove 'delete all' drop as drop target.
   drag$
     .filter(action => action.name == ACTION_DRAG_END)
-    .subscribe(() => deleteAllButton().classList.remove('drop-target'))
+    .subscribe(() => deleteAllButtonEl().classList.remove('drop-target'))
 
   // Highlight hovered 'delete all' button
   drag$
     .filter(action => action.name == ACTION_DRAG_MOVE)
     .subscribe(function(action) {
-                 if (action.dest == deleteAllButton()) {
+                 if (action.dest == deleteAllButtonEl()) {
                    action.outline.style.transition   = 'opacity 0.4'
                    action.outline.style.opacity      = 0.3
                    action.outline.style['transform'] = 'scale(.5,.5)'
@@ -186,12 +183,12 @@ export function newDeck(drawingCtx$, model$) {
   // Drag over 'delete all' button previews deleting pattern.
   drag$
     .filter(action => action.name == ACTION_DRAG_MOVE)
-    .subscribe(action => action.el.style.display = (action.dest == deleteAllButton()) ? 'none' : 'block')
+    .subscribe(action => action.el.style.display = (action.dest == deleteAllButtonEl()) ? 'none' : 'block')
 
   // Trigger the actual delete.
   drag$
     .filter(action => action.name == ACTION_DRAG_END)
-    .filter(action => action.dest == deleteAllButton())
+    .filter(action => action.dest == deleteAllButtonEl())
     .map(action => ({name: 'delete', key: action.el.getAttribute('data-key')}))
     .subscribe(event$)
 
@@ -229,8 +226,8 @@ export function newDeck(drawingCtx$, model$) {
 
   itemClick$
     .filter(el => !el.classList.contains('focus'))
-    .map(x => x.getAttribute('data-key'))
-    .subscribe(x => focus$.next(x))
+    .map(x => ({name: 'focus', key: x.getAttribute('data-key')}))
+    .subscribe(event$)
 
   return event$
 }

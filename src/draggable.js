@@ -38,8 +38,6 @@ export function makeDraggable({
 
   return mousedown$
     .filter(e => !!mapDraggable(e.target, e))
-    //.do(e => e.preventDefault())
-    //.do(e => e.stopPropagation())
     .mergeMap(function(e) {
                 const el              = mapDraggable(e.target, e),
                       start           = {x: e.clientX, y: e.clientY},
@@ -48,16 +46,16 @@ export function makeDraggable({
                       originalTopLeft = {x: el.getClientRects()[0].left, y: el.getClientRects()[0].top},
                       body            = document.getElementsByTagName('BODY')[0]
 
-                //body.insertBefore(outline, body.firstChild)
                 body.appendChild(outline)
 
                 function moveOutlineTo(offset) {
-                  //outline.style.transform = `translate(${offset.x}px, ${offset.y}px)`
                   outline.style.left = `${originalTopLeft.x + offset.x}px`
                   outline.style.top  = `${originalTopLeft.y + offset.y}px`
                 }
 
-                const dragAction$ = mousemove$
+                const dragAction$ = Observable
+                        .from([e])
+                        .merge(mousemove$)
                   .map((mme) => {
                          return {
                            name:   ACTION_DRAG_MOVE,
@@ -74,7 +72,7 @@ export function makeDraggable({
                   .do(action => moveOutlineTo(action.offset))
                   .distinctUntilChanged(function(a, b) {
                                           return a === b ||
-                                            (a !== null && b !== null && a.offset == b.offset)
+                                                 (a !== null && b !== null && a.offset == b.offset)
                                         })
 
 
