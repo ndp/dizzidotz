@@ -119,7 +119,7 @@ export function newDeck(drawingCtx$, model$) {
 
     mapDraggable(target, e) {
       const lis = [...drawingCtx$.getValue().domCntr.getElementsByTagName('li')].reverse()
-      for (let li of lis) {
+      for (const li of lis) {
         const rect = li.children[0].getClientRects()[0]
         if (ptInInscribedCircle({x: e.clientX, y: e.clientY}, rect)) {
           return li
