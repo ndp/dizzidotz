@@ -12427,15 +12427,17 @@
 	
 	var _rxjs = __webpack_require__(336);
 	
-	__webpack_require__(22);
+	var _rxjs2 = _interopRequireDefault(_rxjs);
 	
-	var _AnimationFrameScheduler = __webpack_require__(650);
+	__webpack_require__(22);
 	
 	var _svg = __webpack_require__(651);
 	
 	var _trig = __webpack_require__(652);
 	
 	var _pilota = __webpack_require__(31);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	//import {run} from '@cycle/rxjs-run'
 	//import {makeDOMDriver, svg} from '@cycle/dom'
@@ -12498,7 +12500,7 @@
 	  click$.map(eventToPt).map(ptToNormalizedValue).subscribe(model$);
 	
 	  // preview mouse moves
-	  var scheduler = new _AnimationFrameScheduler.AnimationFrameScheduler();
+	  var scheduler = _rxjs2.default.Scheduler.requestAnimationFrame;
 	  mouseMove$.throttleTime(50, scheduler).map(eventToPt).map(ptToNormalizedValue).map(function (x) {
 	    return { name: 'change', value: x };
 	  }).subscribe(previewCmd$);
@@ -28717,7 +28719,7 @@
 	          var li = _step.value;
 	
 	          var rect = li.children[0].getClientRects()[0];
-	          if ((0, _util.ptInInscribedCircle)({ x: e.clientX, y: e.clientY }, rect)) {
+	          if (rect && (0, _util.ptInInscribedCircle)({ x: e.clientX, y: e.clientY }, rect)) {
 	            return li;
 	          }
 	        }
