@@ -121,7 +121,7 @@ export function newDeck(drawingCtx$, model$) {
       const lis = [...drawingCtx$.getValue().domCntr.getElementsByTagName('li')].reverse()
       for (const li of lis) {
         const rect = li.children[0].getClientRects()[0]
-        if (ptInInscribedCircle({x: e.clientX, y: e.clientY}, rect)) {
+        if (rect && ptInInscribedCircle({x: e.clientX, y: e.clientY}, rect)) {
           return li
         }
       }

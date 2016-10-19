@@ -1,7 +1,7 @@
 import {BehaviorSubject} from 'rxjs/BehaviorSubject'
 import { Observable } from 'rxjs'
+import Rx from 'rxjs'
 import 'rxjs/add/observable/fromEvent'
-import {AnimationFrameScheduler} from 'rxjs/scheduler/AnimationFrameScheduler'
 
 import {svgClippedArc} from './lib/ndp-software/svg.js'
 import {ptToVector, normalizeRadians} from './lib/ndp-software/trig.js'
@@ -71,7 +71,7 @@ export function newDial(dom, model$) {
       .subscribe(model$)
 
   // preview mouse moves
-  const scheduler = new AnimationFrameScheduler()
+  const scheduler = Rx.Scheduler.requestAnimationFrame
   mouseMove$
       .throttleTime(50, scheduler)
       .map(eventToPt)
