@@ -25,7 +25,7 @@ import {msPerPeriod$} from './tempo.js'
 import {name$} from './name.js'
 
 // MODEL
-const NORMALIZED_RADIUS = 600 // main editor is 1200 virtual pizels
+const NORMALIZED_RADIUS = 600 // main editor is 1200 virtual pixels
 const maxPegSize = () => NORMALIZED_RADIUS / 5
 
 const MS_PER_TICK    = 20
