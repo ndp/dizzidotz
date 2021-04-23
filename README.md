@@ -18,8 +18,9 @@ So you could then make some music-like noise. This is kinda like one of those.
 
 A few themes are driving this project:
 
-  * to explore RxJS and _naked functional reactive programming_ (FRP without a framework). I'm evolving the codebase organically, but rework the design as I figure out how to make it more reactive. I am using *cycle.js* as an inspiration, but adding pieces as I run across them to see if I end up at a different place.
+  * to explore RxJS and _naked functional reactive programming_ (FRP without a framework). I'm evolving the codebase organically, and I rework the design as I figure out how to make it more reactive. I am using *cycle.js* as an inspiration, but adding pieces as I run across them to see if I end up at a different place.
   * improve my knowledge of specific technologies: SVG, HTML5 MIDI  sound, in-browser ES6, browser DOM api, CSS animations, Heroku pipelines.
+  * let my kids be my "project owner" and drive feature implementation
 
 ### Development Logistics
   

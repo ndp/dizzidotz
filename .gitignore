@@ -1,2 +1,5 @@
 node_modules/
 .nyc_output
+build/styles
+build/js/lib/velocity.min.js.LICENSE.txt
+build/bundle.js.LICENSE.txt

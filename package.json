@@ -4,47 +4,53 @@
   "description": "Circles, noises  Copyright(c)2016 All Rights Reserved",
   "main": "index.js",
   "dependencies": {
+    "@babel/preset-env": "^7.13.15",
     "http-server": "*",
     "pilota": "^0.2",
     "rxjs": "^5.0.0-rc.1",
-    "simple-mock": "*"
+    "simple-mock": "*",
+    "tone": "*"
   },
   "devDependencies": {
+    "@babel/cli": "*",
+    "@babel/core": "*",
+    "@babel/polyfill": "*",
+    "@babel/preset-env": "*",
+    "@babel/register": "*",
     "autoprefixer": "*",
-    "babel-cli": "*",
-    "babel-core": "*",
     "babel-loader": "*",
-    "babel-plugin-module-resolver": "*",
-    "babel-polyfill": "*",
-    "babel-preset-es2015": "*",
-    "babel-require": "*",
-    "chai": "latest",
+    "chai": "*",
     "copy-webpack-plugin": "*",
     "css-loader": "*",
     "eslint": "*",
     "eslint-plugin-mocha": "*",
-    "extract-text-webpack-plugin": "*",
     "file-loader": "*",
+    "mini-css-extract-plugin": "*",
     "mocha": "*",
     "nyc": "*",
-    "postcss-loader": "*",
     "precss": "*",
+    "regenerator-runtime": "^0.13.7",
     "style-loader": "*",
     "url-loader": "*",
     "webpack": "*",
+    "webpack-cli": "*",
     "webpack-dev-server": "*"
   },
   "babel": {
     "presets": [
-      "es2015-webpack"
-    ]
+      "@babel/preset-env"
+    ],
+    "ignore": [
+      "node_modules"
+    ],
+    "sourceMaps": true
   },
   "scripts": {
-    "build": "webpack",
-    "watch": "webpack --watch",
+    "build": "webpack --config webpack.config.js",
+    "watch": "webpack --config webpack.config.js --watch",
     "start": "webpack-dev-server --hot --inline",
     "server": "./node_modules/.bin/http-server build -e html -d false",
-    "test": "mocha --require test/register-babel.js --compilers js:babel-register 'test/**/*spec.js'",
+    "test": "mocha 'test/**/*spec.js'",
     "test:watch": "npm t -- --watch",
     "cover": "nyc npm t",
     "lint": "./node_modules/.bin/eslint src/*.js src/lib/ndp-software/*"

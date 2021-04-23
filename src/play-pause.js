@@ -10,7 +10,7 @@ import { newCmdBus$ } from 'pilota'
 
 // MODEL
 const STORE_KEY         = 'play-pause'
-export const playState$ = new BehaviorSubject(localStorage[STORE_KEY] || 'playing')
+export const playState$ = new BehaviorSubject('paused') // localStorage[STORE_KEY] ||
 playState$
     .subscribe(x => localStorage[STORE_KEY] = x)
 

@@ -1,6 +1,6 @@
 // Given a fn, returns an iterator that calls that function for each step
 // of an iteration.
-import 'babel-polyfill'
+import '@babel/polyfill'
 
 export const iterateWith = function(fn) {
   return function *(x) {
