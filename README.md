@@ -28,7 +28,7 @@ See `package.json` for the most important script actions.
   
 ### Test Suite
 
-  * `npm run test`
+  * `yarn test`
   * manual suite:
     * add peg: verify sound and highlight
     * restore old pegs: verify sound and highlight
@@ -36,10 +36,11 @@ See `package.json` for the most important script actions.
     * restore newly saved pegs: verify sound and highlight
     * scratch
   
-### Development
+### DevOps
 
   * [Heroku dashboard](https://dashboard.heroku.com/pipelines/68ffa886-6dea-4a15-ad6a-eed1aeb03cbb)
   * [Staging](https://dizzidotz-staging.herokuapp.com/)
+  * [Prod](https://dizzidotz.com)
 
 ### Source Code Style Guide & Glossary
 
@@ -67,5 +68,5 @@ Instruments
 
 ### References
 
-  * http://tonejs.org/docs/
+  * http://tonejs.org/docs/, https://tonejs.github.io/
   * https://plus.maths.org/content/magical-mathematics-music
