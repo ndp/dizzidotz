@@ -19,7 +19,7 @@ const event$ = newDeck(patternListCtx$, patternStore$)
 // INTENTIONS
 event$
     .do(x => console.log('received event: ', x))
-    .filter(x => x.name == 'load')
+    .filter(x => x.name === 'load')
     .withLatestFrom(patternStore$, (e, patterns) => patterns[e.key])
     .map(pattern => {
            return {pattern, name: 'add pattern'}
@@ -28,6 +28,6 @@ event$
 
 event$
     .do(x => console.log('received event: ', x))
-    .filter(x => x.name == 'delete')
+    .filter(x => x.name === 'delete')
     .subscribe(editorCmdBus$)
 

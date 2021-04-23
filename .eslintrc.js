@@ -1,5 +1,4 @@
 module.exports = {
-  'environment':   'mocha, browser',
   'extends':       'eslint:recommended',
   'parserOptions': {
     'ecmaVersion':  6,
@@ -17,10 +16,11 @@ module.exports = {
     'max-params':            ['error', 3],
     'new-cap':               [2],
     'no-confusing-arrow':    [0],
-    'no-console':            [1],
+    'no-console':            ['off'],
     'no-constant-condition': ['off'],
     'no-duplicate-imports':  ['error'],
     'no-negated-condition':  ['error'],
+    'no-prototype-builtins':  ['off'],
     'no-useless-rename':     ['error'],
     'no-unused-vars':        ['error', {'varsIgnorePattern': '^_'}],
     'prefer-const':          ['error'],

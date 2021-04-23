@@ -48,7 +48,7 @@ const normalizeEvent = (e, size) =>
 
 
 playState$.subscribe(labelLog('playing state'))
-const ticker$        = Observable.interval(MS_PER_TICK).delay(6000).filter(() => playState$.getValue() == 'playing')
+const ticker$        = Observable.interval(MS_PER_TICK).delay(6000).filter(() => playState$.getValue() === 'playing')
 const radians$       = ticker$.scan((last) => trig.normalizeRadians(last + radiansPerTick()))
 
 // activePegs$ is a stream of the "active" or highlighted peg.
@@ -103,7 +103,7 @@ editorPegs$
                  for (let i = pegEls.length - 1; i >= 0; i--) {
                    const el   = pegEls[i]
                    const id = el.getAttribute('id')
-                   if (ids.indexOf(id) == -1) {
+                   if (ids.indexOf(id) === -1) {
                      el.remove()
                    }
                  }
@@ -324,7 +324,7 @@ Observable
           }
         })
     .subscribe(function(serialized) {
-                 const newHref = document.location.href.replace(/[#\?].*/, '') + '?v1=' + serialized
+                 const newHref = document.location.href.replace(/[#?].*/, '') + '?v1=' + serialized
                  window.history.replaceState({}, '', newHref)
                })
 

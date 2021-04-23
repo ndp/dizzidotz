@@ -48,7 +48,7 @@ export const patternStoreBus$ = newCmdBus$(patternStore$, {
   'delete all': function() {
 
     localStorageKeys().forEach(key => {
-      if (!/pattern\-/.exec(key)) return
+      if (!/pattern-/.exec(key)) return
       localStorage.removeItem(key)
     })
 
