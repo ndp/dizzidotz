@@ -1,6 +1,5 @@
 /* global __dirname */
 const precss       = require('precss')
-const autoprefixer = require('autoprefixer')
 
 const path = require('path')
 
@@ -104,9 +103,6 @@ module.exports = {
     colors: true,
   },
   devtool: 'source-map',
-  // postcss:   function () {
-  //   return [precss, autoprefixer]
-  // },
 }
 
 

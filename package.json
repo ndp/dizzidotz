@@ -4,11 +4,9 @@
   "description": "Circles, noises  Copyright(c)2016 All Rights Reserved",
   "main": "index.js",
   "dependencies": {
-    "@babel/preset-env": "^7.13.15",
     "http-server": "*",
     "pilota": "^0.2",
     "rxjs": "^5.0.0-rc.1",
-    "simple-mock": "*",
     "tone": "*"
   },
   "devDependencies": {
@@ -17,7 +15,6 @@
     "@babel/polyfill": "*",
     "@babel/preset-env": "*",
     "@babel/register": "*",
-    "autoprefixer": "*",
     "babel-loader": "*",
     "chai": "*",
     "copy-webpack-plugin": "*",
@@ -29,7 +26,8 @@
     "mocha": "*",
     "nyc": "*",
     "precss": "*",
-    "regenerator-runtime": "^0.13.7",
+    "regenerator-runtime": "*",
+    "simple-mock": "*",
     "style-loader": "*",
     "url-loader": "*",
     "webpack": "*",
@@ -48,7 +46,7 @@
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "watch": "webpack --config webpack.config.js --watch",
-    "start": "webpack-dev-server --hot --inline",
+    "start": "webpack serve --hot --inline",
     "server": "./node_modules/.bin/http-server build -e html -d false",
     "test": "mocha 'test/**/*spec.js'",
     "test:watch": "npm t -- --watch",
