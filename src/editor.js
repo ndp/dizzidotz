@@ -32,7 +32,7 @@ editorCmdBus$.on('clear', () => [])
 
 editorCmdBus$.on('add pattern', (state, cmd) => {
   const pattern                              = cmd.pattern
-  if (/^template.*/.exec(pattern.key)) {
+  if (/^template.*/.exec(cmd.key)) {
     name$.next('My Dotz')
   } else {
     name$.next(pattern.name || 'My Dotz')
