@@ -1,4 +1,4 @@
-import {BehaviorSubject} from 'rxjs/BehaviorSubject'
+import {BehaviorSubject} from 'rxjs'
 import {createTonalities} from './tonality-factory.js'
 
 // MODEL

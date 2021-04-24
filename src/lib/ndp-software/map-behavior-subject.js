@@ -1,4 +1,4 @@
-import {BehaviorSubject} from 'rxjs/BehaviorSubject'
+import {BehaviorSubject} from 'rxjs'
 import { distinct } from 'rxjs/operators'
 
 export function mapBehaviorSubject(subject$, wrapFn, unwrapFn) {

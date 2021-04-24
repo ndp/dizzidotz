@@ -2,6 +2,7 @@
 
 
 import {
+  BehaviorSubject,
   merge,
   fromEvent
 } from 'rxjs'
@@ -12,8 +13,6 @@ import {
   filter,
   withLatestFrom
 } from 'rxjs/operators'
-
-import { BehaviorSubject } from 'rxjs/BehaviorSubject'
 
 import {
   linearScaleFns,

@@ -1,8 +1,8 @@
 /*eslint-env browser */
 import {
+  BehaviorSubject,
   fromEvent
 }                          from 'rxjs'
-import { BehaviorSubject } from 'rxjs/BehaviorSubject'
 import { newCmdBus$ }      from 'pilota'
 import { tap, mapTo, filter } from 'rxjs/operators'
 

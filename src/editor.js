@@ -1,6 +1,6 @@
 /*eslint-env browser */
 
-import {BehaviorSubject} from 'rxjs/BehaviorSubject'
+import {BehaviorSubject} from 'rxjs'
 
 import {newCmdBus$ } from 'pilota'
 

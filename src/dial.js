@@ -1,5 +1,5 @@
-import { BehaviorSubject } from 'rxjs/BehaviorSubject'
 import {
+  BehaviorSubject,
   merge,
   fromEvent,
   Scheduler

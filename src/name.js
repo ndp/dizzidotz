@@ -1,10 +1,9 @@
 /*eslint-env browser */
 
 import {
+  BehaviorSubject,
   fromEvent
 } from 'rxjs'
-
-import { BehaviorSubject } from 'rxjs/BehaviorSubject'
 
 import { tap, map, filter } from 'rxjs/operators'
 

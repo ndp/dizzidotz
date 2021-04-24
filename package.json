@@ -1,13 +1,12 @@
 {
   "name": "dizzidotz",
   "version": "1.1.0",
-  "description": "Circles, noises  Copyright(c)2016 All Rights Reserved",
+  "description": "Circles, noises  Copyright(c) 2016-2021 All Rights Reserved",
   "main": "index.js",
   "dependencies": {
     "http-server": "*",
     "pilota": "^6",
     "rxjs": "^6",
-    "rxjs-compat": "*",
     "tone": "*"
   },
   "devDependencies": {

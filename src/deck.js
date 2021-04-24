@@ -1,8 +1,7 @@
 /*eslint-env browser */
 
-import { BehaviorSubject } from 'rxjs/BehaviorSubject'
-
 import {
+  BehaviorSubject,
   combineLatest,
   Subject
 }                          from 'rxjs'

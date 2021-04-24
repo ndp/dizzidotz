@@ -2,7 +2,7 @@
 import { patternStore$ } from './pattern-store.js'
 import { editorCmdBus$ } from './editor.js'
 
-import { BehaviorSubject } from 'rxjs/BehaviorSubject'
+import { BehaviorSubject } from 'rxjs'
 import { newDeck }         from './deck.js'
 import {
   filter,
