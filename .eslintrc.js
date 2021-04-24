@@ -7,9 +7,10 @@ module.exports = {
       'modules': true
     }
   },
-  'plugins':       ['mocha'],
+  'plugins':       ['mocha', 'unused-imports'],
   'rules':         {
     'camelcase':             ['error'],
+    'comma-dangle':          ['error', 'never'],
     'complexity':            ['error', 11],
     'indent':                [0, 2],
     'linebreak-style':       ['error', 'unix'],
@@ -20,13 +21,23 @@ module.exports = {
     'no-constant-condition': ['off'],
     'no-duplicate-imports':  ['error'],
     'no-negated-condition':  ['error'],
-    'no-prototype-builtins':  ['off'],
+    'no-prototype-builtins': ['off'],
     'no-useless-rename':     ['error'],
-    'no-unused-vars':        ['error', {'varsIgnorePattern': '^_'}],
+    'no-unused-vars': 'off',
+    'unused-imports/no-unused-imports': 'error',
+    'unused-imports/no-unused-vars': [
+      'error',
+      {
+        'vars':              'all',
+        'varsIgnorePattern': '^_',
+        'args':              'after-used',
+        'argsIgnorePattern': '^_'
+      }
+    ],
     'prefer-const':          ['error'],
     'prefer-rest-params':    ['error'],
     'prefer-spread':         ['error'],
     'quotes':                ['error', 'single'],
-    'semi':                  ['error', 'never'],
+    'semi':                  ['error', 'never']
   }
 }

@@ -122,7 +122,7 @@ export function newDeck(drawingCtx$, model$) {
   event$
     .pipe(
       filter(e => e.name == 'focus'),
-      map(e => e.key),
+      map(e => e.key)
     )
     .subscribe(focus$)
 
@@ -209,7 +209,7 @@ export function newDeck(drawingCtx$, model$) {
   drag$
     .pipe(filter(action => action.name == ACTION_DRAG_END),
           filter(action => action.dest == deleteAllButtonEl()),
-          map(action => ({ name: 'delete', key: action.el.getAttribute('data-key') })),
+          map(action => ({ name: 'delete', key: action.el.getAttribute('data-key') }))
     )
     .subscribe(event$)
 
@@ -230,7 +230,7 @@ export function newDeck(drawingCtx$, model$) {
           name: 'load',
           key:  action.el.getAttribute('data-key'),
         }
-      }),
+      })
     )
     .subscribe(event$)
 
@@ -239,19 +239,22 @@ export function newDeck(drawingCtx$, model$) {
     .pipe(filter(action => action.name == ACTION_DRAG_END),
           filter(action => action.ms < 400),
           filter(action => (Math.abs(action.offset.x) + Math.abs(action.offset.y)) < 5),
-          map(action => action.el))
+          map(action => action.el)
+    )
 
   itemClick$
     .pipe(
       filter(el => el.classList.contains('focus')),
       map(el => el.getAttribute('data-key')),
-      map(key => ({ name: 'load', key })))
+      map(key => ({ name: 'load', key }))
+    )
     .subscribe(event$)
 
   itemClick$
     .pipe(
       filter(el => !el.classList.contains('focus')),
-      map(x => ({ name: 'focus', key: x.getAttribute('data-key') })))
+      map(x => ({ name: 'focus', key: x.getAttribute('data-key') }))
+    )
     .subscribe(event$)
 
   return event$

@@ -111,7 +111,7 @@ export function newDial (dom, model$) {
       debounceTime(1000, scheduler),
       map(() => {
         return { name: 'change', value: null }
-      }),
+      })
     )
     .subscribe(previewCmd$)
 

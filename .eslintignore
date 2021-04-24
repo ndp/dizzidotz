@@ -1,6 +1,7 @@
+.eslintrc.js
 webpack.config.js
-test/register-babel.js
-js/lib/velocity.min.js
-js/lib/physics.js
-js/lib/lz-string*
+src/lib/lz-string.js
+src/lib/lz-string.min.js
+src/lib/physics.js
+src/lib/velocity.min.js
 build

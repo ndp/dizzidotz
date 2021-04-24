@@ -1,20 +1,5 @@
 import {BehaviorSubject} from 'rxjs/BehaviorSubject'
-import 'rxjs/add/operator/distinct'
-import Rx, {
-  Observable,
-  Subject,
-  asapScheduler,
-  pipe,
-  of,
-  from,
-  interval,
-  merge,
-  fromEvent,
-  SubscriptionLike,
-  PartialObserver,
-} from 'rxjs'
-import { distinct, tap, map, filter, scan } from 'rxjs/operators'
-
+import { distinct } from 'rxjs/operators'
 
 export function mapBehaviorSubject(subject$, wrapFn, unwrapFn) {
   // Distinct keeps cycles from triggering.

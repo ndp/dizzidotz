@@ -36,6 +36,6 @@ fromEvent(document.getElementById('pattern-name'), 'click')
   .pipe(
     tap(e => e.preventDefault()),
     map(() => prompt('New name', name$.getValue())),
-    filter(x => x !== null),
+    filter(x => x !== null)
   )
   .subscribe(name$)

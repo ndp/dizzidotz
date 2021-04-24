@@ -59,7 +59,7 @@ const textElem = () => dial.querySelector('text')
 merge(preview$
         .pipe(
           withLatestFrom(msPerPeriod$, (preview, state) => preview > 0 ? unwrapFn(preview) : state)),
-      msPerPeriod$,
+      msPerPeriod$
 )
   .pipe(map(humanizeTempo))
   .subscribe((x) => textElem().textContent = x)
@@ -67,7 +67,7 @@ merge(preview$
 // Set a class on the text element.
 merge(
   msPerPeriod$.pipe(mapTo('value')),
-  preview$.pipe(map(x => x > 0 ? 'preview' : 'value')),
+  preview$.pipe(map(x => x > 0 ? 'preview' : 'value'))
 )
   .subscribe((cls) => textElem().classList[cls == 'preview' ? 'add' : 'remove']('preview'))
 

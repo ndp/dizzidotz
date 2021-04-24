@@ -1,33 +1,16 @@
 /*eslint-env browser */
-import Rx, {
-  Observable,
-  Subject,
-  asapScheduler,
-  pipe,
-  of,
-  from,
-  interval,
-  merge,
-  fromEvent,
-  SubscriptionLike,
-  PartialObserver,
+import {
+  fromEvent
 }                          from 'rxjs'
 import { BehaviorSubject } from 'rxjs/BehaviorSubject'
-import 'rxjs/add/observable/fromEvent'
-import 'rxjs/add/operator/do'
-import 'rxjs/add/operator/mapTo'
-import 'rxjs/add/operator/filter'
 import { newCmdBus$ }      from 'pilota'
 import { tap, mapTo, filter } from 'rxjs/operators'
 
 // MODEL
-const STORE_KEY         = 'play-pause'
-export const playState$ = new BehaviorSubject('paused') // localStorage[STORE_KEY] ||
-playState$
-  .subscribe(x => localStorage[STORE_KEY] = x)
+export const playState$ = new BehaviorSubject('paused')
 
 const playStateBus$ = newCmdBus$(playState$)
-playStateBus$.on('toggle', state => state == 'playing' ? 'paused' : 'playing')
+playStateBus$.on('toggle', state => state === 'playing' ? 'paused' : 'playing')
 
 
 // VIEW

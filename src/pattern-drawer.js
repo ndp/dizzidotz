@@ -30,7 +30,7 @@ event$
     withLatestFrom(patternStore$, (e, patterns) => patterns[e.key]),
     map(pattern => {
       return { pattern, name: 'add pattern' }
-    }),
+    })
   )
   .subscribe(editorCmdBus$)
 

@@ -1,5 +1,4 @@
 /*eslint-env browser */
-/*eslint no-unused-vars: ["error", { "argsIgnorePattern": "^_" }]*/
 /*global LZString, Velocity */
 import Rx, {
   Observable,
@@ -67,7 +66,7 @@ const radians$ =
         playState$
           .pipe(
             switchMap(ps => ps === 'playing' ? interval(MS_PER_TICK) : of()),
-            scan((last) => trig.normalizeRadians(last + radiansPerTick())),
+            scan((last) => trig.normalizeRadians(last + radiansPerTick()))
           )
 
 // activePegs$ is a stream of the "active" or highlighted peg.
@@ -270,7 +269,7 @@ activePegs$
 const scratch$ = fromEvent(editor, 'mousemove')
   .pipe(
     throttleTime(30),
-    filter(e => e.shiftKey),
+    filter(e => e.shiftKey)
   )
 
 scratch$
@@ -299,7 +298,7 @@ scratch$
 
 scratch$
   .pipe(
-    debounceTime(100),
+    debounceTime(100)
   )
   .subscribe(function () {
     const scratch = document.getElementById('scratch')
