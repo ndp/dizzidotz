@@ -1,4 +1,4 @@
-import { Subject }                      from 'rxjs/Subject'
+import { Subject }                      from 'rxjs'
 import { currentTonality$, tonalities } from './tonality.js'
 import * as Tone from 'tone'
 
