@@ -1,18 +1,30 @@
 /*eslint-env browser */
-
-import {Observable} from 'rxjs/Observable'
-import {BehaviorSubject} from 'rxjs/BehaviorSubject'
+import Rx, {
+  Observable,
+  Subject,
+  asapScheduler,
+  pipe,
+  of,
+  from,
+  interval,
+  merge,
+  fromEvent,
+  SubscriptionLike,
+  PartialObserver,
+}                          from 'rxjs'
+import { BehaviorSubject } from 'rxjs/BehaviorSubject'
 import 'rxjs/add/observable/fromEvent'
 import 'rxjs/add/operator/do'
 import 'rxjs/add/operator/mapTo'
 import 'rxjs/add/operator/filter'
-import { newCmdBus$ } from 'pilota'
+import { newCmdBus$ }      from 'pilota'
+import { tap, mapTo, filter } from 'rxjs/operators'
 
 // MODEL
 const STORE_KEY         = 'play-pause'
 export const playState$ = new BehaviorSubject('paused') // localStorage[STORE_KEY] ||
 playState$
-    .subscribe(x => localStorage[STORE_KEY] = x)
+  .subscribe(x => localStorage[STORE_KEY] = x)
 
 const playStateBus$ = newCmdBus$(playState$)
 playStateBus$.on('toggle', state => state == 'playing' ? 'paused' : 'playing')
@@ -27,12 +39,13 @@ playState$.subscribe(x => {
 
 
 // INTENT
-Observable.fromEvent(playPauseEl, 'click')
-    .do(e => e.preventDefault())
-    .mapTo('toggle')
-    .subscribe(playStateBus$)
+fromEvent(playPauseEl, 'click')
+  .pipe(tap(e => e.preventDefault()),
+        mapTo('toggle'))
+  .subscribe(playStateBus$)
 
-Observable.fromEvent(document, 'keypress')
-    .filter(e => e.keyCode == 32) // space
-    .mapTo('toggle')
-    .subscribe(playStateBus$)
+fromEvent(document, 'keypress')
+  .pipe(
+    filter(e => e.keyCode === 32), // space
+    mapTo('toggle'))
+  .subscribe(playStateBus$)

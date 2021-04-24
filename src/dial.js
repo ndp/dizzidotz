@@ -1,11 +1,34 @@
-import Rx, { Observable }  from 'rxjs'
 import { BehaviorSubject } from 'rxjs/BehaviorSubject'
-import 'rxjs/add/observable/fromEvent'
+import Rx, {
+  Observable,
+  Subject,
+  asapScheduler,
+  pipe,
+  of,
+  from,
+  interval,
+  merge,
+  fromEvent,
+  SubscriptionLike,
+  Scheduler,
+  PartialObserver,
+}                          from 'rxjs'
 
 import { svgClippedArc }                from './lib/ndp-software/svg.js'
 import { ptToVector, normalizeRadians } from './lib/ndp-software/trig.js'
 
-import { newCmdBus$, logCmdBus } from 'pilota'
+import {
+  newCmdBus$,
+  logCmdBus,
+} from 'pilota'
+import {
+  debounceTime,
+  delay,
+  tap,
+  map,
+  mapTo,
+  throttleTime,
+} from 'rxjs/operators'
 
 
 //import {run} from '@cycle/rxjs-run'
@@ -61,41 +84,46 @@ export function newDial (dom, model$) {
     .subscribe(state => previewElem.setAttribute('d', (state.paused || state.value == 0) ? '' : arc(0, state.value * MAX_DEGREE)))
 
   // INTENT
-  const click$     = Observable.fromEvent(dom, 'click').do(e => e.preventDefault())
-  const mouseMove$ = Observable.fromEvent(dom, 'mousemove')
+  const click$     = fromEvent(dom, 'click').pipe(tap(e => e.preventDefault()))
+  const mouseMove$ = fromEvent(dom, 'mousemove')
 
   click$
-    .map(eventToPt)
-    .map(ptToNormalizedValue)
+    .pipe(
+      map(eventToPt),
+      map(ptToNormalizedValue))
     .subscribe(model$)
 
   // preview mouse moves
-  const scheduler = Rx.Scheduler.requestAnimationFrame
+  const scheduler = Scheduler.requestAnimationFrame
   mouseMove$
-    .throttleTime(50, scheduler)
-    .map(eventToPt)
-    .map(ptToNormalizedValue)
-    .map(x => {
-      return { name: 'change', value: x }
-    })
+    .pipe(
+      throttleTime(50, scheduler),
+      map(eventToPt),
+      map(ptToNormalizedValue),
+      map(x => {
+        return { name: 'change', value: x }
+      }))
     .subscribe(previewCmd$)
 
   // Preview off during pause: mm mm mm ...   [1s pause]
   mouseMove$
-    .debounceTime(1000, scheduler)
-    .map(() => {
-      return { name: 'change', value: null }
-    })
+    .pipe(
+      debounceTime(1000, scheduler),
+      map(() => {
+        return { name: 'change', value: null }
+      }),
+    )
     .subscribe(previewCmd$)
 
   // When click, turn preview off: mm mm mm mc  [1 sec off]
-  click$
-    .mapTo('pause')
-    .merge(click$.delay(1000).mapTo('resume'))
-    .subscribe(previewCmd$)
+  const pause$  = click$.pipe(mapTo('pause'))
+  const resume$ = click$.pipe(delay(1000), mapTo('resume'))
+  merge(pause$, resume$).subscribe(previewCmd$)
 
   // Return a stream of preview values
-  return preview$.map((state) => state.paused ? null : state.value)
+  return preview$
+    .pipe(
+      map((state) => state.paused ? null : state.value))
 }
 
 

@@ -1,12 +1,29 @@
 /*eslint-env browser */
-import {Observable} from 'rxjs/Observable'
-import 'rxjs/add/observable/combineLatest'
-import 'rxjs/add/observable/from'
-import 'rxjs/add/operator/combineLatest'
-import 'rxjs/add/operator/mergeMap'
-import 'rxjs/add/operator/concat'
-import 'rxjs/add/operator/startWith'
-import 'rxjs/add/operator/share'
+import Rx, {
+  Observable,
+  Subject,
+  asapScheduler,
+  pipe,
+  of,
+  from,
+  interval,
+  merge,
+  fromEvent,
+  SubscriptionLike,
+  PartialObserver,
+} from 'rxjs'
+import {
+  concat,
+  distinctUntilChanged,
+  filter,
+  map,
+  mergeMap,
+  share,
+  startWith,
+  takeUntil,
+  tap,
+  withLatestFrom
+} from 'rxjs/operators'
 
 
 /**
@@ -25,70 +42,73 @@ ACTION_DRAG_MOVE               = 'drag',
 ACTION_DRAG_END                = 'dragend'
 
 
-export function makeDraggable({
-  draggableCntr,
-  mapDraggable,
-  mapDropTarget,
-  createOutlineEl}) {
+export function makeDraggable ({
+                                 draggableCntr,
+                                 mapDraggable,
+                                 mapDropTarget,
+                                 createOutlineEl,
+                               }) {
 
 
-  const mouseup$   = Observable.fromEvent(document, 'mouseup'),
-        mousemove$ = Observable.fromEvent(document, 'mousemove'),
-        mousedown$ = Observable.fromEvent(draggableCntr, 'mousedown')
+  const mouseup$   = fromEvent(document, 'mouseup'),
+        mousemove$ = fromEvent(document, 'mousemove'),
+        mousedown$ = fromEvent(draggableCntr, 'mousedown')
 
   return mousedown$
-    .filter(e => !!mapDraggable(e.target, e))
-    .mergeMap(function(e) {
-                const el              = mapDraggable(e.target, e),
-                      start           = {x: e.clientX, y: e.clientY},
-                      startMs         = (new Date()).getTime(),
-                      outline         = createOutlineEl(el),
-                      originalTopLeft = {x: el.getClientRects()[0].left, y: el.getClientRects()[0].top},
-                      body            = document.getElementsByTagName('BODY')[0]
+    .pipe(
+      filter(e => !!mapDraggable(e.target, e)),
+      mergeMap(function (e) {
+        const el              = mapDraggable(e.target, e),
+              start           = { x: e.clientX, y: e.clientY },
+              startMs         = (new Date()).getTime(),
+              outline         = createOutlineEl(el),
+              originalTopLeft = { x: el.getClientRects()[0].left, y: el.getClientRects()[0].top },
+              body            = document.getElementsByTagName('BODY')[0]
 
-                body.appendChild(outline)
+        body.appendChild(outline)
 
-                function moveOutlineTo(offset) {
-                  outline.style.left = `${originalTopLeft.x + offset.x}px`
-                  outline.style.top  = `${originalTopLeft.y + offset.y}px`
-                }
+        function moveOutlineTo (offset) {
+          outline.style.left = `${originalTopLeft.x + offset.x}px`
+          outline.style.top  = `${originalTopLeft.y + offset.y}px`
+        }
 
-                const dragAction$ = Observable
-                        .from([e])
-                        .merge(mousemove$)
-                  .map((mme) => {
-                         return {
-                           name:   ACTION_DRAG_MOVE,
-                           dest:   mapDropTarget({
-                             x: mme.clientX,
-                             y: mme.clientY
-                           }, el),
-                           ms:     (new Date()).getTime() - startMs,
-                           offset: {x: mme.clientX - start.x, y: mme.clientY - start.y},
-                                   el,
-                                   outline
-                         }
-                       })
-                  .do(action => moveOutlineTo(action.offset))
-                  .distinctUntilChanged(function(a, b) {
-                                          return a === b ||
-                                                 (a !== null && b !== null && a.offset == b.offset)
-                                        })
+        const dragAction$ =
+                merge(from([e]), mousemove$)
+                  .pipe(
+                    map((mme) => {
+                      return {
+                        name:   ACTION_DRAG_MOVE,
+                        dest:   mapDropTarget({
+                                                x: mme.clientX,
+                                                y: mme.clientY,
+                                              }, el),
+                        ms:     (new Date()).getTime() - startMs,
+                        offset: { x: mme.clientX - start.x, y: mme.clientY - start.y },
+                        el,
+                        outline,
+                      }
+                    }),
+                    tap(action => moveOutlineTo(action.offset)),
+                    distinctUntilChanged(function (a, b) {
+                      return a === b ||
+                             (a !== null && b !== null && a.offset == b.offset)
+                    }))
 
+        const finishAction$ =
+                from([{ name: ACTION_DRAG_END }])
+                  .pipe(tap(() => outline.parentNode.removeChild(outline)))
 
-                const finishAction$ = Observable
-                  .from([{name: ACTION_DRAG_END}])
-                  .do(() => outline.parentNode.removeChild(outline))
-
-                return dragAction$
-                  .takeUntil(mouseup$)
-                  .concat(finishAction$)
-                  .withLatestFrom(dragAction$, (action, dragAction)=> {
-                                    if (action.name !== ACTION_DRAG_END) return action
-                                    return Object.assign({}, dragAction, action)
-                                  })
-                  .startWith({name: ACTION_DRAG_START, el: el})
-              })
-    .share()
-
+        return dragAction$
+          .pipe(
+            takeUntil(mouseup$),
+            concat(finishAction$),
+            withLatestFrom(dragAction$, (action, dragAction) => {
+              if (action.name !== ACTION_DRAG_END) return action
+              return Object.assign({}, dragAction, action)
+            }),
+            startWith({ name: ACTION_DRAG_START, el: el }),
+          )
+      }),
+      share(),
+    )
 }

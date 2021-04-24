@@ -1,17 +1,32 @@
 /*eslint-env browser */
 
-import 'rxjs/add/observable/combineLatest'
-import 'rxjs/add/observable/from'
-import 'rxjs/add/observable/range'
-import 'rxjs/add/operator/combineLatest'
-import 'rxjs/add/operator/mergeMap'
-import 'rxjs/add/operator/bufferCount'
-import 'rxjs/add/operator/concat'
-import 'rxjs/add/operator/startWith'
-import 'rxjs/add/operator/share'
-import 'rxjs/add/operator/buffer'
 import { BehaviorSubject } from 'rxjs/BehaviorSubject'
-import { Subject } from 'rxjs/Subject'
+
+import Rx, {
+  combineLatest,
+  Observable,
+  Subject,
+  asapScheduler,
+  pipe,
+  of,
+  from,
+  interval,
+  merge,
+  fromEvent,
+  SubscriptionLike,
+  Scheduler,
+  PartialObserver,
+}                          from 'rxjs'
+
+import {
+  debounceTime,
+  delay,
+  filter,
+  tap,
+  map,
+  mapTo,
+  throttleTime,
+} from 'rxjs/operators'
 
 import { ptInRect, ptInInscribedCircle } from './lib/ndp-software/util.js'
 
@@ -27,7 +42,7 @@ export function newDeck(drawingCtx$, model$) {
 
   // MODEL
   const focus$ = new BehaviorSubject(null)
-  const state$ = focus$.combineLatest(model$, (focus, model)  => ({focus, model}))
+  const state$ = combineLatest(focus$, model$, (focus, model)  => ({focus, model}))
   const event$ = new Subject() // events we are returning, with 'load', 'delete', 'focus'
 
   // VIEW
@@ -83,8 +98,11 @@ export function newDeck(drawingCtx$, model$) {
     cntrEl.appendChild(nameEl)
   }
 
-  state$
-    .combineLatest(drawingCtx$, (state, drawingCtx)  => ({state, drawingCtx}))
+
+    combineLatest(
+      state$,
+      drawingCtx$,
+      (state, drawingCtx)  => ({state, drawingCtx}))
     .subscribe(function({state, drawingCtx}) {
                  if (state.model.length == 0) {
                    drawingCtx.domCntr.innerHTML = ''
@@ -102,8 +120,10 @@ export function newDeck(drawingCtx$, model$) {
                })
 
   event$
-    .filter(e => e.name == 'focus')
-    .map(e => e.key)
+    .pipe(
+      filter(e => e.name == 'focus'),
+      map(e => e.key),
+    )
     .subscribe(focus$)
 
 
@@ -158,17 +178,17 @@ export function newDeck(drawingCtx$, model$) {
 
   // Draw 'delete all' button as a drop target.
   drag$
-    .filter(action => action.name == ACTION_DRAG_START)
+    .pipe(filter(action => action.name == ACTION_DRAG_START))
     .subscribe(() => deleteAllButtonEl().classList.add('drop-target'))
 
   // Remove 'delete all' drop as drop target.
   drag$
-    .filter(action => action.name == ACTION_DRAG_END)
+    .pipe(filter(action => action.name == ACTION_DRAG_END))
     .subscribe(() => deleteAllButtonEl().classList.remove('drop-target'))
 
   // Highlight hovered 'delete all' button
   drag$
-    .filter(action => action.name == ACTION_DRAG_MOVE)
+    .pipe(filter(action => action.name == ACTION_DRAG_MOVE))
     .subscribe(function(action) {
                  if (action.dest == deleteAllButtonEl()) {
                    action.outline.style.transition   = 'opacity 0.4'
@@ -182,51 +202,56 @@ export function newDeck(drawingCtx$, model$) {
 
   // Drag over 'delete all' button previews deleting pattern.
   drag$
-    .filter(action => action.name == ACTION_DRAG_MOVE)
+    .pipe(filter(action => action.name == ACTION_DRAG_MOVE))
     .subscribe(action => action.el.style.display = (action.dest == deleteAllButtonEl()) ? 'none' : 'block')
 
   // Trigger the actual delete.
   drag$
-    .filter(action => action.name == ACTION_DRAG_END)
-    .filter(action => action.dest == deleteAllButtonEl())
-    .map(action => ({name: 'delete', key: action.el.getAttribute('data-key')}))
+    .pipe(filter(action => action.name == ACTION_DRAG_END),
+          filter(action => action.dest == deleteAllButtonEl()),
+          map(action => ({ name: 'delete', key: action.el.getAttribute('data-key') })),
+    )
     .subscribe(event$)
 
   // Provide drag feedback over the editor
-  drag$.filter(action => action.name == ACTION_DRAG_MOVE)
+  drag$.pipe(filter(action => action.name == ACTION_DRAG_MOVE))
     .subscribe(action => editorEl().classList.toggle('drop-target', editorEl() == action.dest))
 
-  drag$.filter(action => action.name == ACTION_DRAG_END)
+  drag$.pipe(filter(action => action.name == ACTION_DRAG_END))
     .subscribe(() =>  editorEl().classList.remove('drop-target'))
 
   // Trigger the load of the pattern on drag
   drag$
-    .filter(action => action.name == ACTION_DRAG_END)
-    .filter(action => action.dest == editorEl())
-    .map(action => {
-           return {
-             name: 'load',
-             key:  action.el.getAttribute('data-key')
-           }
-         })
+    .pipe(
+      filter(action => action.name == ACTION_DRAG_END),
+      filter(action => action.dest == editorEl()),
+      map(action => {
+        return {
+          name: 'load',
+          key:  action.el.getAttribute('data-key'),
+        }
+      }),
+    )
     .subscribe(event$)
 
   // Detect simple click to load a pattern
   const itemClick$ = drag$
-    .filter(action => action.name == ACTION_DRAG_END)
-    .filter(action => action.ms < 400)
-    .filter(action => (Math.abs(action.offset.x) + Math.abs(action.offset.y)) < 5)
-    .map(action => action.el)
+    .pipe(filter(action => action.name == ACTION_DRAG_END),
+          filter(action => action.ms < 400),
+          filter(action => (Math.abs(action.offset.x) + Math.abs(action.offset.y)) < 5),
+          map(action => action.el))
 
   itemClick$
-    .filter(el => el.classList.contains('focus'))
-    .map(el => el.getAttribute('data-key'))
-    .map(key => ({name: 'load', key}))
+    .pipe(
+      filter(el => el.classList.contains('focus')),
+      map(el => el.getAttribute('data-key')),
+      map(key => ({ name: 'load', key })))
     .subscribe(event$)
 
   itemClick$
-    .filter(el => !el.classList.contains('focus'))
-    .map(x => ({name: 'focus', key: x.getAttribute('data-key')}))
+    .pipe(
+      filter(el => !el.classList.contains('focus')),
+      map(x => ({ name: 'focus', key: x.getAttribute('data-key') })))
     .subscribe(event$)
 
   return event$
