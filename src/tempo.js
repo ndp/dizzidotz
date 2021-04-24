@@ -1,35 +1,23 @@
 /*eslint-env browser */
 
 
-import Rx, {
-  Observable,
-  Subject,
-  asapScheduler,
-  pipe,
-  of,
-  from,
-  interval,
+import {
   merge,
-  fromEvent,
-  SubscriptionLike,
-  PartialObserver,
+  fromEvent
 } from 'rxjs'
 import {
   tap,
   map,
   mapTo,
   filter,
-  scan,
-  distinct,
-  withLatestFrom,
+  withLatestFrom
 } from 'rxjs/operators'
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject'
-import 'rxjs/add/operator/mapTo'
 
 import {
   linearScaleFns,
-  humanizeTempo,
+  humanizeTempo
 }                             from './lib/ndp-software/util.js'
 import { mapBehaviorSubject } from './lib/ndp-software/map-behavior-subject.js'
 import { newDial }            from './dial.js'
@@ -69,7 +57,7 @@ merge(
   msPerPeriod$.pipe(mapTo('value')),
   preview$.pipe(map(x => x > 0 ? 'preview' : 'value'))
 )
-  .subscribe((cls) => textElem().classList[cls == 'preview' ? 'add' : 'remove']('preview'))
+  .subscribe((cls) => textElem().classList[cls === 'preview' ? 'add' : 'remove']('preview'))
 
 
 // INTENT

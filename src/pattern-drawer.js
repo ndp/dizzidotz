@@ -17,7 +17,7 @@ const renderPattern = function (pattern, cntr) {
 
 const patternListCtx$ = new BehaviorSubject({
                                               domCntr:    document.getElementById('drawer'),
-                                              renderItem: renderPattern,
+                                              renderItem: renderPattern
                                             })
 
 const event$ = newDeck(patternListCtx$, patternStore$)
@@ -37,7 +37,7 @@ event$
 event$
   .pipe(
     tap(x => console.log('received event: ', x)),
-    filter(x => x.name === 'delete'),
+    filter(x => x.name === 'delete')
   )
   .subscribe(editorCmdBus$)
 

@@ -1,17 +1,8 @@
 import { BehaviorSubject } from 'rxjs/BehaviorSubject'
-import Rx, {
-  Observable,
-  Subject,
-  asapScheduler,
-  pipe,
-  of,
-  from,
-  interval,
+import {
   merge,
   fromEvent,
-  SubscriptionLike,
-  Scheduler,
-  PartialObserver,
+  Scheduler
 }                          from 'rxjs'
 
 import { svgClippedArc }                from './lib/ndp-software/svg.js'
@@ -19,7 +10,7 @@ import { ptToVector, normalizeRadians } from './lib/ndp-software/trig.js'
 
 import {
   newCmdBus$,
-  logCmdBus,
+  logCmdBus
 } from 'pilota'
 import {
   debounceTime,
@@ -27,7 +18,7 @@ import {
   tap,
   map,
   mapTo,
-  throttleTime,
+  throttleTime
 } from 'rxjs/operators'
 
 
@@ -65,7 +56,7 @@ export function newDial (dom, model$) {
     },
     change (state, cmd) {
       return Object.assign({}, state, { value: cmd.value })
-    },
+    }
   })
   logCmdBus //(previewCmd$)
 

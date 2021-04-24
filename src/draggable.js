@@ -1,16 +1,8 @@
 /*eslint-env browser */
-import Rx, {
-  Observable,
-  Subject,
-  asapScheduler,
-  pipe,
-  of,
+import {
   from,
-  interval,
   merge,
-  fromEvent,
-  SubscriptionLike,
-  PartialObserver,
+  fromEvent
 } from 'rxjs'
 import {
   concat,
@@ -46,7 +38,7 @@ export function makeDraggable ({
                                  draggableCntr,
                                  mapDraggable,
                                  mapDropTarget,
-                                 createOutlineEl,
+                                 createOutlineEl
                                }) {
 
 
@@ -80,18 +72,18 @@ export function makeDraggable ({
                         name:   ACTION_DRAG_MOVE,
                         dest:   mapDropTarget({
                                                 x: mme.clientX,
-                                                y: mme.clientY,
+                                                y: mme.clientY
                                               }, el),
                         ms:     (new Date()).getTime() - startMs,
                         offset: { x: mme.clientX - start.x, y: mme.clientY - start.y },
                         el,
-                        outline,
+                        outline
                       }
                     }),
                     tap(action => moveOutlineTo(action.offset)),
                     distinctUntilChanged(function (a, b) {
                       return a === b ||
-                             (a !== null && b !== null && a.offset == b.offset)
+                             (a !== null && b !== null && a.offset === b.offset)
                     }))
 
         const finishAction$ =
@@ -106,9 +98,9 @@ export function makeDraggable ({
               if (action.name !== ACTION_DRAG_END) return action
               return Object.assign({}, dragAction, action)
             }),
-            startWith({ name: ACTION_DRAG_START, el: el }),
+            startWith({ name: ACTION_DRAG_START, el: el })
           )
       }),
-      share(),
+      share()
     )
 }

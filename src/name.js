@@ -1,22 +1,12 @@
 /*eslint-env browser */
 
-import Rx, {
-  Observable,
-  Subject,
-  asapScheduler,
-  pipe,
-  of,
-  from,
-  interval,
-  merge,
-  fromEvent,
-  SubscriptionLike,
-  PartialObserver,
+import {
+  fromEvent
 } from 'rxjs'
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject'
 
-import { tap, map, filter, scan } from 'rxjs/operators'
+import { tap, map, filter } from 'rxjs/operators'
 
 // MODEL
 export const name$ = new BehaviorSubject('My Dotz')

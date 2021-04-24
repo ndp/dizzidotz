@@ -2,30 +2,14 @@
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject'
 
-import Rx, {
+import {
   combineLatest,
-  Observable,
-  Subject,
-  asapScheduler,
-  pipe,
-  of,
-  from,
-  interval,
-  merge,
-  fromEvent,
-  SubscriptionLike,
-  Scheduler,
-  PartialObserver,
+  Subject
 }                          from 'rxjs'
 
 import {
-  debounceTime,
-  delay,
   filter,
-  tap,
-  map,
-  mapTo,
-  throttleTime,
+  map
 } from 'rxjs/operators'
 
 import { ptInRect, ptInInscribedCircle } from './lib/ndp-software/util.js'
@@ -228,7 +212,7 @@ export function newDeck(drawingCtx$, model$) {
       map(action => {
         return {
           name: 'load',
-          key:  action.el.getAttribute('data-key'),
+          key:  action.el.getAttribute('data-key')
         }
       })
     )

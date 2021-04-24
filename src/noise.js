@@ -25,6 +25,6 @@ export const newSoundData = normalized => {
     frequency,
     volume:   normalized.sz * 20,   // 0.0 .. 1.0  => 30 .. 70
     velocity: 1 - normalized.sz,
-    duration: normalized.sz,
+    duration: normalized.sz
   }
 }

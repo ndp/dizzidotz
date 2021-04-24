@@ -1,22 +1,13 @@
 /*eslint-env browser */
 /*global LZString, Velocity */
-import Rx, {
-  Observable,
+import {
   Subject,
-  asapScheduler,
-  pipe,
   of,
-  from,
   interval,
-  merge,
-  fromEvent,
-  SubscriptionLike,
-  PartialObserver,
+  fromEvent
 } from 'rxjs'
 
 import {
-  combineAll,
-  delay,
   debounceTime,
   filter,
   map,
@@ -25,7 +16,7 @@ import {
   switchMap,
   tap,
   throttleTime,
-  withLatestFrom,
+  withLatestFrom
 } from 'rxjs/operators'
 
 
@@ -97,7 +88,7 @@ const Color = {
   note:    'violet',
   playing: 'white',
   growing: 'deeppink',
-  scratch: 'yellow',
+  scratch: 'yellow'
 }
 
 
@@ -132,7 +123,7 @@ editorPegs$
 const normalizedToScreen = (normalized) => {
   return {
     pt:   trig.vectorToPt(normalized.rad, (1 - normalized.mag) * NORMALIZED_RADIUS),
-    size: normalized.sz * maxPegSize(),
+    size: normalized.sz * maxPegSize()
   }
 }
 
@@ -170,8 +161,8 @@ fromEvent(saveButton, 'click')
           tonality: currentTonality$.getValue(),
           periodMs: msPerPeriod$.getValue(),
           pegs:     pegs,
-          svg:      `<svg viewBox="${editor.getAttribute('viewBox')}">${wheel.outerHTML.replace(/(style|id)="[^"]+"/g, '')}</svg>`,
-        },
+          svg:      `<svg viewBox="${editor.getAttribute('viewBox')}">${wheel.outerHTML.replace(/(style|id)="[^"]+"/g, '')}</svg>`
+        }
       }
     }))
   .subscribe(patternStoreBus$)
@@ -206,12 +197,12 @@ editorMousedown$.subscribe((e) => {
       const peg    = {
         id:    'wip',
         angle: angle,
-        dist:  dist,
+        dist:  dist
       }
       const screen = {
         size:  calcSizeWhileGrowing(),
         pt:    pt,
-        color: Color.growing,
+        color: Color.growing
       }
       renderPeg(peg, screen)
     } else {
@@ -245,7 +236,7 @@ radians$.subscribe((angle) => {
     x1: NORMALIZED_RADIUS + Math.cos(angle) * NORMALIZED_RADIUS,
     y1: NORMALIZED_RADIUS + Math.sin(angle) * NORMALIZED_RADIUS,
     x2: NORMALIZED_RADIUS,
-    y2: NORMALIZED_RADIUS,
+    y2: NORMALIZED_RADIUS
   }, { duration: duration, easing: 'linear', queue: false })
 })
 
@@ -285,13 +276,13 @@ scratch$
     const screen        = {
       size:  3,
       pt:    pt,
-      color: Color.scratch,
+      color: Color.scratch
     }
     const [angle, dist] = trig.ptToVector(pt)
     const peg           = {
       id:    'scratch',
       angle: angle,
-      dist:  dist,
+      dist:  dist
     }
     renderPeg(peg, screen)
   })
@@ -330,9 +321,9 @@ function compressedModel (pegs) {
       return {
         rad: roundForJSON(peg.normalized.rad),
         mag: roundForJSON(peg.normalized.mag),
-        sz:  roundForJSON(peg.normalized.sz),
+        sz:  roundForJSON(peg.normalized.sz)
       }
-    }),
+    })
   }
   // max length 2000
   const json  = JSON.stringify(model)
@@ -366,7 +357,7 @@ of(document.location)
     map(x => {
       return {
         name:    'add pattern',
-        pattern: x,
+        pattern: x
       }
     }))
   .subscribe(function (x) {
