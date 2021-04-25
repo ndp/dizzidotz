@@ -6,7 +6,7 @@ import {
   pin,
   linearScaleFns,
   ptInRect,
-  ptInInscribedCircle,
+  ptInInscribedCircle
 }                 from './util.js'
 
 describe('util.js: ', function () {
