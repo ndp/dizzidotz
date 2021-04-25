@@ -1,5 +1,5 @@
-import * as generators from './lib/ndp-software/generators.js'
-import {pin} from './lib/ndp-software/util.js'
+import * as generators from './ndp-software/generators.js'
+import {pin} from './ndp-software/util.js'
 
 export function createTonalities() {
 // equal tempered scale

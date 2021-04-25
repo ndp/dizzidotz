@@ -11,7 +11,7 @@ import {
   map
 } from 'rxjs/operators'
 
-import { ptInRect, ptInInscribedCircle } from './lib/ndp-software/util.js'
+import { ptInRect, ptInInscribedCircle } from './ndp-software/util.js'
 
 import {
   makeDraggable,

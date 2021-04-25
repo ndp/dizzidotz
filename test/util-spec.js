@@ -1,7 +1,7 @@
 /*eslint-env mocha */
 
 import {assert} from 'chai'
-import {linearScaleFns, ptInRect, ptInInscribedCircle} from '../src/lib/ndp-software/util.js'
+import {linearScaleFns, ptInRect, ptInInscribedCircle} from '../src/ndp-software/util.js'
 
 describe('util.js: ', function() {
 

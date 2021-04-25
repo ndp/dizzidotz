@@ -5,8 +5,8 @@ import {
   Scheduler
 }                          from 'rxjs'
 
-import { svgClippedArc }                from './lib/ndp-software/svg.js'
-import { ptToVector, normalizeRadians } from './lib/ndp-software/trig.js'
+import { svgClippedArc }                from './ndp-software/svg.js'
+import { ptToVector, normalizeRadians } from './ndp-software/trig.js'
 
 import {
   newCmdBus$,

@@ -1,7 +1,7 @@
 /*eslint-env mocha */
 
 import {assert} from 'chai'
-import {ptToVector,vectorToPt, normalizeRadians} from '../src/lib/ndp-software/trig.js'
+import {ptToVector,vectorToPt, normalizeRadians} from '../src/ndp-software/trig.js'
 
 
 const threshold = 0.00000001

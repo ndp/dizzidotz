@@ -3,8 +3,8 @@
 import { BehaviorSubject } from 'rxjs'
 
 import { newCmdBus$ } from 'pilota'
-import { localStorageKeys } from './lib/ndp-software/util.js'
-import { ownPropertiesIter } from './lib/ndp-software/generators.js'
+import { localStorageKeys } from './ndp-software/util.js'
+import { ownPropertiesIter } from './ndp-software/generators.js'
 import { tonalities } from './tonality.js'
 
 // hashmap of key => stored value

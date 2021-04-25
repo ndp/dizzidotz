@@ -26,7 +26,6 @@
     "mini-css-extract-plugin": "*",
     "mocha": "*",
     "nyc": "*",
-    "precss": "*",
     "regenerator-runtime": "*",
     "simple-mock": "*",
     "style-loader": "*",
@@ -52,7 +51,7 @@
     "test": "mocha 'test/**/*spec.js'",
     "test:watch": "npm t -- --watch",
     "cover": "nyc npm t",
-    "lint": "./node_modules/.bin/eslint src/*.js src/lib/ndp-software/*"
+    "lint": "./node_modules/.bin/eslint src/*.js src/ndp-software/*"
   },
   "repository": {
     "type": "git",

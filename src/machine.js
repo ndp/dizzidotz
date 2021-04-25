@@ -20,8 +20,8 @@ import {
 } from 'rxjs/operators'
 
 
-import { labelLog } from './lib/ndp-software/util.js'
-import * as trig    from './lib/ndp-software/trig.js'
+import { labelLog } from './ndp-software/util.js'
+import * as trig    from './ndp-software/trig.js'
 
 import { editorPegs$, editorCmdBus$ } from './editor.js'
 import { patternStoreBus$ }           from './pattern-store.js'
