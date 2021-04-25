@@ -5,7 +5,7 @@ import { assert } from 'chai'
 import { BehaviorSubject } from 'rxjs'
 import { skip }            from 'rxjs/operators'
 
-import { mapBehaviorSubject } from '../src/ndp-software/map-behavior-subject.js'
+import { mapBehaviorSubject } from './map-behavior-subject.js'
 
 
 function modelWrapped () {

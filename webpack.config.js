@@ -35,6 +35,7 @@ module.exports = {
       {
         test:    /\.js$/,
         include: dir_src,
+        exclude: /.*\-spec\.js/,
         loader: 'babel-loader'
       },
       {

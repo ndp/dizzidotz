@@ -48,7 +48,7 @@
     "watch": "webpack --config webpack.config.js --watch",
     "start": "webpack serve --hot --inline",
     "server": "./node_modules/.bin/http-server build -e html -d false",
-    "test": "mocha 'test/**/*spec.js'",
+    "test": "mocha 'src/**/*spec.js'",
     "test:watch": "npm t -- --watch",
     "cover": "nyc npm t",
     "lint": "./node_modules/.bin/eslint src/*.js src/ndp-software/*"
