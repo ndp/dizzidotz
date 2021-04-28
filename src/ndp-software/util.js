@@ -78,7 +78,7 @@ export function localStorageKeys() {
 
 export function labelLog(label) {
   return function(...msgs) {
-    global.console.log(...[`${label}: `, ...msgs])
+    console.log(...[`${label}: `, ...msgs])
   }
 }
 
