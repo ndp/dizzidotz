@@ -3,209 +3,209 @@
       itemscope
       itemtype="http://schema.org/SoftwareApplication">
 <head>
-  <meta charset="UTF-8">
-  <title>Di&#119911;&#119911;iD&#7885;T&#119911;</title>
-  <meta itemprop="name" property="og:title" content="Di&#119911;&#119911;iD&#7885;T&#119911;">
-  <link rel="icon" type="image/x-icon" href="./img/icon-16.png">
-  <link rel="author" href="https://plus.google.com/111325326458556506982/posts?rel=author">
-  <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
-  <link rel="apple-touch-icon" href="img/icon-32.png"/>
-  <link rel="apple-touch-startup-image" href="img/icon-48.png"/>
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta charset="UTF-8">
+    <title>Di&#119911;&#119911;iD&#7885;T&#119911;</title>
+    <meta itemprop="name" property="og:title" content="Di&#119911;&#119911;iD&#7885;T&#119911;">
+    <link rel="icon" type="image/x-icon" href="./img/icon-16.png">
+    <link rel="author" href="https://plus.google.com/111325326458556506982/posts?rel=author">
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <link rel="apple-touch-icon" href="img/icon-32.png"/>
+    <link rel="apple-touch-startup-image" href="img/icon-48.png"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 
-  <!--    <script>var global=global||this;</script>-->
-  <script type="application/javascript">
-    //        window.onerror = function(m) {
-    //          window.open(`http://stackoverflow.com/search?q=[js] + ${m}`)
-    //        }
-  </script>
+<!--    <script>var global=global||this;</script>-->
+    <script type="application/javascript">
+//        window.onerror = function(m) {
+//          window.open(`http://stackoverflow.com/search?q=[js] + ${m}`)
+//        }
+    </script>
   <script src="js/lib/velocity.min.js" type="application/javascript"></script>
 
 
   <link rel="stylesheet" href="Impact-Label-fontfacekit/stylesheet.css" type="text/css"/>
-  <link rel="stylesheet" href="styles.css" type="text/css"/>
+    <link rel="stylesheet" href="styles.css" type="text/css"/>
 </head>
 <body>
 <div class="templates" style="display: none">
-  <div id="delete-icon">
-    <svg viewBox="0 0 100 100" class="button">
-      <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" style="filter:url(#dropshadow)"/>
-      <path class='btn stroked' d='M 25 25 L 75 75 M 75 25 L 25 75'></path>
-    </svg>
-  </div>
+    <div id="delete-icon">
+        <svg viewBox="0 0 100 100" class="button">
+            <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" style="filter:url(#dropshadow)"/>
+            <path class='btn stroked' d='M 25 25 L 75 75 M 75 25 L 25 75'></path>
+        </svg>
+    </div>
 </div>
 
 <svg id='editor' viewBox="0 0 1200 1200" class="slow-fade-in">
-  <g id='wheel' class='wheel slow-fade-in'>
-    <circle class="bg" cx="50%" cy="50%" r="49%" style="filter:url(#dropshadow)"/>
-    <g class="pegs"></g>
-  </g>
+    <g id='wheel' class='wheel slow-fade-in'>
+        <circle class="bg" cx="50%" cy="50%" r="49%" style="filter:url(#dropshadow)"/>
+        <g class="pegs"></g>
+    </g>
   <line id='hand' x1="0" y1="0" x2="50%" y2="50%" style="stroke:white;stroke-width:2" class="slow-fade-in"/>
 
   <radialGradient id="rgrad-blue-glow" cx="50%" cy="50%" r="100%" gradientUnits="objectBoundingBox">
-    <stop offset="0%" style="stop-color:rgb(0, 255, 244); stop-opacity:1"></stop>
-    <stop offset="50%" style="stop-color:rgb(0, 74, 255); stop-opacity:1"></stop>
-    <stop offset="80%" style="stop-color:rgb(46, 60, 208); stop-opacity:1"></stop>
-    <stop offset="100%" style="stop-color:DodgerBlue; stop-opacity:1"></stop>
-  </radialGradient>
+        <stop offset="0%" style="stop-color:rgb(0, 255, 244); stop-opacity:1"></stop>
+        <stop offset="50%" style="stop-color:rgb(0, 74, 255); stop-opacity:1"></stop>
+        <stop offset="80%" style="stop-color:rgb(46, 60, 208); stop-opacity:1"></stop>
+        <stop offset="100%" style="stop-color:DodgerBlue; stop-opacity:1"></stop>
+    </radialGradient>
 
-  <radialGradient id="rgrad-purple" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-    <stop offset="0%" style="stop-color:mediumpurple;stop-opacity:1"/>
-    <stop offset="50%" style="stop-color:slateblue;stop-opacity:1"/>
-    <stop offset="100%" style="stop-color:purple;stop-opacity:1"/>
-  </radialGradient>
+    <radialGradient id="rgrad-purple" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+        <stop offset="0%" style="stop-color:mediumpurple;stop-opacity:1"/>
+        <stop offset="50%" style="stop-color:slateblue;stop-opacity:1"/>
+        <stop offset="100%" style="stop-color:purple;stop-opacity:1"/>
+    </radialGradient>
 
-  <radialGradient id="rgrad-dark-blue" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-    <stop offset="0%" style="stop-color:blue;stop-opacity:1"/>
-    <stop offset="33%" style="stop-color:mediumblue;stop-opacity:1"/>
-    <stop offset="66%" style="stop-color:darkblue;stop-opacity:1"/>
-    <stop offset="100%" style="stop-color:navy;stop-opacity:1"/>
-  </radialGradient>
+    <radialGradient id="rgrad-dark-blue" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+        <stop offset="0%" style="stop-color:blue;stop-opacity:1"/>
+        <stop offset="33%" style="stop-color:mediumblue;stop-opacity:1"/>
+        <stop offset="66%" style="stop-color:darkblue;stop-opacity:1"/>
+        <stop offset="100%" style="stop-color:navy;stop-opacity:1"/>
+    </radialGradient>
 
-  <radialGradient id="rgrad-sun" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-    <stop offset="0%" style="stop-color:lightyellow;stop-opacity:1"/>
-    <stop offset="33%" style="stop-color:LemonChiffon;stop-opacity:1"/>
-    <stop offset="66%" style="stop-color:khaki;stop-opacity:1"/>
-    <stop offset="100%" style="stop-color:gold;stop-opacity:1"/>
-  </radialGradient>
-
-
-  <radialGradient id="rgrad-sea-green" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-    <stop offset="0%" style="stop-color:MediumAquamarine;stop-opacity:1"/>
-    <stop offset="33%" style="stop-color:LightSeaGreen;stop-opacity:1"/>
-    <stop offset="66%" style="stop-color:DarkCyan;stop-opacity:1"/>
-    <stop offset="100%" style="stop-color:Teal;stop-opacity:1"/>
-  </radialGradient>
-
-  <radialGradient id="rgrad-pink" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-    <stop offset="4%" style="stop-color:pink;stop-opacity:1"/>
-    <stop offset="50%" style="stop-color:lightpink;stop-opacity:1"/>
-    <stop offset="98%" style="stop-color:red;stop-opacity:1"/>
-  </radialGradient>
-
-  <radialGradient id="rgrad-yellow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-    <stop offset="4%" style="stop-color:yellow;stop-opacity:1"/>
-    <stop offset="50%" style="stop-color:orange;stop-opacity:1"/>
-    <stop offset="98%" style="stop-color:orangered;stop-opacity:1"/>
-  </radialGradient>
-
-  <radialGradient id="rgrad-brown" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-    <stop offset="4%" style="stop-color:brown;stop-opacity:1"/>
-    <stop offset="50%" style="stop-color:saddlebrown;stop-opacity:1"/>
-    <stop offset="98%" style="stop-color:black;stop-opacity:.7"/>
-  </radialGradient>
-
-  <radialGradient id="rgrad-lime-green" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-    <stop offset="1%" style="stop-color:palegreen;stop-opacity:1"/>
-    <stop offset="50%" style="stop-color:limegreen;stop-opacity:1"/>
-    <stop offset="100%" style="stop-color:ForestGreen;stop-opacity:1"/>
-  </radialGradient>
+    <radialGradient id="rgrad-sun" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+        <stop offset="0%" style="stop-color:lightyellow;stop-opacity:1"/>
+        <stop offset="33%" style="stop-color:LemonChiffon;stop-opacity:1"/>
+        <stop offset="66%" style="stop-color:khaki;stop-opacity:1"/>
+        <stop offset="100%" style="stop-color:gold;stop-opacity:1"/>
+    </radialGradient>
 
 
-  <radialGradient id="rgrad-b-and-w" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-    <stop offset="4%" style="stop-color:white;stop-opacity:1"/>
-    <stop offset="25%" style="stop-color:lightgray;stop-opacity:1"/>
-    <stop offset="50%" style="stop-color:darkgray;stop-opacity:1"/>
-    <stop offset="75%" style="stop-color:gray;stop-opacity:1"/>
-    <stop offset="100%" style="stop-color:DimGray;stop-opacity:1"/>
-  </radialGradient>
+    <radialGradient id="rgrad-sea-green" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+        <stop offset="0%" style="stop-color:MediumAquamarine;stop-opacity:1"/>
+        <stop offset="33%" style="stop-color:LightSeaGreen;stop-opacity:1"/>
+        <stop offset="66%" style="stop-color:DarkCyan;stop-opacity:1"/>
+        <stop offset="100%" style="stop-color:Teal;stop-opacity:1"/>
+    </radialGradient>
 
-  <radialGradient id="rgrad-rainbow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-    <stop offset="10%" style="stop-color:violet;"/>
-    <stop offset="25%" style="stop-color:indigo;"/>
-    <stop offset="45%" style="stop-color:blue;"/>
-    <stop offset="65%" style="stop-color:green;"/>
-    <stop offset="80%" style="stop-color:yellow;"/>
-    <stop offset="90%" style="stop-color:orange;"/>
-    <stop offset="100%" style="stop-color:red;"/>
-  </radialGradient>
-  <filter id="dropshadow" height="130%" width="130%">
-    <feGaussianBlur in="SourceAlpha" stdDeviation="5"/>
-    <!-- stdDeviation is how much to blur -->
-    <feOffset dx="2" dy="2" result="offsetblur"/>
-    <!-- how much to offset -->
-    <feComponentTransfer>
-      <feFuncA type="linear" slope="0.8"/>
-    </feComponentTransfer>
-    <feMerge>
-      <feMergeNode/>
-      <!-- this contains the offset blurred image -->
-      <feMergeNode in="SourceGraphic"/>
-      <!-- this contains the element that the filter is applied to -->
-    </feMerge>
-  </filter>
+    <radialGradient id="rgrad-pink" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+        <stop offset="4%" style="stop-color:pink;stop-opacity:1"/>
+        <stop offset="50%" style="stop-color:lightpink;stop-opacity:1"/>
+        <stop offset="98%" style="stop-color:red;stop-opacity:1"/>
+    </radialGradient>
+
+    <radialGradient id="rgrad-yellow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+        <stop offset="4%" style="stop-color:yellow;stop-opacity:1"/>
+        <stop offset="50%" style="stop-color:orange;stop-opacity:1"/>
+        <stop offset="98%" style="stop-color:orangered;stop-opacity:1"/>
+    </radialGradient>
+
+    <radialGradient id="rgrad-brown" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+        <stop offset="4%" style="stop-color:brown;stop-opacity:1"/>
+        <stop offset="50%" style="stop-color:saddlebrown;stop-opacity:1"/>
+        <stop offset="98%" style="stop-color:black;stop-opacity:.7"/>
+    </radialGradient>
+
+    <radialGradient id="rgrad-lime-green" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+        <stop offset="1%" style="stop-color:palegreen;stop-opacity:1"/>
+        <stop offset="50%" style="stop-color:limegreen;stop-opacity:1"/>
+        <stop offset="100%" style="stop-color:ForestGreen;stop-opacity:1"/>
+    </radialGradient>
+
+
+    <radialGradient id="rgrad-b-and-w" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+        <stop offset="4%" style="stop-color:white;stop-opacity:1"/>
+        <stop offset="25%" style="stop-color:lightgray;stop-opacity:1"/>
+        <stop offset="50%" style="stop-color:darkgray;stop-opacity:1"/>
+        <stop offset="75%" style="stop-color:gray;stop-opacity:1"/>
+        <stop offset="100%" style="stop-color:DimGray;stop-opacity:1"/>
+    </radialGradient>
+
+    <radialGradient id="rgrad-rainbow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+        <stop offset="10%" style="stop-color:violet;"/>
+        <stop offset="25%" style="stop-color:indigo;"/>
+        <stop offset="45%" style="stop-color:blue;"/>
+        <stop offset="65%" style="stop-color:green;"/>
+        <stop offset="80%" style="stop-color:yellow;"/>
+        <stop offset="90%" style="stop-color:orange;"/>
+        <stop offset="100%" style="stop-color:red;"/>
+    </radialGradient>
+    <filter id="dropshadow" height="130%" width="130%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="5"/>
+        <!-- stdDeviation is how much to blur -->
+        <feOffset dx="2" dy="2" result="offsetblur"/>
+        <!-- how much to offset -->
+        <feComponentTransfer>
+            <feFuncA type="linear" slope="0.8"/>
+        </feComponentTransfer>
+        <feMerge>
+            <feMergeNode/>
+            <!-- this contains the offset blurred image -->
+            <feMergeNode in="SourceGraphic"/>
+            <!-- this contains the element that the filter is applied to -->
+        </feMerge>
+    </filter>
 </svg>
 
 <a id="pattern-name"  class="slow-fade-in" href="#">
-  <svg viewBox="0 0 100 100">
-    <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" style="filter:url(#dropshadow)"/>
-    <defs>
-      <path id="top-curve-100-path"
-            d="M 17.110758272493207 61.970705016398405 A 35 35 0 1 1 82.8892417275068 61.970705016398405"/>
-      <path id="bottom-curve-100-path"
-            d="M 12.41229516856366 63.680805733026745 A 40 40 0 0 0 87.58770483143634 63.680805733026745"/>
-    </defs>
-    <use xlink:href="#top-curve-100-path" fill="none"/>
-    <use xlink:href="#bottom-curve-100-path" fill="none"/>
-    <image xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="./img/pencil.svg" x="42" y="40" height="20"
-           width="20"></image>
-    <text fill="#fff" text-anchor="middle">
-      <textPath class="name" startOffSet="50%" xlink:href="#top-curve-100-path"></textPath>
-    </text>
-    <text fill="#fff" text-anchor="middle">
-      <textPath id="scale-current" startOffSet="50%" xlink:href="#bottom-curve-100-path"></textPath>
-    </text>
-  </svg>
+    <svg viewBox="0 0 100 100">
+        <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" style="filter:url(#dropshadow)"/>
+        <defs>
+            <path id="top-curve-100-path"
+                  d="M 17.110758272493207 61.970705016398405 A 35 35 0 1 1 82.8892417275068 61.970705016398405"/>
+            <path id="bottom-curve-100-path"
+                  d="M 12.41229516856366 63.680805733026745 A 40 40 0 0 0 87.58770483143634 63.680805733026745"/>
+        </defs>
+        <use xlink:href="#top-curve-100-path" fill="none"/>
+        <use xlink:href="#bottom-curve-100-path" fill="none"/>
+        <image xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="./img/pencil.svg" x="42" y="40" height="20"
+               width="20"></image>
+        <text fill="#fff" text-anchor="middle">
+            <textPath class="name" startOffSet="50%" xlink:href="#top-curve-100-path"></textPath>
+        </text>
+        <text fill="#fff" text-anchor="middle">
+            <textPath id="scale-current" startOffSet="50%" xlink:href="#bottom-curve-100-path"></textPath>
+        </text>
+    </svg>
 </a>
 
 <svg id="logo" viewBox="0 0 100 100">
-  <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" />
-  <g transform="translate(50 50)">
-    <text x="0" y="-5" text-anchor="middle">Dizzi</text>
-    <text x="0" y="20" width='70' height='30' text-anchor="middle">Dotz</text>
-  </g>
+    <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" />
+    <g transform="translate(50 50)">
+        <text x="0" y="-5" text-anchor="middle">Dizzi</text>
+        <text x="0" y="20" width='70' height='30' text-anchor="middle">Dotz</text>
+    </g>
 </svg>
 
 <div id="drawer" class="slow-fade-in-stage-3">
 </div>
 <svg id="tempo-dial" class='dial fading-fill-children slow-fade-in-stage-2' viewBox="0 0 100 100">
-  <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" />
-  <path class='reading' />
-  <path class='preview'/>
-  <text x="50" y="50" text-anchor="middle"></text>
+    <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" />
+    <path class='reading' />
+    <path class='preview'/>
+    <text x="50" y="50" text-anchor="middle"></text>
 </svg>
 <a id='play-pause' type="button" class="playing button slow-fade-in-stage-2">
-  <svg viewBox="0 0 100 100" class="fading-fill-children">
-    <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" style="filter:url(#dropshadow)"/>
-    <path class='play btn' d='M 35 25 L 35 75 L 75 50 Z'></path>
-    <rect class='pause btn' height='40' width='40' x='30' y='30'></rect>
-  </svg>
+    <svg viewBox="0 0 100 100" class="fading-fill-children">
+        <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" style="filter:url(#dropshadow)"/>
+        <path class='play btn' d='M 35 25 L 35 75 L 75 50 Z'></path>
+        <rect class='pause btn' height='40' width='40' x='30' y='30'></rect>
+    </svg>
 </a>
 <a id="save-button" class="button slow-fade-in-stage-3" href="#">
-  <svg viewBox="0 0 100 100">
-    <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" style="filter:url(#dropshadow)"/>
-    <path class='btn stroked' d='M 50 30 L 50 70 M 70 50 L 30 50'></path>
-  </svg>
+    <svg viewBox="0 0 100 100">
+        <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" style="filter:url(#dropshadow)"/>
+        <path class='btn stroked' d='M 50 30 L 50 70 M 70 50 L 30 50'></path>
+    </svg>
 </a>
 
 <a id="delete-all-btn" class="button slow-fade-in-stage-3"
    href="#">
-  <svg viewBox="0 0 100 100" class="fading-fill-children">
-    <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" style="filter:url(#dropshadow)"/>
-    <path class='btn stroked' d='M 30 30 L 70 70 M 70 30 L 30 70'></path>
-  </svg>
+    <svg viewBox="0 0 100 100" class="fading-fill-children">
+        <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" style="filter:url(#dropshadow)"/>
+        <path class='btn stroked' d='M 30 30 L 70 70 M 70 30 L 30 70'></path>
+    </svg>
 </a>
 
 <a id="permalink-button" class="button slow-fade-in-stage-3" href="#">
-  <svg viewBox="0 0 100 100">
-    <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" style="filter:url(#dropshadow)"/>
-    <path class='btn stroked' fill='none' d='
+    <svg viewBox="0 0 100 100">
+        <circle class='bg' r="46" cx="50" cy="50" stroke-width="0" style="filter:url(#dropshadow)"/>
+        <path class='btn stroked' fill='none' d='
     M 45 35 L 30 35 L 30 75 L 70 75 L 70 35 L 55 35
     M 35 25 L 50 10 L 65 25
     M 50 10 L 50 40'></path>
-  </svg>
+    </svg>
 </a>
 
 
@@ -213,8 +213,8 @@
 <script src="bundle.js" type="application/javascript"></script>
 </body>
 <script type="text/javascript">
-  if (document.location.href !== document.referrer) {
-    document.getElementsByTagName('BODY')[0].className = 'slow'
-  }
+    if (document.location.href !== document.referrer) {
+        document.getElementsByTagName('BODY')[0].className = 'slow'
+    }
 </script>
 </html>
