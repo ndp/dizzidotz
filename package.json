@@ -41,10 +41,12 @@
     "sourceMaps": true
   },
   "scripts": {
-    "build:static": "rsync -c -r html/ build/",
-    "build": "yarn build:static && esbuild --bundle ./src/machine.js --inject:./src/pattern-drawer.js --outfile=build/bundle.js --minify --sourcemap",
-    "start": "yarn build:static && esbuild --servedir=./build --bundle ./src/machine.js --inject:./src/pattern-drawer.js --outfile=./build/bundle.js --sourcemap",
-    "server": "./node_modules/.bin/http-server build -e html -d false",
+    "build": "esbuild --bundle ./src/machine.js --inject:./src/pattern-drawer.js --outfile=build/bundle.js --minify --sourcemap --sources-content=false",
+    "build:all": "yarn build:static && yarn build",
+    "build:static": "mkdir -p build && rsync -c -r html/ build/ && mkdir -p build/js/lib && rsync -c -r src/lib/ build/js/lib",
+    "clean": "rm -fr build",
+    "serve": "./node_modules/.bin/http-server build -e html -d false",
+    "serve:dev": "yarn build:static && esbuild --servedir=./build --bundle ./src/machine.js --inject:./src/pattern-drawer.js --outfile=./build/bundle.js --sourcemap",
     "test": "mocha 'src/**/*spec.js'",
     "test:watch": "npm t -- --watch",
     "cover": "nyc npm t",
