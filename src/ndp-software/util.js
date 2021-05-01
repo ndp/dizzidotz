@@ -65,7 +65,7 @@ export function linearScaleFns(minOrMax, max) {
   return [scaleFn, unscaleFn]
 }
 
-/*global global, localStorage */
+/*global localStorage */
 export function localStorageKeys() {
   const keys = []
   if (typeof(localStorage) !== 'undefined') {
@@ -75,7 +75,7 @@ export function localStorageKeys() {
   return keys
 }
 
-
+/*global console */
 export function labelLog(label) {
   return function(...msgs) {
     console.log(...[`${label}: `, ...msgs])
