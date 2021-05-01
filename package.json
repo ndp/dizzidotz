@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "pilota": "^6",
-    "rxjs": "^6",
+    "rxjs": "*",
     "serve": "*",
     "tone": "*"
   },
