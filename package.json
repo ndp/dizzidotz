@@ -17,8 +17,8 @@
     "@babel/register": "*",
     "babel-loader": "*",
     "chai": "*",
-    "copy-webpack-plugin": "*",
     "css-loader": "*",
+    "esbuild": "^0.11.15",
     "eslint": "*",
     "eslint-plugin-mocha": "*",
     "eslint-plugin-unused-imports": "^1.1.1",
@@ -29,10 +29,7 @@
     "regenerator-runtime": "*",
     "simple-mock": "*",
     "style-loader": "*",
-    "url-loader": "*",
-    "webpack": "*",
-    "webpack-cli": "*",
-    "webpack-dev-server": "*"
+    "url-loader": "*"
   },
   "babel": {
     "presets": [
@@ -44,10 +41,12 @@
     "sourceMaps": true
   },
   "scripts": {
-    "build": "webpack --config webpack.config.js",
-    "watch": "webpack --config webpack.config.js --watch",
-    "start": "webpack serve --hot --inline",
-    "server": "./node_modules/.bin/http-server build -e html -d false",
+    "build": "esbuild --bundle ./src/machine.js --inject:./src/pattern-drawer.js --outfile=build/bundle.js --minify --sourcemap --sources-content=false",
+    "build:all": "yarn build:static && yarn build",
+    "build:static": "mkdir -p build && rsync -c -r html/ build/ && mkdir -p build/js/lib && rsync -c -r src/lib/ build/js/lib",
+    "clean": "rm -fr build",
+    "serve": "./node_modules/.bin/http-server build -e html -d false",
+    "serve:dev": "yarn build:static && esbuild --servedir=./build --bundle ./src/machine.js --inject:./src/pattern-drawer.js --outfile=./build/bundle.js --sourcemap",
     "test": "mocha 'src/**/*spec.js'",
     "test:watch": "npm t -- --watch",
     "cover": "nyc npm t",
