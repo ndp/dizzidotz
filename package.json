@@ -4,7 +4,7 @@
   "description": "Circles, noises  Copyright(c) 2016-2021 All Rights Reserved",
   "main": "index.js",
   "dependencies": {
-    "http-server": "*",
+    "serve": "*",
     "pilota": "^6",
     "rxjs": "^6",
     "tone": "*"
@@ -45,7 +45,7 @@
     "build:all": "yarn build:static && yarn build",
     "build:static": "mkdir -p build && rsync -c -r html/ build/ && mkdir -p build/js/lib && rsync -c -r src/lib/ build/js/lib",
     "clean": "rm -fr build",
-    "serve": "./node_modules/.bin/http-server build -e html -d false",
+    "serve": "./node_modules/.bin/serve build -n",
     "serve:dev": "yarn build:static && esbuild --servedir=./build --bundle ./src/machine.js --inject:./src/pattern-drawer.js --outfile=./build/bundle.js --sourcemap",
     "test": "mocha 'src/**/*spec.js'",
     "test:watch": "npm t -- --watch",
