@@ -4,9 +4,9 @@
   "description": "Circles, noises  Copyright(c) 2016-2021 All Rights Reserved",
   "main": "index.js",
   "dependencies": {
-    "serve": "*",
     "pilota": "^6",
     "rxjs": "^6",
+    "serve": "*",
     "tone": "*"
   },
   "devDependencies": {
