@@ -15,21 +15,15 @@
     "@babel/polyfill": "*",
     "@babel/preset-env": "*",
     "@babel/register": "*",
-    "babel-loader": "*",
     "chai": "*",
-    "css-loader": "*",
     "esbuild": "^0.11.15",
     "eslint": "*",
     "eslint-plugin-mocha": "*",
     "eslint-plugin-unused-imports": "^1.1.1",
-    "file-loader": "*",
-    "mini-css-extract-plugin": "*",
     "mocha": "*",
     "nyc": "*",
     "regenerator-runtime": "*",
-    "simple-mock": "*",
-    "style-loader": "*",
-    "url-loader": "*"
+    "simple-mock": "*"
   },
   "babel": {
     "presets": [
