@@ -19,7 +19,7 @@
     "esbuild": "*",
     "eslint": "*",
     "eslint-plugin-mocha": "*",
-    "eslint-plugin-unused-imports": "^1.1.1",
+    "eslint-plugin-unused-imports": "*",
     "mocha": "*",
     "nyc": "*",
     "regenerator-runtime": "*",
