@@ -2,9 +2,10 @@
   "name": "dizzidotz",
   "version": "1.1.0",
   "description": "Circles, noises  Copyright(c) 2016-2021 All Rights Reserved",
+  "type": "module",
   "main": "index.js",
   "dependencies": {
-    "pilota": "^6",
+    "pilota": "*",
     "rxjs": "*",
     "serve": "*",
     "tone": "*"
@@ -14,7 +15,6 @@
     "@babel/core": "*",
     "@babel/polyfill": "*",
     "@babel/preset-env": "*",
-    "@babel/register": "*",
     "chai": "*",
     "esbuild": "*",
     "eslint": "*",
