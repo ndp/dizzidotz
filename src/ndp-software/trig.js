@@ -1,10 +1,10 @@
 export const radiansPerPeriod = 2 * Math.PI
 
 // Put `r` between -π and π
-export const normalizeRadians = (r) => {
-  if (Math.abs(r) < Math.pi) return r
+export const normalizeRadians = (r, positive=false) => {
+  const max = positive ? 1.99999999999999 * Math.PI : Math.PI
   while (r < 0) r += radiansPerPeriod
-  while (r > Math.PI) r -= radiansPerPeriod
+  while (r > max) r -= radiansPerPeriod
   return r
 }
 

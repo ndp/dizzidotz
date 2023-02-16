@@ -29,12 +29,12 @@ export function newDeck(drawingCtx$, model$) {
   const event$ = new Subject() // events we are returning, with 'load', 'delete', 'focus'
 
   // VIEW
-  function findOrCreateListEl(domCntr) {
-    let listEl = domCntr.getElementsByClassName('deck')[0]
+  function findOrCreateListEl(root, classNames = 'deck') {
+    let listEl = root.getElementsByClassName(classNames)[0]
     if (!listEl) {
       listEl           = document.createElement('UL')
-      listEl.className = 'deck'
-      domCntr.appendChild(listEl)
+      listEl.className = classNames
+      root.appendChild(listEl)
     }
     return listEl
   }
@@ -87,15 +87,15 @@ export function newDeck(drawingCtx$, model$) {
       drawingCtx$,
       (state, drawingCtx)  => ({state, drawingCtx}))
     .subscribe(function({state, drawingCtx}) {
-                 if (state.model.length == 0) {
+                 if (state.model.length === 0) {
                    drawingCtx.domCntr.innerHTML = ''
                  }
-                 var listEl = findOrCreateListEl(drawingCtx.domCntr)
+                 const listEl = findOrCreateListEl(drawingCtx.domCntr)
 
                  const list          = Object.values(state.model).sort((a, b) => b.timestamp - a.timestamp)
                  let precedingItemEl = null
                  list.forEach(model => {
-                   const m          = Object.assign({}, model, {focused: state.focus == model || state.focus == model.key})
+                   const m          = Object.assign({}, model, {focused: state.focus === model || state.focus === model.key})
                    const itemCntrEl = findOrCreateListItem(m, listEl, precedingItemEl ? precedingItemEl.parentNode : null)
                    drawingCtx.renderItem(model, itemCntrEl)
                    precedingItemEl  = itemCntrEl
@@ -104,7 +104,7 @@ export function newDeck(drawingCtx$, model$) {
 
   event$
     .pipe(
-      filter(e => e.name == 'focus'),
+      filter(e => e.name === 'focus'),
       map(e => e.key)
     )
     .subscribe(focus$)
@@ -161,19 +161,19 @@ export function newDeck(drawingCtx$, model$) {
 
   // Draw 'delete all' button as a drop target.
   drag$
-    .pipe(filter(action => action.name == ACTION_DRAG_START))
+    .pipe(filter(action => action.name === ACTION_DRAG_START))
     .subscribe(() => deleteAllButtonEl().classList.add('drop-target'))
 
   // Remove 'delete all' drop as drop target.
   drag$
-    .pipe(filter(action => action.name == ACTION_DRAG_END))
+    .pipe(filter(action => action.name === ACTION_DRAG_END))
     .subscribe(() => deleteAllButtonEl().classList.remove('drop-target'))
 
   // Highlight hovered 'delete all' button
   drag$
-    .pipe(filter(action => action.name == ACTION_DRAG_MOVE))
+    .pipe(filter(action => action.name === ACTION_DRAG_MOVE))
     .subscribe(function(action) {
-                 if (action.dest == deleteAllButtonEl()) {
+                 if (action.dest === deleteAllButtonEl()) {
                    action.outline.style.transition   = 'opacity 0.4'
                    action.outline.style.opacity      = 0.3
                    action.outline.style['transform'] = 'scale(.5,.5)'
@@ -185,29 +185,29 @@ export function newDeck(drawingCtx$, model$) {
 
   // Drag over 'delete all' button previews deleting pattern.
   drag$
-    .pipe(filter(action => action.name == ACTION_DRAG_MOVE))
-    .subscribe(action => action.el.style.display = (action.dest == deleteAllButtonEl()) ? 'none' : 'block')
+    .pipe(filter(action => action.name === ACTION_DRAG_MOVE))
+    .subscribe(action => action.el.style.display = (action.dest === deleteAllButtonEl()) ? 'none' : 'block')
 
   // Trigger the actual delete.
   drag$
-    .pipe(filter(action => action.name == ACTION_DRAG_END),
-          filter(action => action.dest == deleteAllButtonEl()),
+    .pipe(filter(action => action.name === ACTION_DRAG_END),
+          filter(action => action.dest === deleteAllButtonEl()),
           map(action => ({ name: 'delete', key: action.el.getAttribute('data-key') }))
     )
     .subscribe(event$)
 
   // Provide drag feedback over the editor
-  drag$.pipe(filter(action => action.name == ACTION_DRAG_MOVE))
-    .subscribe(action => editorEl().classList.toggle('drop-target', editorEl() == action.dest))
+  drag$.pipe(filter(action => action.name === ACTION_DRAG_MOVE))
+    .subscribe(action => editorEl().classList.toggle('drop-target', editorEl() === action.dest))
 
-  drag$.pipe(filter(action => action.name == ACTION_DRAG_END))
+  drag$.pipe(filter(action => action.name === ACTION_DRAG_END))
     .subscribe(() =>  editorEl().classList.remove('drop-target'))
 
   // Trigger the load of the pattern on drag
   drag$
     .pipe(
-      filter(action => action.name == ACTION_DRAG_END),
-      filter(action => action.dest == editorEl()),
+      filter(action => action.name === ACTION_DRAG_END),
+      filter(action => action.dest === editorEl()),
       map(action => {
         return {
           name: 'load',
@@ -219,7 +219,7 @@ export function newDeck(drawingCtx$, model$) {
 
   // Detect simple click to load a pattern
   const itemClick$ = drag$
-    .pipe(filter(action => action.name == ACTION_DRAG_END),
+    .pipe(filter(action => action.name === ACTION_DRAG_END),
           filter(action => action.ms < 400),
           filter(action => (Math.abs(action.offset.x) + Math.abs(action.offset.y)) < 5),
           map(action => action.el)

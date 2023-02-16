@@ -21,10 +21,6 @@ import {
   throttleTime
 } from 'rxjs/operators'
 
-
-//import {run} from '@cycle/rxjs-run'
-//import {makeDOMDriver, svg} from '@cycle/dom'
-
 const MAX_DEGREE = 355
 
 function arc (startAngle, value) {
@@ -34,14 +30,16 @@ function arc (startAngle, value) {
 export function newDial (dom, model$) {
 
   function eventToPt (e) {
-    return { x: e.layerX / dom.clientWidth - 0.5, y: e.layerY / dom.clientHeight - 0.5 }
+    return {
+      x: e.layerX / dom.clientWidth - 0.5,
+      y: e.layerY / dom.clientHeight - 0.5
+    }
   }
 
   function ptToNormalizedValue (pt) {
     let rads = ptToVector(pt)[0]
     rads     = rads + Math.PI / 2
-    rads     = normalizeRadians(rads)
-    rads     = rads < 0 ? rads + 2 * Math.PI : rads
+    rads     = normalizeRadians(rads, true)
     return rads * 0.5 / Math.PI // normalize [0..1]
   }
 
@@ -55,7 +53,7 @@ export function newDial (dom, model$) {
       return { value: 0, paused: false }
     },
     change (state, cmd) {
-      return Object.assign({}, state, { value: cmd.value })
+      return { ...state, value: cmd.value }
     }
   })
   logCmdBus //(previewCmd$)
@@ -72,7 +70,7 @@ export function newDial (dom, model$) {
   // Draw preview
   const previewElem = dom.querySelector('.preview')
   preview$
-    .subscribe(state => previewElem.setAttribute('d', (state.paused || state.value == 0) ? '' : arc(0, state.value * MAX_DEGREE)))
+    .subscribe(state => previewElem.setAttribute('d', (state.paused || state.value === 0) ? '' : arc(0, state.value * MAX_DEGREE)))
 
   // INTENT
   const click$     = fromEvent(dom, 'click').pipe(tap(e => e.preventDefault()))

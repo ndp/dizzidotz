@@ -50,6 +50,41 @@ describe('normalizeRadians', function() {
     assert.closeTo(normalizeRadians(Math.PI * -3), Math.PI, threshold)
   })
 
+
+  it('0 positive', function() {
+    assert.closeTo(normalizeRadians(0, true), 0, threshold)
+  })
+  it('2π positive', function() {
+    assert.closeTo(normalizeRadians(Math.PI * 2, true), 0, threshold)
+  })
+  it('-2π positive', function() {
+    assert.closeTo(normalizeRadians(Math.PI * -2, true), 0, threshold)
+  })
+  it('4π positive', function() {
+    assert.closeTo(normalizeRadians(Math.PI * 4, true), 0, threshold)
+  })
+
+  it('1/2π positive', function() {
+    assert.closeTo(normalizeRadians(.5 * Math.PI, true), .5 * Math.PI, threshold)
+  })
+
+  it('5/2π positive', function() {
+    assert.closeTo(normalizeRadians(2.5 * Math.PI, true), .5 * Math.PI, threshold)
+  })
+
+  it('-3/2π positive', function() {
+    assert.closeTo(normalizeRadians(-1.5 * Math.PI, true), .5 * Math.PI, threshold)
+  })
+
+  it('-7/2π positive', function() {
+    assert.closeTo(normalizeRadians(-3.5 * Math.PI, true), .5 * Math.PI, threshold)
+  })
+
+  it('-1/2π positive', function() {
+    assert.closeTo(normalizeRadians(-.5 * Math.PI, true), 1.5 * Math.PI, threshold)
+  })
+
+
 })
 
 
@@ -77,17 +112,17 @@ describe('ptToVector', function() {
 
 describe('vectorToPt', function() {
   it('vectorToPt([Math.PI / 4, Math.sqrt(2)])', function() {
-    var r = vectorToPt(Math.PI / 4, Math.sqrt(2))
+    const r = vectorToPt(Math.PI / 4, Math.sqrt(2))
     assertArrayClose([r.x, r.y], [1, 1])
   })
 
   it('vectorToPt([Math.PI, 100])', function() {
-    var r = vectorToPt(Math.PI, 100)
+    const r = vectorToPt(Math.PI, 100)
     assertArrayClose([r.x, r.y], [-100, 0])
   })
 
   it('vectorToPt([-2.214297435588181, 50])', function() {
-    var r = vectorToPt(-2.214297435588181, 50)
+    const r = vectorToPt(-2.214297435588181, 50)
     assertArrayClose([r.x, r.y], [-30, -40])
   })
 

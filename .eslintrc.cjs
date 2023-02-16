@@ -1,11 +1,8 @@
 module.exports = {
   'extends':       'eslint:recommended',
   'parserOptions': {
-    'ecmaVersion':  6,
     'sourceType':   'module',
-    'ecmaFeatures': {
-      'modules': true,
-    },
+    'ecmaVersion':  2023,
   },
   'plugins':       ['mocha', 'unused-imports'],
   'rules':         {

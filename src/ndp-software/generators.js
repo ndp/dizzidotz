@@ -1,7 +1,8 @@
-// Given a fn, returns an iterator that calls that function for each step
-// of an iteration.
 import '@babel/polyfill'
 
+// Given a fn, returns an iterator that calls that function for each step
+// of an iteration.
+// What's this really called?
 export const iterateWith = function(fn) {
   return function *(x) {
     while (true) {

@@ -172,7 +172,7 @@ const editorMousedown$ = fromEvent(editor, 'mousedown')
 const editorMouseup$   = fromEvent(editor, 'mouseup')
 
 
-var eventToPt = function (e) {
+const eventToPt = function (e) {
   const bounds = editor.getBoundingClientRect()
   //const width = bounds.right - bounds.left
   const x      = ((e.x - bounds.left) / editor.clientWidth - 0.5) * 2.0 * NORMALIZED_RADIUS
@@ -228,13 +228,15 @@ editorMouseup$
 editorMouseup$.subscribe(() => startedPegAt = null)
 
 // Move the clock hand
-radians$.subscribe((angle) => {
+radians$
+  .pipe(map(r => r - .2)) // compensate for drawing lag
+          .subscribe((radians) => {
   const hand     = document.getElementById('hand')
   const duration = MS_PER_TICK * .75 // smaller than interval so we don't drop behind
   /* eslint-disable new-cap */
   Velocity(hand, {
-    x1: NORMALIZED_RADIUS + Math.cos(angle) * NORMALIZED_RADIUS,
-    y1: NORMALIZED_RADIUS + Math.sin(angle) * NORMALIZED_RADIUS,
+    x1: NORMALIZED_RADIUS + Math.cos(radians) * NORMALIZED_RADIUS,
+    y1: NORMALIZED_RADIUS + Math.sin(radians) * NORMALIZED_RADIUS,
     x2: NORMALIZED_RADIUS,
     y2: NORMALIZED_RADIUS
   }, { duration: duration, easing: 'linear', queue: false })
