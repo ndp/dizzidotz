@@ -4,15 +4,13 @@
 import {
   BehaviorSubject,
   merge,
-  fromEvent
-} from 'rxjs'
-import {
+  fromEvent,
   tap,
   map,
   mapTo,
   filter,
   withLatestFrom
-} from 'rxjs/operators'
+} from 'rxjs'
 
 import {
   linearScaleFns,

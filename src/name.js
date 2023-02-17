@@ -2,10 +2,9 @@
 
 import {
   BehaviorSubject,
-  fromEvent
+  fromEvent,
+  tap, map, filter
 } from 'rxjs'
-
-import { tap, map, filter } from 'rxjs/operators'
 
 // MODEL
 export const name$ = new BehaviorSubject('My Dotz')

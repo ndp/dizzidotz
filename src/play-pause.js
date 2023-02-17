@@ -1,10 +1,10 @@
 /*eslint-env browser */
 import {
   BehaviorSubject,
-  fromEvent
+  fromEvent,
+  tap, mapTo, filter
 }                          from 'rxjs'
 import { newCmdBus$ }      from 'pilota'
-import { tap, mapTo, filter } from 'rxjs/operators'
 
 // MODEL
 export const playState$ = new BehaviorSubject('paused')

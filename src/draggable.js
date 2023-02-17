@@ -2,9 +2,7 @@
 import {
   from,
   merge,
-  fromEvent
-} from 'rxjs'
-import {
+  fromEvent,
   concat,
   distinctUntilChanged,
   filter,
@@ -15,7 +13,7 @@ import {
   takeUntil,
   tap,
   withLatestFrom
-} from 'rxjs/operators'
+} from 'rxjs'
 
 
 /**

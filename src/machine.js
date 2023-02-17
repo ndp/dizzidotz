@@ -4,10 +4,7 @@ import {
   Subject,
   of,
   interval,
-  fromEvent
-} from 'rxjs'
-
-import {
+  fromEvent,
   debounceTime,
   filter,
   map,
@@ -17,7 +14,7 @@ import {
   tap,
   throttleTime,
   withLatestFrom
-} from 'rxjs/operators'
+} from 'rxjs'
 
 
 import { labelLog } from './ndp-software/util.js'

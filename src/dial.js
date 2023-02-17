@@ -2,7 +2,13 @@ import {
   BehaviorSubject,
   merge,
   fromEvent,
-  Scheduler
+  Scheduler,
+  debounceTime,
+  delay,
+  tap,
+  map,
+  mapTo,
+  throttleTime
 }                          from 'rxjs'
 
 import { svgClippedArc }                from './ndp-software/svg.js'
@@ -12,14 +18,6 @@ import {
   newCmdBus$,
   logCmdBus
 } from 'pilota'
-import {
-  debounceTime,
-  delay,
-  tap,
-  map,
-  mapTo,
-  throttleTime
-} from 'rxjs/operators'
 
 const MAX_DEGREE = 355
 

@@ -2,8 +2,7 @@
 
 import { assert } from 'chai'
 
-import { BehaviorSubject } from 'rxjs'
-import { skip }            from 'rxjs/operators'
+import { BehaviorSubject, skip } from 'rxjs'
 
 import { mapBehaviorSubject } from './map-behavior-subject.js'
 

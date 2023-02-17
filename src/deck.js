@@ -3,13 +3,10 @@
 import {
   BehaviorSubject,
   combineLatest,
-  Subject
-}                          from 'rxjs'
-
-import {
+  Subject,
   filter,
-  map
-} from 'rxjs/operators'
+  map,
+} from 'rxjs'
 
 import { ptInRect, ptInInscribedCircle } from './ndp-software/util.js'
 
@@ -17,31 +14,31 @@ import {
   makeDraggable,
   ACTION_DRAG_START,
   ACTION_DRAG_MOVE,
-  ACTION_DRAG_END
+  ACTION_DRAG_END,
 } from './draggable'
 
 //  returns events
-export function newDeck(drawingCtx$, model$) {
+export function newDeck (drawingCtx$, model$) {
 
   // MODEL
   const focus$ = new BehaviorSubject(null)
-  const state$ = combineLatest(focus$, model$, (focus, model)  => ({focus, model}))
+  const state$ = combineLatest(focus$, model$, (focus, model) => ({ focus, model }))
   const event$ = new Subject() // events we are returning, with 'load', 'delete', 'focus'
 
   // VIEW
-  function findOrCreateListEl(root, classNames = 'deck') {
+  function findOrCreateListEl (root, classNames = 'deck') {
     let listEl = root.getElementsByClassName(classNames)[0]
     if (!listEl) {
-      listEl           = document.createElement('UL')
+      listEl = document.createElement('UL')
       listEl.className = classNames
       root.appendChild(listEl)
     }
     return listEl
   }
 
-  function findOrCreateListItem(model, listEl, precedingItemEl) {
+  function findOrCreateListItem (model, listEl, precedingItemEl) {
     let itemCntrEl = null,
-        itemEl     = document.querySelector(`[data-key='${model.key}']`)
+      itemEl = document.querySelector(`[data-key='${model.key}']`)
     if (itemEl) {
       itemCntrEl = itemEl.children[0]
     } else {
@@ -59,8 +56,8 @@ export function newDeck(drawingCtx$, model$) {
     return itemCntrEl
   }
 
-  function appendNameSpan(name, cntrEl) {
-    const nameEl     = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+  function appendNameSpan (name, cntrEl) {
+    const nameEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
     nameEl.setAttributeNS('xmlns', 'xlink', 'http://www.w3.org/1999/xlink')
     nameEl.setAttribute('version', '1.1')
     nameEl.setAttribute('x', '0px')
@@ -82,35 +79,35 @@ export function newDeck(drawingCtx$, model$) {
   }
 
 
-    combineLatest(
-      state$,
-      drawingCtx$,
-      (state, drawingCtx)  => ({state, drawingCtx}))
-    .subscribe(function({state, drawingCtx}) {
-                 if (state.model.length === 0) {
-                   drawingCtx.domCntr.innerHTML = ''
-                 }
-                 const listEl = findOrCreateListEl(drawingCtx.domCntr)
+  combineLatest(
+    state$,
+    drawingCtx$,
+    (state, drawingCtx) => ({ state, drawingCtx }))
+    .subscribe(function ({ state, drawingCtx }) {
+      if (state.model.length === 0) {
+        drawingCtx.domCntr.innerHTML = ''
+      }
+      const listEl = findOrCreateListEl(drawingCtx.domCntr)
 
-                 const list          = Object.values(state.model).sort((a, b) => b.timestamp - a.timestamp)
-                 let precedingItemEl = null
-                 list.forEach(model => {
-                   const m          = Object.assign({}, model, {focused: state.focus === model || state.focus === model.key})
-                   const itemCntrEl = findOrCreateListItem(m, listEl, precedingItemEl ? precedingItemEl.parentNode : null)
-                   drawingCtx.renderItem(model, itemCntrEl)
-                   precedingItemEl  = itemCntrEl
-                 })
-               })
+      const list = Object.values(state.model).sort((a, b) => b.timestamp - a.timestamp)
+      let precedingItemEl = null
+      list.forEach(model => {
+        const m = Object.assign({}, model, { focused: state.focus === model || state.focus === model.key })
+        const itemCntrEl = findOrCreateListItem(m, listEl, precedingItemEl ? precedingItemEl.parentNode : null)
+        drawingCtx.renderItem(model, itemCntrEl)
+        precedingItemEl = itemCntrEl
+      })
+    })
 
   event$
     .pipe(
       filter(e => e.name === 'focus'),
-      map(e => e.key)
+      map(e => e.key),
     )
     .subscribe(focus$)
 
 
-  function deleteAllButtonEl() {
+  function deleteAllButtonEl () {
     return document.getElementById('delete-all-btn')
   }
 
@@ -118,45 +115,45 @@ export function newDeck(drawingCtx$, model$) {
 
   const drag$ = makeDraggable({
 
-    draggableCntr: drawingCtx$.getValue().domCntr,
+                                draggableCntr: drawingCtx$.getValue().domCntr,
 
-    mapDraggable(target, e) {
-      const lis = [...drawingCtx$.getValue().domCntr.getElementsByTagName('li')].reverse()
-      for (const li of lis) {
-        const rect = li.children[0].getClientRects()[0]
-        if (rect && ptInInscribedCircle({x: e.clientX, y: e.clientY}, rect)) {
-          return li
-        }
-      }
-      return null
-    },
+                                mapDraggable (target, e) {
+                                  const lis = [...drawingCtx$.getValue().domCntr.getElementsByTagName('li')].reverse()
+                                  for (const li of lis) {
+                                    const rect = li.children[0].getClientRects()[0]
+                                    if (rect && ptInInscribedCircle({ x: e.clientX, y: e.clientY }, rect)) {
+                                      return li
+                                    }
+                                  }
+                                  return null
+                                },
 
-    mapDropTarget(pos, draggedEl) {
-      const key = draggedEl.getAttribute('data-key')
-      if (!key.match(/^template/)) {
-        const el     = deleteAllButtonEl()
-        const bounds = el.getBoundingClientRect()
-        if (ptInRect(pos, bounds)) return el
-      }
+                                mapDropTarget (pos, draggedEl) {
+                                  const key = draggedEl.getAttribute('data-key')
+                                  if (!key.match(/^template/)) {
+                                    const el = deleteAllButtonEl()
+                                    const bounds = el.getBoundingClientRect()
+                                    if (ptInRect(pos, bounds)) return el
+                                  }
 
-      const editor = editorEl()
-      if (ptInInscribedCircle(pos, editor.getBoundingClientRect())) return editor
+                                  const editor = editorEl()
+                                  if (ptInInscribedCircle(pos, editor.getBoundingClientRect())) return editor
 
-      return null
-    },
+                                  return null
+                                },
 
-    createOutlineEl(el) {
-      const rect             = el.children[0].children[0].getClientRects()[0]
-      const outline          = document.createElement('DIV')
-      outline.style.position = 'fixed'
-      outline.style.top      = `${rect.top}px`
-      outline.style.left     = `${rect.left}px`
-      outline.style.width    = `${rect.width}px`
-      outline.style.height   = `${rect.height}px`
-      outline.appendChild(el.children[0].children[0].cloneNode(true))
-      return outline
-    }
-  })
+                                createOutlineEl (el) {
+                                  const rect = el.children[0].children[0].getClientRects()[0]
+                                  const outline = document.createElement('DIV')
+                                  outline.style.position = 'fixed'
+                                  outline.style.top = `${rect.top}px`
+                                  outline.style.left = `${rect.left}px`
+                                  outline.style.width = `${rect.width}px`
+                                  outline.style.height = `${rect.height}px`
+                                  outline.appendChild(el.children[0].children[0].cloneNode(true))
+                                  return outline
+                                },
+                              })
 
 
   // Draw 'delete all' button as a drop target.
@@ -172,16 +169,16 @@ export function newDeck(drawingCtx$, model$) {
   // Highlight hovered 'delete all' button
   drag$
     .pipe(filter(action => action.name === ACTION_DRAG_MOVE))
-    .subscribe(function(action) {
-                 if (action.dest === deleteAllButtonEl()) {
-                   action.outline.style.transition   = 'opacity 0.4'
-                   action.outline.style.opacity      = 0.3
-                   action.outline.style['transform'] = 'scale(.5,.5)'
-                 } else {
-                   action.outline.style.opacity      = 1
-                   action.outline.style['transform'] = ''
-                 }
-               })
+    .subscribe(function (action) {
+      if (action.dest === deleteAllButtonEl()) {
+        action.outline.style.transition = 'opacity 0.4'
+        action.outline.style.opacity = 0.3
+        action.outline.style['transform'] = 'scale(.5,.5)'
+      } else {
+        action.outline.style.opacity = 1
+        action.outline.style['transform'] = ''
+      }
+    })
 
   // Drag over 'delete all' button previews deleting pattern.
   drag$
@@ -192,16 +189,16 @@ export function newDeck(drawingCtx$, model$) {
   drag$
     .pipe(filter(action => action.name === ACTION_DRAG_END),
           filter(action => action.dest === deleteAllButtonEl()),
-          map(action => ({ name: 'delete', key: action.el.getAttribute('data-key') }))
+          map(action => ({ name: 'delete', key: action.el.getAttribute('data-key') })),
     )
     .subscribe(event$)
 
   // Provide drag feedback over the editor
   drag$.pipe(filter(action => action.name === ACTION_DRAG_MOVE))
-    .subscribe(action => editorEl().classList.toggle('drop-target', editorEl() === action.dest))
+       .subscribe(action => editorEl().classList.toggle('drop-target', editorEl() === action.dest))
 
   drag$.pipe(filter(action => action.name === ACTION_DRAG_END))
-    .subscribe(() =>  editorEl().classList.remove('drop-target'))
+       .subscribe(() => editorEl().classList.remove('drop-target'))
 
   // Trigger the load of the pattern on drag
   drag$
@@ -211,9 +208,9 @@ export function newDeck(drawingCtx$, model$) {
       map(action => {
         return {
           name: 'load',
-          key:  action.el.getAttribute('data-key')
+          key:  action.el.getAttribute('data-key'),
         }
-      })
+      }),
     )
     .subscribe(event$)
 
@@ -222,21 +219,21 @@ export function newDeck(drawingCtx$, model$) {
     .pipe(filter(action => action.name === ACTION_DRAG_END),
           filter(action => action.ms < 400),
           filter(action => (Math.abs(action.offset.x) + Math.abs(action.offset.y)) < 5),
-          map(action => action.el)
+          map(action => action.el),
     )
 
   itemClick$
     .pipe(
       filter(el => el.classList.contains('focus')),
       map(el => el.getAttribute('data-key')),
-      map(key => ({ name: 'load', key }))
+      map(key => ({ name: 'load', key })),
     )
     .subscribe(event$)
 
   itemClick$
     .pipe(
       filter(el => !el.classList.contains('focus')),
-      map(x => ({ name: 'focus', key: x.getAttribute('data-key') }))
+      map(x => ({ name: 'focus', key: x.getAttribute('data-key') })),
     )
     .subscribe(event$)
 

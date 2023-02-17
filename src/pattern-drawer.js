@@ -2,14 +2,14 @@
 import { patternStore$ } from './pattern-store.js'
 import { editorCmdBus$ } from './editor.js'
 
-import { BehaviorSubject } from 'rxjs'
 import { newDeck }         from './deck.js'
 import {
+  BehaviorSubject,
   filter,
   map,
   tap,
   withLatestFrom
-}             from 'rxjs/operators'
+}             from 'rxjs'
 
 const renderPattern = function (pattern, cntr) {
   cntr.innerHTML = pattern.svg
